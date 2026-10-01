@@ -1,6 +1,6 @@
 // Home-page content the admin panel edits: the hero carousel.
-// Slide text is per language ({ en, uz, ru }); other languages fall back to the
-// translation files for the default slides (`i18n` index), then to English.
+// Slide text is per language ({ en, uz, ru }); other languages use the translation files for the
+// default slides (`i18n` index), otherwise the text is translated automatically.
 
 const defaultHeroSlides = [
   {
@@ -62,11 +62,3 @@ export function setSite(next = {}) {
 }
 
 export const defaultSite = { heroSlides: defaultHeroSlides, stats: defaultStats }
-
-// Text of a slide in the current language.
-export function slideText(slide, field, lng, t) {
-  return slide[field]?.[lng]
-    || (slide.i18n != null && t ? t(`hero.slides.${slide.i18n}.${field}`, { defaultValue: '' }) : '')
-    || slide[field]?.en
-    || ''
-}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useAutoText } from '../i18n/auto'
 import {
   FaArrowLeft, FaArrowRight, FaCalendarAlt, FaUsers, FaBed, FaSun, FaCheck, FaTimes, FaMinus, FaPlus,
   FaTrain, FaPlane, FaCar, FaWalking, FaTruckMonster, FaRoute, FaBuilding, FaCheckCircle, FaInfoCircle,
@@ -23,6 +24,7 @@ const SORTS = ['popular', 'price', 'duration']
 
 export function TourCard({ tour, inert = false }) {
   const { t } = useTranslation()
+  const at = useAutoText()
   const op = tourOperator(tour)
   return (
     <Link
@@ -37,8 +39,8 @@ export function TourCard({ tour, inert = false }) {
       </div>
       <div className="tour-card__body">
         <small className="tour-card__op">{op.name} · {t(`guides.cities.${op.city}`)}</small>
-        <h3>{tour.title}</h3>
-        <p className="tour-card__route"><FaRoute /> {tour.route.join(' → ')}</p>
+        <h3>{at(tour.title)}</h3>
+        <p className="tour-card__route"><FaRoute /> {tour.route.map(at).join(' → ')}</p>
         <div className="tour-card__foot">
           <span className="tour-card__from">{t('common.from')}</span>
           <Price usd={tour.price} unit={t('tours.perPerson')} />
@@ -205,6 +207,7 @@ const isoDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2
 
 function TourBooking({ tour }) {
   const { t } = useTranslation()
+  const at = useAutoText()
   const f = useFormat()
   const book = useBook()
   const [earliest] = useState(() => isoDate(new Date(Date.now() + LEAD_DAYS * 864e5)))
@@ -246,7 +249,7 @@ function TourBooking({ tour }) {
         onClick={() =>
           book({
             id: `tour-${tour.slug}-${date}`,
-            name: tour.title,
+            name: at(tour.title),
             kind: 'tours',
             price: total,
             meta: `${f.date(date, { day: 'numeric', month: 'long' })} · ${t('guides.book.peopleCount', { count: travelers })}`,
@@ -263,6 +266,7 @@ function TourBooking({ tour }) {
 export function TourDetail() {
   const { slug } = useParams()
   const { t } = useTranslation()
+  const at = useAutoText()
   const tour = tourBySlug[slug]
   const { data } = useWiki(tour?.wiki)
   if (!tour) return <NotFound />
@@ -273,12 +277,12 @@ export function TourDetail() {
     [FaCalendarAlt, t('tours.facts.duration'), t('tours.daysNights', { count: tour.days, nights: tour.days - 1 })],
     [FaUsers, t('tours.facts.group'), t(`tours.groups.${tour.group}`)],
     [FaBed, t('tours.facts.stay'), t(`tours.stays.${tour.stay}`)],
-    [FaSun, t('tours.facts.season'), tour.season],
+    [FaSun, t('tours.facts.season'), at(tour.season)],
   ]
 
   return (
     <>
-      <PageHero title={tour.title} subtitle={`${op.name} · ${t(`guides.cities.${op.city}`)}`} image={sizedThumb(data?.thumb, 1280)}>
+      <PageHero title={at(tour.title)} subtitle={`${op.name} · ${t(`guides.cities.${op.city}`)}`} image={sizedThumb(data?.thumb, 1280)}>
         <Link to="/tours" className="back-link"><FaArrowLeft className="flip-rtl" /> {t('tours.back')}</Link>
         <span className="pill is-active">{t('tours.daysNights', { count: tour.days, nights: tour.days - 1 })}</span>
       </PageHero>
@@ -294,20 +298,20 @@ export function TourDetail() {
 
             <h2>{t('tours.routeTitle')}</h2>
             <ol className="tour-route">
-              {tour.route.map((c) => <li key={c}>{c}</li>)}
+              {tour.route.map((c) => <li key={c}>{at(c)}</li>)}
             </ol>
 
             <h2>{t('tours.highlights')}</h2>
             <ul className="tour-highlights">
-              {tour.highlights.map((h) => <li key={h}><FaCheck /> {h}</li>)}
+              {tour.highlights.map((h) => <li key={h}><FaCheck /> {at(h)}</li>)}
             </ul>
 
             <h2>{t('tours.itinerary')}</h2>
             <div className="tour-days">
               {tour.itinerary.map(([title, text], i) => (
                 <details key={i} open={i === 0}>
-                  <summary><span className="tour-days__num">{t('tours.day', { n: i + 1 })}</span> {title}</summary>
-                  <p>{text}</p>
+                  <summary><span className="tour-days__num">{t('tours.day', { n: i + 1 })}</span> {at(title)}</summary>
+                  <p>{at(text)}</p>
                 </details>
               ))}
             </div>

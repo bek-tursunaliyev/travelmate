@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import { heroSlides, slideText } from '../data/site'
+import { heroSlides } from '../data/site'
+import { useLocalizedText } from '../i18n/auto'
 import SearchBar from './SearchBar'
 
 const INTERVAL = 6000
@@ -9,6 +10,11 @@ const INTERVAL = 6000
 export default function HeroCarousel() {
   const { t, i18n } = useTranslation()
   const lng = i18n.resolvedLanguage
+  const lt = useLocalizedText()
+  // Written translation for this language → the translation file (built-in slides) → automatic.
+  const slideText = (slide, field) => slide[field]?.[lng]
+    || (slide.i18n != null ? t(`hero.slides.${slide.i18n}.${field}`, { defaultValue: '' }) : '')
+    || lt(slide[field])
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const touchX = useRef(null)
@@ -59,8 +65,8 @@ export default function HeroCarousel() {
       <div className="container hero__content">
         <div className="hero__text" key={index}>
           <span className="hero__eyebrow">TravelMate · {String(index + 1).padStart(2, '0')}/{String(count).padStart(2, '0')}</span>
-          <h1>{current && slideText(current, 'title', lng, t)}</h1>
-          <p>{current && slideText(current, 'text', lng, t)}</p>
+          <h1>{current && slideText(current, 'title')}</h1>
+          <p>{current && slideText(current, 'text')}</p>
         </div>
 
         <div onFocusCapture={() => setPaused(true)} onBlurCapture={() => setPaused(false)}>

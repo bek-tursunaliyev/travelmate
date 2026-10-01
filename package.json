@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
+    "i18n:fill": "node scripts/i18n-fill.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

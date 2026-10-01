@@ -1393,6 +1393,7 @@ button.chip:hover, a.chip:hover { background: var(--primary); color: #fff; }
 .adm-i18n { display: flex; flex-direction: column; gap: 8px; }
 .adm-i18n label { display: grid; grid-template-columns: 34px 1fr; align-items: start; gap: 8px; }
 .adm-i18n label > span { padding-top: 10px; font-size: 0.75rem; color: var(--muted); }
+.adm-i18n__note { font-size: 0.75rem; color: var(--muted); padding-inline-start: 42px; }
 .adm-image { display: flex; flex-direction: column; gap: 8px; }
 .adm-image__preview { width: 180px; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: var(--soft); }
 .adm-color { display: flex; gap: 8px; align-items: center; }

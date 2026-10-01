@@ -1,5 +1,6 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useAutoText } from '../i18n/auto'
 import { FaArrowRight, FaArrowLeft, FaSearch, FaExternalLinkAlt, FaMapMarkerAlt } from 'react-icons/fa'
 import { placeLists, findPlace, typeOfList, allPlaces, placePhoto } from '../data/places'
 import { services, serviceById, serviceHref } from '../data/services'
@@ -113,6 +114,7 @@ export function Popular() {
 export function Place() {
   const { list, slug } = useParams()
   const { t } = useTranslation()
+  const at = useAutoText()
   const place = findPlace(list, slug)
   const { loading, data } = useWiki(place?.wiki)
   if (!place) return <NotFound />
@@ -138,7 +140,7 @@ export function Place() {
             {loading ? (
               <div className="skeleton-lines"><span /><span /><span /><span /></div>
             ) : (
-              <p>{data?.extract || t('place.noInfo')}</p>
+              <p>{data?.extract ? at(data.extract) : t('place.noInfo')}</p>
             )}
             {data?.url && (
               <a className="source-link" href={data.url} target="_blank" rel="noreferrer">

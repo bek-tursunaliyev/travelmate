@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useAutoText, useLocalizedText } from '../i18n/auto'
 import {
   FaArrowLeft, FaCalendarAlt, FaClock, FaChair, FaMinus, FaPlus, FaCheckCircle, FaExternalLinkAlt, FaUsers, FaLanguage,
 } from 'react-icons/fa'
@@ -10,7 +11,7 @@ import Price from '../components/Price'
 import PlaceImage from '../components/PlaceImage'
 import LocationMap from '../components/LocationMap'
 import { ticketVenue } from '../components/Sections'
-import { ticketCategories, findTicket, localized, ticketName } from '../data/tickets'
+import { ticketCategories, findTicket, ticketName } from '../data/tickets'
 import { useBook, useFormat, useWiki } from '../hooks'
 
 const routeHeroPhoto = { bus: 'Afrosiyob_(train)', flights: 'Tashkent_International_Airport' }
@@ -31,7 +32,8 @@ function Stepper({ value, max, onChange, label }) {
 }
 
 function BookingBox({ tk, cat, time, children }) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const lt = useLocalizedText()
   const f = useFormat()
   const book = useBook()
   const max = Math.max(1, Math.min(MAX_TICKETS, Number(tk.seats) || MAX_TICKETS))
@@ -49,7 +51,7 @@ function BookingBox({ tk, cat, time, children }) {
         className="btn btn--primary btn--block"
         onClick={() => book({
           id: `${tk.id}${time ? `-${time}` : ''}`,
-          name: ticketName(tk, i18n.resolvedLanguage),
+          name: tk.title ? lt(tk.title) : ticketName(tk),
           kind: cat,
           price: total,
           meta: [f.date(tk.date, { day: 'numeric', month: 'long' }), time || tk.depart || tk.time, t('tickets.countLabel', { count })].filter(Boolean).join(' · '),
@@ -81,7 +83,9 @@ function useRemoteEvent(cat, id, local) {
 
 export default function TicketPage() {
   const { cat, id } = useParams()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const lt = useLocalizedText()
+  const at = useAutoText()
   const f = useFormat()
   const local = findTicket(cat, id)
   const { remote, done } = useRemoteEvent(cat, id, local)
@@ -129,7 +133,7 @@ export default function TicketPage() {
   const venue = ticketVenue(tk)
   const times = tk.times?.length ? tk.times : [tk.time].filter(Boolean)
   const chosen = time || (times.length === 1 ? times[0] : null) || tk.time
-  const description = cat === 'cinema' ? wiki?.extract : localized(tk.description, i18n.resolvedLanguage)
+  const description = cat === 'cinema' ? at(wiki?.extract) : lt(tk.description)
 
   return (
     <section className="section section--flush ticket-show">
@@ -137,16 +141,16 @@ export default function TicketPage() {
         {back}
         <div className="show-hero">
           <div className={`show-hero__poster ${cat === 'events' ? 'is-wide' : ''}`}>
-            <PlaceImage wiki={tk.photo || tk.wiki} alt={localized(tk.title, i18n.resolvedLanguage)} width={500} />
+            <PlaceImage wiki={tk.photo || tk.wiki} alt={lt(tk.title)} width={500} />
           </div>
           <div className="show-hero__info">
             <span className="pass__cat"><Icon /> {t(`tickets.categories.${cat}`)}</span>
-            <h1>{localized(tk.title, i18n.resolvedLanguage)}</h1>
+            <h1>{lt(tk.title)}</h1>
             <ul className="show-hero__facts">
-              {tk.genre && <li>{localized(tk.genre, i18n.resolvedLanguage)}</li>}
+              {tk.genre && <li>{lt(tk.genre)}</li>}
               {tk.age && <li className="show-hero__age">{tk.age}</li>}
               {tk.lang && <li><FaLanguage /> {tk.lang}</li>}
-              {tk.hall && <li><FaChair /> {localized(tk.hall, i18n.resolvedLanguage)}</li>}
+              {tk.hall && <li><FaChair /> {lt(tk.hall)}</li>}
               <li><FaCalendarAlt /> {f.date(tk.date, { weekday: 'long', day: 'numeric', month: 'long' })}</li>
             </ul>
             {wikiLoading && cat === 'cinema' ? (

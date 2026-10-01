@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useAutoText } from '../i18n/auto'
 import {
   FaArrowLeft, FaStar, FaCheckCircle, FaSlidersH, FaTimes, FaUserTie, FaPlus, FaCheck,
   FaMapMarkerAlt, FaClock, FaBalanceScale, FaMinus,
@@ -162,6 +163,7 @@ function CompareBar({ compare, onOpen }) {
 
 function GuideCard({ guide, selected, compareFull, onCompare }) {
   const { t } = useTranslation()
+  const at = useAutoText()
   const disabled = !selected && compareFull
   return (
     <article className="g-card">
@@ -181,7 +183,7 @@ function GuideCard({ guide, selected, compareFull, onCompare }) {
         <span className="g-langs">{guide.languages.map((l) => l.toUpperCase()).join(' · ')}</span>
       </div>
 
-      <p className="g-card__bio">{guide.bio}</p>
+      <p className="g-card__bio">{at(guide.bio)}</p>
 
       <div className="g-card__foot">
         <span className="g-card__price">
@@ -432,6 +434,7 @@ function BookingCard({ guide }) {
 export function GuideProfile() {
   const { id } = useParams()
   const { t } = useTranslation()
+  const at = useAutoText()
   const f = useFormat()
   const langName = useLanguageName()
   const guide = guideById[id]
@@ -464,7 +467,7 @@ export function GuideProfile() {
 
           <div className="g-profile__body">
             <h2>{t('guides.about')}</h2>
-            <p>{guide.bio}</p>
+            <p>{at(guide.bio)}</p>
 
             <dl className="g-profile__list">
               <div>
@@ -485,7 +488,7 @@ export function GuideProfile() {
                     <li key={o.id}>
                       <div>
                         <strong>{o.name}</strong>
-                        <small>{o.tags.join(' · ')} · <FaStar className="g-star" /> {o.rating} ({f.number(o.reviews)})</small>
+                        <small>{o.tags.map(at).join(' · ')} · <FaStar className="g-star" /> {o.rating} ({f.number(o.reviews)})</small>
                       </div>
                       <span className="g-tours__price"><Price usd={o.price} unit={t('common.per.person')} /></span>
                     </li>

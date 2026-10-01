@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useLocalizedText } from '../i18n/auto'
 import {
   FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChair, FaArrowRight,
 } from 'react-icons/fa'
 import { services, serviceHref } from '../data/services'
-import { localized, ticketCategories, tickets, venueById } from '../data/tickets'
+import { ticketCategories, tickets, venueById } from '../data/tickets'
 import { famousPlaces, placePhoto } from '../data/places'
 import PlaceImage from './PlaceImage'
 import Price from './Price'
@@ -70,8 +71,8 @@ export function ticketVenue(tk) {
 
 // A ticket card; the whole card opens the ticket page where the booking happens.
 export function TicketItem({ tk, cat }) {
-  const { t, i18n } = useTranslation()
-  const lng = i18n.resolvedLanguage
+  const { t } = useTranslation()
+  const lt = useLocalizedText()
   const f = useFormat()
   const isRoute = cat === 'bus' || cat === 'flights'
   const Icon = ticketCategories.find((c) => c.id === cat).icon
@@ -109,7 +110,7 @@ export function TicketItem({ tk, cat }) {
           </div>
         ) : (
           <div className="pass__show">
-            <strong>{localized(tk.title, lng)}</strong>
+            <strong>{lt(tk.title)}</strong>
             {venue && <span><FaMapMarkerAlt /> {[venue.name, venue.city].filter(Boolean).join(', ')}</span>}
           </div>
         )}
@@ -120,8 +121,8 @@ export function TicketItem({ tk, cat }) {
           ) : (
             <>
               <span><FaClock /> {(tk.times && tk.times.length > 1) ? tk.times.join(' · ') : tk.time}</span>
-              {tk.hall && <span><FaChair /> {localized(tk.hall, lng)}</span>}
-              {tk.genre && <span className="pass__genre">{localized(tk.genre, lng)}</span>}
+              {tk.hall && <span><FaChair /> {lt(tk.hall)}</span>}
+              {tk.genre && <span className="pass__genre">{lt(tk.genre)}</span>}
             </>
           )}
         </div>

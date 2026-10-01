@@ -97,6 +97,7 @@ function FieldInput({ field, value, onChange, doc }) {
                 : <input type="text" value={value[l]} onChange={(e) => onChange({ ...value, [l]: e.target.value })} />}
             </label>
           ))}
+          <small className="adm-i18n__note">{t('admin.autoTranslate')}</small>
         </div>
       )
     default:

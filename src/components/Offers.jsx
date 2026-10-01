@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAutoText } from '../i18n/auto'
 import { FaStar, FaMapMarkerAlt, FaExchangeAlt } from 'react-icons/fa'
 import { currencies, serviceById } from '../data/services'
 import { useBook, useFormat } from '../hooks'
 
 export function OfferCard({ offer, service }) {
   const { t } = useTranslation()
+  const at = useAutoText()
   const f = useFormat()
   const book = useBook()
   const s = serviceById[service]
@@ -20,7 +22,7 @@ export function OfferCard({ offer, service }) {
       <h3>{offer.name}</h3>
       <p className="offer__loc"><FaMapMarkerAlt /> {offer.location}</p>
       <div className="chips chips--small">
-        {offer.tags.map((tag) => <span key={tag} className="chip chip--static">{tag}</span>)}
+        {offer.tags.map((tag) => <span key={tag} className="chip chip--static">{at(tag)}</span>)}
       </div>
       <div className="offer__foot">
         {offer.unit === 'rate' ? (

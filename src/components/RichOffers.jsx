@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAutoText, useLocalizedText } from '../i18n/auto'
 import {
   FaStar, FaMapMarkerAlt, FaPlus, FaCheck, FaBalanceScale, FaTimes, FaClock, FaUtensils, FaExternalLinkAlt,
   FaUserFriends, FaCogs, FaGasPump, FaSwimmingPool, FaSpa, FaDumbbell, FaCoffee, FaWifi, FaParking, FaPlaneArrival, FaConciergeBell,
@@ -9,7 +10,6 @@ import PlaceImage from './PlaceImage'
 import Modal from './Modal'
 import { LazyMap } from './LocationMap'
 import { rentalCompanies, companyById } from '../data/services'
-import { localized } from '../data/tickets'
 import { useBook } from '../hooks'
 
 const MAX_COMPARE = 3
@@ -31,6 +31,7 @@ function Rating({ offer }) {
 
 function PlaceOfferCard({ offer, service, selected, onShowMap, compare }) {
   const { t } = useTranslation()
+  const at = useAutoText()
   const book = useBook()
   const isHotel = service === 'accommodation'
   const inCompare = compare?.ids.includes(offer.id)
@@ -41,7 +42,7 @@ function PlaceOfferCard({ offer, service, selected, onShowMap, compare }) {
       <div className="rich-card__media">
         <PlaceImage wiki={offer.photo} alt={offer.name} width={500} />
         {isHotel && offer.stars ? <span className="rich-card__badge"><Stars count={offer.stars} /></span> : null}
-        {!isHotel && offer.cuisine && <span className="rich-card__badge"><FaUtensils /> {offer.cuisine}</span>}
+        {!isHotel && offer.cuisine && <span className="rich-card__badge"><FaUtensils /> {at(offer.cuisine)}</span>}
       </div>
       <div className="rich-card__body">
         <div className="rich-card__top">
@@ -60,7 +61,7 @@ function PlaceOfferCard({ offer, service, selected, onShowMap, compare }) {
           offer.hours && <p className="rich-card__meta"><FaClock /> {offer.hours}</p>
         )}
         <div className="chips chips--small">
-          {(offer.tags || []).map((tag) => <span key={tag} className="chip chip--static">{tag}</span>)}
+          {(offer.tags || []).map((tag) => <span key={tag} className="chip chip--static">{at(tag)}</span>)}
         </div>
         <div className="rich-card__foot">
           <span className="rich-card__price">
@@ -200,6 +201,7 @@ export function PlaceOffers({ service, offers }) {
 
 function CarCard({ car }) {
   const { t } = useTranslation()
+  const at = useAutoText()
   const book = useBook()
   const company = companyById(car.company)
   return (
@@ -219,7 +221,7 @@ function CarCard({ car }) {
           <li><FaMapMarkerAlt /> {car.location}</li>
         </ul>
         <div className="chips chips--small">
-          {(car.tags || []).map((tag) => <span key={tag} className="chip chip--static">{tag}</span>)}
+          {(car.tags || []).map((tag) => <span key={tag} className="chip chip--static">{at(tag)}</span>)}
         </div>
         <div className="rich-card__foot">
           <span className="rich-card__price">
@@ -239,7 +241,8 @@ function CarCard({ car }) {
 }
 
 export function CarRental({ cars }) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const lt = useLocalizedText()
   const [company, setCompany] = useState('')
   const list = cars.filter((c) => !company || c.company === company)
   return (
@@ -252,7 +255,7 @@ export function CarRental({ cars }) {
               <strong>{c.name}</strong>
               <small>{t('rich.carsCount', { count: cars.filter((car) => car.company === c.id).length })}</small>
             </button>
-            <p>{localized(c.info, i18n.resolvedLanguage)}</p>
+            <p>{lt(c.info)}</p>
             {c.website && <a href={c.website} target="_blank" rel="noreferrer" className="company__link">{t('rich.website')} <FaExternalLinkAlt /></a>}
           </article>
         ))}
