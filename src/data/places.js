@@ -1,92 +1,102 @@
-// Top-10 lists shown in the sub-navbar dropdowns and on /popular/:type pages.
-// `wiki` is the English Wikipedia title used to load a real photo + description.
+// Uzbekistan places: regions (sub-navbar), cities and landmarks.
+// `wiki` is the English Wikipedia title used for the description; `photo` (a Wikipedia title or an
+// image URL) overrides the picture when the article's own image is a map.
+// These are defaults — the admin panel can replace every list (see setPlaces).
 
-export const regions = [
-  { slug: 'central-asia', name: 'Central Asia', country: 'Uzbekistan · Kazakhstan · Kyrgyzstan', wiki: 'Central_Asia', tags: ['silk road', 'uzbekistan', 'mountains'] },
-  { slug: 'southeast-asia', name: 'Southeast Asia', country: 'Thailand · Vietnam · Indonesia', wiki: 'Southeast_Asia', tags: ['beach', 'islands', 'food'] },
-  { slug: 'western-europe', name: 'Western Europe', country: 'France · Italy · Spain', wiki: 'Western_Europe', tags: ['museums', 'history', 'cities'] },
-  { slug: 'middle-east', name: 'Middle East', country: 'UAE · Jordan · Oman', wiki: 'Middle_East', tags: ['desert', 'luxury'] },
-  { slug: 'mediterranean', name: 'Mediterranean', country: 'Greece · Croatia · Turkey', wiki: 'Mediterranean_Basin', tags: ['sea', 'islands', 'beach'] },
-  { slug: 'caribbean', name: 'Caribbean', country: 'Cuba · Jamaica · Bahamas', wiki: 'Caribbean', tags: ['beach', 'islands'] },
-  { slug: 'scandinavia', name: 'Scandinavia', country: 'Norway · Sweden · Denmark', wiki: 'Scandinavia', tags: ['fjords', 'northern lights'] },
-  { slug: 'east-asia', name: 'East Asia', country: 'Japan · South Korea · China', wiki: 'East_Asia', tags: ['culture', 'cities', 'food'] },
-  { slug: 'south-america', name: 'South America', country: 'Peru · Brazil · Argentina', wiki: 'South_America', tags: ['andes', 'amazon'] },
-  { slug: 'north-africa', name: 'North Africa', country: 'Morocco · Egypt · Tunisia', wiki: 'North_Africa', tags: ['desert', 'pyramids', 'medina'] },
+const defaultRegions = [
+  { slug: 'tashkent-city', name: 'Tashkent', country: 'Capital city', wiki: 'Tashkent', photo: 'Amir_Timur_Square', tags: ['capital', 'metro', 'bazaar'] },
+  { slug: 'samarkand-region', name: 'Samarkand Region', country: 'Centre: Samarkand', wiki: 'Samarqand_Region', photo: 'Registan', tags: ['samarkand', 'silk road'] },
+  { slug: 'bukhara-region', name: 'Bukhara Region', country: 'Centre: Bukhara', wiki: 'Bukhara_Region', photo: 'Po-i-Kalyan', tags: ['bukhara', 'old town'] },
+  { slug: 'khorezm-region', name: 'Khorezm Region', country: 'Centre: Urgench', wiki: 'Xorazm_Region', photo: 'Itchan_Kala', tags: ['khiva', 'urgench'] },
+  { slug: 'karakalpakstan', name: 'Karakalpakstan', country: 'Centre: Nukus', wiki: 'Karakalpakstan', photo: 'Moynaq', tags: ['nukus', 'aral sea', 'savitsky'] },
+  { slug: 'fergana-region', name: 'Fergana Region', country: 'Centre: Fergana', wiki: 'Fergana_Region', photo: 'Margilan', tags: ['fergana', 'silk', 'ceramics'] },
+  { slug: 'andijan-region', name: 'Andijan Region', country: 'Centre: Andijan', wiki: 'Andijan_Region', photo: 'Andijan', tags: ['andijan', 'fergana valley'] },
+  { slug: 'namangan-region', name: 'Namangan Region', country: 'Centre: Namangan', wiki: 'Namangan_Region', photo: 'Namangan', tags: ['namangan', 'fergana valley'] },
+  { slug: 'kashkadarya-region', name: 'Kashkadarya Region', country: 'Centre: Karshi', wiki: 'Qashqadaryo_Region', photo: 'Ak-Saray_Palace', tags: ['shahrisabz', 'karshi'] },
+  { slug: 'surkhandarya-region', name: 'Surkhandarya Region', country: 'Centre: Termez', wiki: 'Surxondaryo_Region', photo: 'Fayaz_Tepe', tags: ['termez', 'buddhist'] },
+  { slug: 'navoiy-region', name: 'Navoiy Region', country: 'Centre: Navoiy', wiki: 'Navoiy_Region', photo: 'Sarmishsay', tags: ['nurata', 'petroglyphs'] },
+  { slug: 'jizzakh-region', name: 'Jizzakh Region', country: 'Centre: Jizzakh', wiki: 'Jizzakh_Region', photo: 'Aydar_Lake', tags: ['aydar lake', 'zaamin'] },
+  { slug: 'tashkent-region', name: 'Tashkent Region', country: 'Mountains & lakes', wiki: 'Tashkent_Region', photo: 'Charvak_Reservoir', tags: ['chimgan', 'charvak'] },
+  { slug: 'sirdaryo-region', name: 'Sirdaryo Region', country: 'Centre: Gulistan', wiki: 'Sirdaryo_Region', tags: ['gulistan'] },
 ]
 
-export const destinations = [
-  { slug: 'samarkand', name: 'Samarkand', country: 'Uzbekistan', wiki: 'Samarkand', tags: ['silk road', 'registan', 'uzbekistan'] },
-  { slug: 'istanbul', name: 'Istanbul', country: 'Türkiye', wiki: 'Istanbul', tags: ['bosphorus', 'turkey'] },
-  { slug: 'dubai', name: 'Dubai', country: 'United Arab Emirates', wiki: 'Dubai', tags: ['uae', 'shopping', 'desert'] },
-  { slug: 'paris', name: 'Paris', country: 'France', wiki: 'Paris', tags: ['eiffel', 'romance', 'museums'] },
-  { slug: 'tokyo', name: 'Tokyo', country: 'Japan', wiki: 'Tokyo', tags: ['anime', 'sushi', 'japan'] },
-  { slug: 'bali', name: 'Bali', country: 'Indonesia', wiki: 'Bali', tags: ['beach', 'temples', 'surf'] },
-  { slug: 'rome', name: 'Rome', country: 'Italy', wiki: 'Rome', tags: ['colosseum', 'history', 'italy'] },
-  { slug: 'bukhara', name: 'Bukhara', country: 'Uzbekistan', wiki: 'Bukhara', tags: ['silk road', 'uzbekistan', 'old town'] },
-  { slug: 'barcelona', name: 'Barcelona', country: 'Spain', wiki: 'Barcelona', tags: ['gaudi', 'beach', 'spain'] },
-  { slug: 'new-york', name: 'New York City', country: 'United States', wiki: 'New_York_City', tags: ['usa', 'manhattan', 'nyc'] },
+const defaultDestinations = [
+  { slug: 'tashkent', name: 'Tashkent', country: 'Capital city', wiki: 'Tashkent', tags: ['capital', 'metro', 'tashkent'] },
+  { slug: 'samarkand', name: 'Samarkand', country: 'Samarkand Region', wiki: 'Samarkand', tags: ['silk road', 'registan'] },
+  { slug: 'bukhara', name: 'Bukhara', country: 'Bukhara Region', wiki: 'Bukhara', tags: ['silk road', 'old town'] },
+  { slug: 'khiva', name: 'Khiva', country: 'Khorezm Region', wiki: 'Khiva', tags: ['itchan kala', 'khorezm'] },
+  { slug: 'shahrisabz', name: 'Shahrisabz', country: 'Kashkadarya Region', wiki: 'Shahrisabz', tags: ['amir temur', 'ak-saray'] },
+  { slug: 'nukus', name: 'Nukus', country: 'Karakalpakstan', wiki: 'Nukus', tags: ['savitsky', 'aral sea'] },
+  { slug: 'termez', name: 'Termez', country: 'Surkhandarya Region', wiki: 'Termez', tags: ['buddhist', 'ancient'] },
+  { slug: 'fergana', name: 'Fergana', country: 'Fergana Region', wiki: 'Fergana', tags: ['fergana valley'] },
+  { slug: 'kokand', name: 'Kokand', country: 'Fergana Region', wiki: 'Kokand', tags: ['khudayar khan', 'fergana valley'] },
+  { slug: 'margilan', name: 'Margilan', country: 'Fergana Region', wiki: 'Margilan', tags: ['silk', 'ikat'] },
+  { slug: 'namangan', name: 'Namangan', country: 'Namangan Region', wiki: 'Namangan', tags: ['fergana valley', 'gardens'] },
+  { slug: 'andijan', name: 'Andijan', country: 'Andijan Region', wiki: 'Andijan', tags: ['babur', 'fergana valley'] },
 ]
 
-export const landmarks = [
-  { slug: 'registan', name: 'Registan', country: 'Samarkand, Uzbekistan', wiki: 'Registan', tags: ['madrasa', 'samarkand'] },
-  { slug: 'eiffel-tower', name: 'Eiffel Tower', country: 'Paris, France', wiki: 'Eiffel_Tower', tags: ['paris'] },
-  { slug: 'colosseum', name: 'Colosseum', country: 'Rome, Italy', wiki: 'Colosseum', tags: ['rome', 'ancient'] },
-  { slug: 'great-wall', name: 'Great Wall of China', country: 'China', wiki: 'Great_Wall_of_China', tags: ['china', 'beijing'] },
-  { slug: 'taj-mahal', name: 'Taj Mahal', country: 'Agra, India', wiki: 'Taj_Mahal', tags: ['india', 'agra'] },
-  { slug: 'machu-picchu', name: 'Machu Picchu', country: 'Cusco, Peru', wiki: 'Machu_Picchu', tags: ['peru', 'inca', 'andes'] },
-  { slug: 'burj-khalifa', name: 'Burj Khalifa', country: 'Dubai, UAE', wiki: 'Burj_Khalifa', tags: ['dubai', 'skyscraper'] },
-  { slug: 'hagia-sophia', name: 'Hagia Sophia', country: 'Istanbul, Türkiye', wiki: 'Hagia_Sophia', tags: ['istanbul', 'mosque'] },
-  { slug: 'statue-of-liberty', name: 'Statue of Liberty', country: 'New York, USA', wiki: 'Statue_of_Liberty', tags: ['new york', 'usa'] },
-  { slug: 'petra', name: 'Petra', country: 'Jordan', wiki: 'Petra', tags: ['jordan', 'ancient'] },
+const defaultLandmarks = [
+  { slug: 'registan', name: 'Registan', country: 'Samarkand', wiki: 'Registan', tags: ['samarkand', 'madrasa'] },
+  { slug: 'shah-i-zinda', name: 'Shah-i-Zinda', country: 'Samarkand', wiki: 'Shah-i-Zinda', tags: ['samarkand', 'necropolis'] },
+  { slug: 'itchan-kala', name: 'Itchan Kala', country: 'Khiva', wiki: 'Itchan_Kala', tags: ['khiva', 'old town'] },
+  { slug: 'po-i-kalyan', name: 'Po-i-Kalyan', country: 'Bukhara', wiki: 'Po-i-Kalyan', tags: ['bukhara', 'minaret'] },
+  { slug: 'gur-e-amir', name: 'Gur-e-Amir', country: 'Samarkand', wiki: 'Gur-e-Amir', tags: ['samarkand', 'mausoleum'] },
+  { slug: 'ark-of-bukhara', name: 'Ark of Bukhara', country: 'Bukhara', wiki: 'Ark_of_Bukhara', tags: ['bukhara', 'fortress'] },
+  { slug: 'bibi-khanym', name: 'Bibi-Khanym Mosque', country: 'Samarkand', wiki: 'Bibi-Khanym_Mosque', tags: ['samarkand', 'mosque'] },
+  { slug: 'chor-minor', name: 'Chor Minor', country: 'Bukhara', wiki: 'Chor_Minor', tags: ['bukhara'] },
+  { slug: 'lyab-i-hauz', name: 'Lyab-i Hauz', country: 'Bukhara', wiki: 'Lyab-i_Hauz', tags: ['bukhara', 'old town'] },
+  { slug: 'samanid-mausoleum', name: 'Samanid Mausoleum', country: 'Bukhara', wiki: 'Samanid_Mausoleum', tags: ['bukhara', 'mausoleum'] },
+  { slug: 'ulugh-beg-observatory', name: 'Ulugh Beg Observatory', country: 'Samarkand', wiki: 'Ulugh_Beg_Observatory', tags: ['samarkand', 'science'] },
+  { slug: 'ak-saray', name: 'Ak-Saray Palace', country: 'Shahrisabz', wiki: 'Ak-Saray_Palace', tags: ['amir temur', 'shahrisabz'] },
+  { slug: 'chorsu-bazaar', name: 'Chorsu Bazaar', country: 'Tashkent', wiki: 'Chorsu_Bazaar', tags: ['tashkent', 'market'] },
+  { slug: 'savitsky-museum', name: 'Savitsky Museum', country: 'Nukus', wiki: 'Savitsky_Museum', tags: ['nukus', 'art'] },
 ]
 
-// Attractions in Uzbekistan — the home page "Famous places" carousel and the /places default tab.
-export const uzbekistan = [
-  { slug: 'registan', name: 'Registan', country: 'Samarkand', wiki: 'Registan', tags: ['samarkand', 'madrasa', 'uzbekistan'] },
-  { slug: 'shah-i-zinda', name: 'Shah-i-Zinda', country: 'Samarkand', wiki: 'Shah-i-Zinda', tags: ['samarkand', 'necropolis', 'uzbekistan'] },
-  { slug: 'itchan-kala', name: 'Itchan Kala', country: 'Khiva', wiki: 'Itchan_Kala', tags: ['khiva', 'old town', 'uzbekistan'] },
-  { slug: 'po-i-kalyan', name: 'Po-i-Kalyan', country: 'Bukhara', wiki: 'Po-i-Kalyan', tags: ['bukhara', 'minaret', 'uzbekistan'] },
-  { slug: 'gur-e-amir', name: 'Gur-e-Amir', country: 'Samarkand', wiki: 'Gur-e-Amir', tags: ['samarkand', 'mausoleum', 'uzbekistan'] },
-  { slug: 'ark-of-bukhara', name: 'Ark of Bukhara', country: 'Bukhara', wiki: 'Ark_of_Bukhara', tags: ['bukhara', 'fortress', 'uzbekistan'] },
-  { slug: 'bibi-khanym', name: 'Bibi-Khanym Mosque', country: 'Samarkand', wiki: 'Bibi-Khanym_Mosque', tags: ['samarkand', 'mosque', 'uzbekistan'] },
-  { slug: 'chor-minor', name: 'Chor Minor', country: 'Bukhara', wiki: 'Chor_Minor', tags: ['bukhara', 'uzbekistan'] },
-  { slug: 'lyab-i-hauz', name: 'Lyab-i Hauz', country: 'Bukhara', wiki: 'Lyab-i_Hauz', tags: ['bukhara', 'old town', 'uzbekistan'] },
-  { slug: 'samanid-mausoleum', name: 'Samanid Mausoleum', country: 'Bukhara', wiki: 'Samanid_Mausoleum', tags: ['bukhara', 'mausoleum', 'uzbekistan'] },
-  { slug: 'ulugh-beg-observatory', name: 'Ulugh Beg Observatory', country: 'Samarkand', wiki: 'Ulugh_Beg_Observatory', tags: ['samarkand', 'science', 'uzbekistan'] },
-  { slug: 'shahrisabz', name: 'Shahrisabz', country: 'Kashkadarya', wiki: 'Shahrisabz', tags: ['amir temur', 'ak-saray', 'uzbekistan'] },
-]
-
-export const placeLists = { regions, destinations, landmarks, uzbekistan }
+export const typeOfList = { regions: 'region', destinations: 'destination', landmarks: 'landmark' }
 
 // Menus shown in the sub-navbar and the mobile drawer.
 export const menuLists = ['regions', 'destinations']
 
-export const typeOfList = { regions: 'region', destinations: 'destination', landmarks: 'landmark', uzbekistan: 'landmark' }
+// Live bindings: setPlaces() reassigns these and every importer sees the new values.
+export let regions = defaultRegions
+export let destinations = defaultDestinations
+export let landmarks = defaultLandmarks
+export let placeLists = {}
+export let allPlaces = []
+// Famous places carousel on the home page.
+export let famousPlaces = []
 
-export const allPlaces = Object.entries(placeLists).flatMap(([list, items]) =>
-  items.map((p, i) => ({ ...p, list, type: typeOfList[list], rank: i + 1 })),
-)
+function rebuild() {
+  placeLists = { regions, destinations, landmarks }
+  allPlaces = Object.entries(placeLists).flatMap(([list, items]) =>
+    items.map((p, i) => ({ ...p, list, type: typeOfList[list], rank: i + 1 })),
+  )
+  famousPlaces = allPlaces.filter((p) => p.list === 'landmarks')
+}
+rebuild()
+
+export function setPlaces(next = {}) {
+  if (Array.isArray(next.regions)) regions = next.regions
+  if (Array.isArray(next.destinations)) destinations = next.destinations
+  if (Array.isArray(next.landmarks)) landmarks = next.landmarks
+  rebuild()
+}
+
+export const defaultPlaces = { regions: defaultRegions, destinations: defaultDestinations, landmarks: defaultLandmarks }
 
 export function findPlace(list, slug) {
   return allPlaces.find((p) => p.list === list && p.slug === slug)
 }
 
-// Famous places carousel on the home page: Uzbekistan only.
-export const famousPlaces = allPlaces.filter((p) => p.list === 'uzbekistan')
+// Picture source for a place: an explicit photo wins over the article's own image.
+export const placePhoto = (p) => p.photo || p.wiki
 
-export const heroSlides = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/1280px-RegistanSquare_Samarkand.jpg',
-  'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1800&q=75&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1800&q=75&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=1800&q=75&auto=format&fit=crop',
-]
-
-export const topSearches = ['Samarkand', 'eSIM', 'Airport taxi', 'Tashkent → Samarkand', 'Dubai', 'Rent a car']
+export const topSearches = ['Samarkand', 'eSIM', 'Airport taxi', 'Tashkent → Samarkand', 'Khiva', 'Rent a car']
 
 export const trending = [
   { list: 'destinations', slug: 'samarkand', growth: 48 },
-  { list: 'destinations', slug: 'istanbul', growth: 36 },
-  { list: 'destinations', slug: 'bukhara', growth: 31 },
-  { list: 'destinations', slug: 'dubai', growth: 24 },
-  { list: 'destinations', slug: 'tokyo', growth: 19 },
+  { list: 'destinations', slug: 'bukhara', growth: 36 },
+  { list: 'destinations', slug: 'khiva', growth: 31 },
+  { list: 'destinations', slug: 'tashkent', growth: 24 },
+  { list: 'destinations', slug: 'shahrisabz', growth: 19 },
 ]

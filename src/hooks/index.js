@@ -35,9 +35,13 @@ function loadWiki(title) {
   return wikiCache.get(title)
 }
 
-// Wikimedia serves pre-rendered thumbnails at standard widths.
-export const sizedThumb = (src, width = 500) =>
-  src ? src.replace(/\/(\d+)px-([^/?]+)(\?.*)?$/, `/${width}px-$2`) : src
+// Wikimedia only serves thumbnails at standard widths (others return 400), so snap up to one.
+const THUMB_WIDTHS = [120, 250, 330, 500, 960, 1280, 1920]
+export const sizedThumb = (src, width = 500) => {
+  if (!src) return src
+  const w = THUMB_WIDTHS.find((x) => x >= width) || THUMB_WIDTHS.at(-1)
+  return src.replace(/\/(\d+)px-([^/?]+)(\?.*)?$/, `/${w}px-$2`)
+}
 
 export function useWiki(title) {
   const [state, setState] = useState({ loading: true, data: null, title })

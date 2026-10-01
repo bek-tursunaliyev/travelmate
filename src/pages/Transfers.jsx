@@ -70,7 +70,7 @@ function VehicleCard({ vehicle, destination, selected, onSelect }) {
     <article className={`tf-vehicle ${selected ? 'is-selected' : ''}`}>
       <div className="tf-vehicle__img"><PlaceImage wiki={vehicle.wiki} alt="" width={330} /></div>
       <div className="tf-vehicle__info">
-        <h3>{t(`transfer.vehicles.${vehicle.id}`)}</h3>
+        <h3>{t(`transfer.vehicles.${vehicle.id}`, { defaultValue: vehicle.name || vehicle.id })}</h3>
         <p className="tf-vehicle__cap">
           <span><Users size={14} /> {vehicle.passengers}</span>
           <span><Briefcase size={14} /> {vehicle.luggage}</span>
@@ -250,7 +250,7 @@ export function TransferCheckout() {
     }
     const item = {
       id: `transfer-${destination.id}-${vehicle.id}-${form.date}-${form.time}`,
-      name: t('transfer.bookingName', { from: PICKUP, to: destination.name, vehicle: t(`transfer.vehicles.${vehicle.id}`) }),
+      name: t('transfer.bookingName', { from: PICKUP, to: destination.name, vehicle: t(`transfer.vehicles.${vehicle.id}`, { defaultValue: vehicle.name || vehicle.id }) }),
       kind: 'taxi',
       price,
       meta: `${f.date(form.date, { day: 'numeric', month: 'long' })} · ${form.time} · ${t('guides.book.peopleCount', { count: passengers })}`,
@@ -264,7 +264,7 @@ export function TransferCheckout() {
   }
 
   const summaryRows = [
-    ['vehicle', t(`transfer.vehicles.${vehicle.id}`)],
+    ['vehicle', t(`transfer.vehicles.${vehicle.id}`, { defaultValue: vehicle.name || vehicle.id })],
     ['pickup', PICKUP],
     ['dropoff', destination.name],
     ['date', form.date ? f.date(form.date, { weekday: 'short', day: 'numeric', month: 'short' }) : '—'],
@@ -284,7 +284,7 @@ export function TransferCheckout() {
             <div className="tf-picked">
               <div className="tf-picked__img"><PlaceImage wiki={vehicle.wiki} alt="" width={330} /></div>
               <div className="tf-picked__info">
-                <strong>{t(`transfer.vehicles.${vehicle.id}`)}</strong>
+                <strong>{t(`transfer.vehicles.${vehicle.id}`, { defaultValue: vehicle.name || vehicle.id })}</strong>
                 <span className="tf-vehicle__cap">
                   <span><Users size={14} /> {vehicle.passengers}</span>
                   <span><Briefcase size={14} /> {vehicle.luggage}</span>

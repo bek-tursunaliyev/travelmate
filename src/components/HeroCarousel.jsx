@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import { heroSlides } from '../data/places'
+import { heroSlides, slideText } from '../data/site'
 import SearchBar from './SearchBar'
 
 const INTERVAL = 6000
 
 export default function HeroCarousel() {
-  const { t } = useTranslation()
-  const slides = t('hero.slides', { returnObjects: true })
+  const { t, i18n } = useTranslation()
+  const lng = i18n.resolvedLanguage
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const touchX = useRef(null)
   const count = heroSlides.length
+  const current = heroSlides[index % count] || heroSlides[0]
 
   const go = useCallback((i) => setIndex((i + count) % count), [count])
   const next = useCallback(() => setIndex((i) => (i + 1) % count), [count])
@@ -26,8 +27,8 @@ export default function HeroCarousel() {
 
   // Preload all slide images so transitions never flash.
   useEffect(() => {
-    heroSlides.forEach((src) => { const img = new Image(); img.src = src })
-  }, [])
+    heroSlides.forEach((s) => { const img = new Image(); img.src = s.image })
+  }, [count])
 
   const onTouchEnd = (e) => {
     if (touchX.current == null) return
@@ -44,11 +45,11 @@ export default function HeroCarousel() {
       onTouchEnd={onTouchEnd}
     >
       <div className="hero__media">
-        {heroSlides.map((src, i) => (
+        {heroSlides.map((s, i) => (
           <div
-            key={src}
+            key={s.id || i}
             className={`hero__slide ${i === index ? 'is-active' : ''}`}
-            style={{ backgroundImage: `url(${src})` }}
+            style={{ backgroundImage: `url(${s.image})` }}
             aria-hidden={i !== index}
           />
         ))}
@@ -58,8 +59,8 @@ export default function HeroCarousel() {
       <div className="container hero__content">
         <div className="hero__text" key={index}>
           <span className="hero__eyebrow">TravelMate · {String(index + 1).padStart(2, '0')}/{String(count).padStart(2, '0')}</span>
-          <h1>{slides[index]?.title}</h1>
-          <p>{slides[index]?.text}</p>
+          <h1>{current && slideText(current, 'title', lng, t)}</h1>
+          <p>{current && slideText(current, 'text', lng, t)}</p>
         </div>
 
         <div onFocusCapture={() => setPaused(true)} onBlurCapture={() => setPaused(false)}>

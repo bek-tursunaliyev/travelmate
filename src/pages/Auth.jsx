@@ -6,6 +6,7 @@ import { FaCheckCircle, FaLock, FaInfoCircle, FaArrowLeft } from 'react-icons/fa
 import Logo from '../components/Logo'
 import { GOOGLE_CLIENT_ID, useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
+import { adminLogin } from '../content/admin'
 
 function useButtonWidth() {
   const calc = () => Math.min(360, Math.max(220, window.innerWidth - 80))
@@ -20,35 +21,52 @@ function useButtonWidth() {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
-// Fallback sign-in used only when Google Sign-In is unavailable.
-function DemoLogin({ onDone }) {
+// Login + password form. The admin's credentials open the admin panel (checked on the server);
+// any other login signs in as a regular traveller account kept in this browser.
+function PasswordLogin({ onDone }) {
   const { t } = useTranslation()
   const { loginDemo } = useAuth()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+  const navigate = useNavigate()
+  const toast = useToast()
+  const [login, setLogin] = useState('')
+  const [password, setPassword] = useState('')
   const [touched, setTouched] = useState(false)
-  const nameOk = name.trim().length >= 2
-  const emailOk = EMAIL_RE.test(email.trim())
+  const [busy, setBusy] = useState(false)
+  const loginOk = login.trim().length >= 3
+  const passwordOk = password.length >= 4
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     setTouched(true)
-    if (nameOk && emailOk) onDone(loginDemo({ name, email }))
+    if (!loginOk || !passwordOk || busy) return
+    setBusy(true)
+    const admin = await adminLogin(login.trim(), password)
+    setBusy(false)
+    if (admin) {
+      toast(t('auth.adminWelcome'))
+      navigate('/admin', { replace: true })
+      return
+    }
+    const value = login.trim()
+    const email = EMAIL_RE.test(value) ? value : `${value.replace(/\s+/g, '.').toLowerCase()}@travelmate.uz`
+    const raw = value.split('@')[0].replace(/[._-]+/g, ' ')
+    const name = raw.replace(/\b\w/g, (c) => c.toUpperCase())
+    onDone(loginDemo({ name, email }))
   }
 
   return (
     <form className="auth__demo" onSubmit={submit} noValidate>
       <label>
-        <span>{t('auth.demoName')}</span>
-        <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" aria-invalid={touched && !nameOk} />
+        <span>{t('auth.login')}</span>
+        <input value={login} onChange={(e) => setLogin(e.target.value)} autoComplete="username" aria-invalid={touched && !loginOk} />
       </label>
       <label>
-        <span>{t('auth.demoEmail')}</span>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" aria-invalid={touched && !emailOk} />
+        <span>{t('auth.password')}</span>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" aria-invalid={touched && !passwordOk} />
       </label>
-      {touched && (!nameOk || !emailOk) && <p className="auth__demo-error">{t('auth.demoInvalid')}</p>}
-      <button type="submit" className="btn btn--primary btn--block">{t('auth.demoSubmit')}</button>
-      <p className="auth__demo-note"><FaInfoCircle /> {t('auth.demoNote')}</p>
+      {touched && (!loginOk || !passwordOk) && <p className="auth__demo-error">{t('auth.loginInvalid')}</p>}
+      <button type="submit" className="btn btn--primary btn--block" disabled={busy}>{busy ? t('common.loading') : t('auth.demoSubmit')}</button>
+      <p className="auth__demo-note"><FaInfoCircle /> {t('auth.loginNote')}</p>
     </form>
   )
 }
@@ -66,11 +84,13 @@ export default function AuthPage({ mode = 'login' }) {
   const [demoOpen, setDemoOpen] = useState(false)
   const showDemo = !GOOGLE_CLIENT_ID || googleFailed || demoOpen
 
-  if (user) return <Navigate to={from} replace />
+  // A signed-in traveller can still open the form to sign in as admin.
+  if (user && from !== '/admin') return <Navigate to={from} replace />
 
   const finish = (u) => {
     toast(t('auth.welcome', { name: u.givenName }))
-    navigate(from, { replace: true })
+    // Travellers who came from the admin link land on the home page instead.
+    navigate(from === '/admin' ? '/' : from, { replace: true })
   }
 
   const onSuccess = ({ credential }) => {
@@ -124,7 +144,7 @@ export default function AuthPage({ mode = 'login' }) {
           {showDemo ? (
             <>
               {GOOGLE_CLIENT_ID ? <div className="auth__or"><span>{t('auth.or')}</span></div> : <p className="auth__demo-intro">{t('auth.demoUnavailable')}</p>}
-              <DemoLogin onDone={finish} />
+              <PasswordLogin onDone={finish} />
             </>
           ) : (
             <button className="auth__demo-toggle" onClick={() => setDemoOpen(true)}>{t('auth.demoToggle')}</button>

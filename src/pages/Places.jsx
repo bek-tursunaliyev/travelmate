@@ -1,16 +1,21 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaArrowRight, FaArrowLeft, FaSearch, FaExternalLinkAlt, FaMapMarkerAlt } from 'react-icons/fa'
-import { placeLists, findPlace, typeOfList, allPlaces } from '../data/places'
+import { placeLists, findPlace, typeOfList, allPlaces, placePhoto } from '../data/places'
 import { services, serviceById, serviceHref } from '../data/services'
 import PlaceImage from '../components/PlaceImage'
 import { ServiceCard, PlaceCard } from '../components/Sections'
 import { useWiki, sizedThumb } from '../hooks'
 import NotFound from './NotFound'
 
-export function PageHero({ title, subtitle, children, image }) {
+const isUrl = (v) => /^(https?:)?\/\//.test(v || '')
+
+// Large page header with a photo. `photo` is a Wikipedia title or an image URL; `image` a ready URL.
+export function PageHero({ title, subtitle, children, image, photo }) {
+  const { data } = useWiki(photo && !isUrl(photo) ? photo : null)
+  const bg = image || (isUrl(photo) ? photo : sizedThumb(data?.thumb, 1280))
   return (
-    <section className="page-hero" style={image ? { '--img': `url(${image})` } : undefined}>
+    <section className={`page-hero ${bg ? 'has-photo' : ''}`} style={bg ? { '--img': `url("${bg}")` } : undefined}>
       <div className="container">
         {children}
         <h1>{title}</h1>
@@ -20,21 +25,22 @@ export function PageHero({ title, subtitle, children, image }) {
   )
 }
 
-/* ------------------------------ /places (attractions service) ------------------------------ */
+// Header photo for each place list.
+const listPhotos = { landmarks: 'Registan', destinations: 'Itchan_Kala', regions: 'Charvak_Reservoir' }
 
-const placeTabs = ['uzbekistan', 'landmarks', 'destinations', 'regions']
+const placeTabs = ['landmarks', 'destinations', 'regions']
 
 export function PlacesPage() {
   const { t } = useTranslation()
   const [params, setParams] = useSearchParams()
-  const list = placeTabs.includes(params.get('list')) ? params.get('list') : 'uzbekistan'
+  const list = placeTabs.includes(params.get('list')) ? params.get('list') : 'landmarks'
   const service = serviceById.places
   const Icon = service.icon
   const items = allPlaces.filter((p) => p.list === list)
 
   return (
     <>
-      <PageHero title={t('services.items.places.title')} subtitle={t('services.items.places.desc')}>
+      <PageHero title={t('services.items.places.title')} subtitle={t('services.items.places.desc')} photo={listPhotos[list]}>
         <Link to="/#services" className="back-link"><FaArrowLeft className="flip-rtl" /> {t('services.all')}</Link>
         <span className="page-hero__icon" style={{ '--c': service.color }}><Icon /></span>
       </PageHero>
@@ -80,7 +86,7 @@ export function Popular() {
 
   return (
     <>
-      <PageHero title={t(`subnav.${list}`)} subtitle={t('popular.subtitle')}>
+      <PageHero title={t(`subnav.${list}`)} subtitle={t('popular.subtitle')} photo={listPhotos[list]}>
         <div className="pills">
           {Object.keys(placeLists).map((l) => (
             <Link key={l} to={`/popular/${l}`} className={`pill ${l === list ? 'is-active' : ''}`}>{t(`subnav.${l}`)}</Link>
@@ -92,7 +98,7 @@ export function Popular() {
           {items.slice(0, 10).map((p, i) => (
             <Link key={p.slug} to={`/place/${list}/${p.slug}`} className="place-card">
               <div className="place-card__media">
-                <PlaceImage wiki={p.wiki} alt={p.name} />
+                <PlaceImage wiki={placePhoto(p)} alt={p.name} />
                 <span className="place-card__rank">#{i + 1}</span>
               </div>
               <div className="place-card__body">
@@ -121,7 +127,7 @@ export function Place() {
 
   return (
     <>
-      <PageHero title={place.name} subtitle={place.country} image={sizedThumb(data?.thumb, 1280)}>
+      <PageHero title={place.name} subtitle={place.country} image={place.photo ? undefined : sizedThumb(data?.thumb, 1280)} photo={place.photo}>
         <Link to={`/popular/${list}`} className="back-link"><FaArrowLeft className="flip-rtl" /> {t(`subnav.${list}`)}</Link>
         <span className="pill is-active">{t(`place.types.${type}`)} · #{place.rank}</span>
       </PageHero>
@@ -129,7 +135,7 @@ export function Place() {
       <section className="section section--flush">
         <div className="container place-detail">
           <div className="place-detail__media">
-            <PlaceImage wiki={place.wiki} alt={place.name} width={960} />
+            <PlaceImage wiki={placePhoto(place)} alt={place.name} width={960} />
           </div>
           <div className="place-detail__text">
             <h2>{t('place.about')} {place.name}</h2>
@@ -170,7 +176,7 @@ export function Place() {
           <div className="place-grid place-grid--4">
             {others.map((p) => (
               <Link key={p.slug} to={`/place/${list}/${p.slug}`} className="place-card">
-                <div className="place-card__media"><PlaceImage wiki={p.wiki} alt={p.name} /></div>
+                <div className="place-card__media"><PlaceImage wiki={placePhoto(p)} alt={p.name} /></div>
                 <div className="place-card__body">
                   <h3>{p.name}</h3>
                   <p><FaMapMarkerAlt /> {p.country}</p>

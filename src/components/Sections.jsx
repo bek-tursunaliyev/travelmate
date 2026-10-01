@@ -1,14 +1,19 @@
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   FaLayerGroup, FaHandshake, FaTags,
-  FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChair, FaArrowRight,
+  FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChair, FaArrowRight, FaRoute,
 } from 'react-icons/fa'
 import { services, serviceHref } from '../data/services'
-import { ticketCategories, tickets, ticketName } from '../data/tickets'
-import { famousPlaces } from '../data/places'
+import { ticketCategories, tickets, ticketName, venueById } from '../data/tickets'
+import Modal from './Modal'
+import { famousPlaces, placePhoto } from '../data/places'
+import { stats } from '../data/site'
 import PlaceImage from './PlaceImage'
 import { useBook, useCountUp, useFormat, useInView } from '../hooks'
+
+const VenueMap = lazy(() => import('./VenueMap'))
 
 export function SectionHeader({ eyebrow, title, subtitle, action }) {
   return (
@@ -57,16 +62,71 @@ export function Services() {
 
 /* ------------------------------ Tickets ------------------------------ */
 
+// Venue of a cinema/event ticket: a venue id from the admin panel, or inline fields from iTicket.
+function ticketVenue(tk) {
+  const v = venueById(tk.venue)
+  if (v) return v
+  if (tk.venueName) return { name: tk.venueName, city: tk.venueCity, address: '', lat: tk.lat, lng: tk.lng }
+  return tk.venue ? { name: tk.venue, city: '', address: '' } : null
+}
+
+const hasCoords = (v) => v && Number.isFinite(Number(v.lat)) && Number.isFinite(Number(v.lng)) && v.lat !== '' && v.lng !== ''
+
+function VenueDialog({ tk, venue, onClose, onBook }) {
+  const { t } = useTranslation()
+  const lat = Number(venue.lat)
+  const lng = Number(venue.lng)
+  const label = [venue.name, venue.city].filter(Boolean).join(', ')
+  return (
+    <Modal title={tk.title} onClose={onClose} wide>
+      <div className="venue-dialog">
+        <div className="venue-dialog__info">
+          <p className="venue-dialog__name"><FaMapMarkerAlt /> {label}</p>
+          {venue.address && <p className="venue-dialog__addr">{venue.address}</p>}
+        </div>
+        {hasCoords(venue) ? (
+          <Suspense fallback={<div className="venue-map venue-map--loading" />}>
+            <VenueMap lat={lat} lng={lng} label={label} />
+          </Suspense>
+        ) : (
+          <p className="venue-dialog__nomap">{t('tickets.noMap')}</p>
+        )}
+        <div className="venue-dialog__actions">
+          {hasCoords(venue) && (
+            <>
+              <a className="btn btn--outline btn--sm" href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`} target="_blank" rel="noreferrer">
+                <FaRoute /> Google Maps
+              </a>
+              <a className="btn btn--outline btn--sm" href={`https://yandex.uz/maps/?rtext=~${lat}%2C${lng}&rtt=auto`} target="_blank" rel="noreferrer">
+                <FaRoute /> Yandex Maps
+              </a>
+            </>
+          )}
+          <button className="btn btn--primary btn--sm" onClick={onBook}>{t('tickets.book')}</button>
+        </div>
+      </div>
+    </Modal>
+  )
+}
+
 export function TicketItem({ tk, cat }) {
   const { t } = useTranslation()
   const f = useFormat()
   const book = useBook()
+  const [mapOpen, setMapOpen] = useState(false)
   const isRoute = cat === 'bus' || cat === 'flights'
   const Icon = ticketCategories.find((c) => c.id === cat).icon
   const low = tk.seats <= 8
+  const venue = isRoute ? null : ticketVenue(tk)
+  const doBook = () => book({ id: tk.id, name: ticketName(tk), kind: cat, price: tk.price, meta: tk.date })
 
   return (
-    <article className="pass">
+    <article className={`pass ${isRoute ? '' : 'pass--show'}`}>
+      {!isRoute && (
+        <div className="pass__poster">
+          <PlaceImage wiki={tk.photo} alt="" width={330} />
+        </div>
+      )}
       <div className="pass__main">
         <div className="pass__top">
           <span className="pass__cat"><Icon /> {t(`tickets.categories.${cat}`)}</span>
@@ -91,7 +151,12 @@ export function TicketItem({ tk, cat }) {
         ) : (
           <div className="pass__show">
             <strong>{tk.title}</strong>
-            <span><FaMapMarkerAlt /> {tk.venue}</span>
+            {venue && (
+              <button className="pass__venue" onClick={() => setMapOpen(true)}>
+                <FaMapMarkerAlt /> {[venue.name, venue.city].filter(Boolean).join(', ')}
+                <span className="pass__maplink">{t('tickets.mapRoute')}</span>
+              </button>
+            )}
           </div>
         )}
 
@@ -101,8 +166,8 @@ export function TicketItem({ tk, cat }) {
           ) : (
             <>
               <span><FaClock /> {tk.time}</span>
-              <span><FaChair /> {tk.hall}</span>
-              <span className="pass__genre">{tk.genre}</span>
+              {tk.hall && <span><FaChair /> {tk.hall}</span>}
+              {tk.genre && <span className="pass__genre">{tk.genre}</span>}
             </>
           )}
         </div>
@@ -113,24 +178,42 @@ export function TicketItem({ tk, cat }) {
         <strong>{f.money(tk.price)}</strong>
         <small className="price__uzs">≈ {f.uzs(tk.price)}</small>
         <small>{t('tickets.perPerson')}</small>
-        <span className={`pass__seats ${low ? 'is-low' : ''}`}>{t('tickets.seatsLeft', { count: tk.seats })}</span>
-        <button
-          className="btn btn--primary btn--sm"
-          onClick={() => book({ id: tk.id, name: ticketName(tk), kind: cat, price: tk.price, meta: tk.date })}
-        >
-          {t('tickets.book')}
-        </button>
+        {tk.seats > 0 && <span className={`pass__seats ${low ? 'is-low' : ''}`}>{t('tickets.seatsLeft', { count: tk.seats })}</span>}
+        {tk.url ? (
+          <a className="btn btn--primary btn--sm" href={tk.url} target="_blank" rel="noreferrer">{t('tickets.book')}</a>
+        ) : (
+          <button className="btn btn--primary btn--sm" onClick={doBook}>{t('tickets.book')}</button>
+        )}
       </div>
+
+      {mapOpen && venue && <VenueDialog tk={tk} venue={venue} onClose={() => setMapOpen(false)} onBook={doBook} />}
     </article>
   )
+}
+
+// Events come from iTicket when the integration is configured (see api/events.js),
+// otherwise from the admin panel.
+function useEvents() {
+  const [remote, setRemote] = useState(null)
+  useEffect(() => {
+    let alive = true
+    fetch('/api/events')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => alive && Array.isArray(d?.events) && d.events.length && setRemote(d.events))
+      .catch(() => {})
+    return () => { alive = false }
+  }, [])
+  return remote
 }
 
 export function Tickets() {
   const { t } = useTranslation()
   const [params, setParams] = useSearchParams()
+  const remoteEvents = useEvents()
+  const lists = { ...tickets, events: remoteEvents || tickets.events }
   const fromUrl = params.get('cat')
   // The category lives in the URL (/tickets?cat=flights) so it can be linked and shared.
-  const cat = tickets[fromUrl] ? fromUrl : 'bus'
+  const cat = lists[fromUrl] ? fromUrl : 'bus'
   const choose = (id) => setParams({ cat: id }, { replace: true })
 
   return (
@@ -146,12 +229,14 @@ export function Tickets() {
               onClick={() => choose(id)}
             >
               <Icon /> {t(`tickets.categories.${id}`)}
-              <span className="tab__count">{tickets[id].length}</span>
+              <span className="tab__count">{(lists[id] || []).length}</span>
             </button>
           ))}
         </div>
+        {cat === 'flights' && <p className="tickets-note">{t('tickets.domesticNote')}</p>}
+        {cat === 'events' && remoteEvents && <p className="tickets-note">{t('tickets.fromIticket')}</p>}
         <div className="passes" key={cat}>
-          {tickets[cat].map((tk) => (
+          {(lists[cat] || []).map((tk) => (
             <TicketItem key={tk.id} tk={tk} cat={cat} />
           ))}
         </div>
@@ -168,7 +253,7 @@ export function PlaceCard({ place, badge }) {
   return (
     <article className="place-card place-card--explore">
       <Link to={href} className="place-card__media" tabIndex={-1} aria-hidden="true">
-        <PlaceImage wiki={place.wiki} alt={place.name} />
+        <PlaceImage wiki={placePhoto(place)} alt={place.name} />
         {badge && <span className="place-card__rank">{badge}</span>}
       </Link>
       <div className="place-card__body">
@@ -192,7 +277,7 @@ function ExperienceCard({ place, inert }) {
       tabIndex={inert ? -1 : undefined}
       aria-hidden={inert || undefined}
     >
-      <PlaceImage wiki={place.wiki} alt={place.name} width={640} />
+      <PlaceImage wiki={placePhoto(place)} alt={place.name} width={640} />
       <span className="xp-card__text">
         <small>{place.country}</small>
         <strong>{place.name}</strong>
@@ -210,7 +295,7 @@ export function FamousPlaces() {
           eyebrow={t('famous.eyebrow')}
           title={t('famous.title')}
           subtitle={t('famous.subtitle')}
-          action={<Link to="/places?list=uzbekistan" className="btn btn--outline">{t('subnav.viewAll')} <FaArrowRight className="flip-rtl" /></Link>}
+          action={<Link to="/places" className="btn btn--outline">{t('subnav.viewAll')} <FaArrowRight className="flip-rtl" /></Link>}
         />
       </div>
       {/* Auto-scrolling strip: the list is rendered twice and the track slides by exactly one copy, so it loops seamlessly. */}
@@ -235,21 +320,16 @@ const whyItems = [
   { key: 'prices', icon: FaTags },
 ]
 
-const stats = [
-  { key: 'travelers', value: 2.4, suffix: 'M+', digits: 1 },
-  { key: 'countries', value: 190, suffix: '+' },
-  { key: 'partners', value: 12500, suffix: '+' },
-  { key: 'rating', value: 4.9, suffix: '/5', digits: 1 },
-]
 
 function Stat({ stat, start }) {
   const { t } = useTranslation()
   const f = useFormat()
-  const v = useCountUp(stat.value, start, 1800)
+  const v = useCountUp(Number(stat.value) || 0, start, 1800)
+  // A label typed in the admin panel wins over the translated default.
   return (
     <div className="stat">
-      <strong>{f.number(v, stat.digits || 0)}{stat.suffix}</strong>
-      <span>{t(`why.stats.${stat.key}`)}</span>
+      <strong>{f.number(v, Number(stat.digits) || 0)}{stat.suffix}</strong>
+      <span>{stat.label || t(`why.stats.${stat.key}`)}</span>
     </div>
   )
 }

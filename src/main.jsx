@@ -8,6 +8,7 @@ import App from './App.jsx'
 import { AuthProvider, GOOGLE_CLIENT_ID } from './context/AuthContext'
 import { ToastProvider } from './context/ToastContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { ContentProvider } from './context/ContentContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')).render(
         <ThemeProvider>
           <ToastProvider>
             <AuthProvider>
-              <App />
+              <ContentProvider>
+                <App />
+              </ContentProvider>
             </AuthProvider>
           </ToastProvider>
         </ThemeProvider>

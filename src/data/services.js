@@ -19,18 +19,18 @@ export const services = [
 export const serviceById = Object.fromEntries(services.map((s) => [s.id, s]))
 
 // Tickets, places and guides have their own pages; every other service lists offers on /services/:id
-const ownPages = { tickets: '/tickets', places: '/places', guide: '/guides', tours: '/tours', taxi: '/transfers' }
+const ownPages = { tickets: '/tickets', places: '/places', guide: '/guides', tours: '/tours', taxi: '/transfers', esim: '/esim' }
 export const serviceHref = (id) => ownPages[id] || `/services/${id}`
 
 // Offers shown on /services/:id — unit maps to common.per.<unit>
-export const offers = {
+const defaultOffers = {
   accommodation: [
     { id: 'acc-1', name: 'Registan Plaza Hotel', location: 'Samarkand', price: 65, unit: 'night', rating: 4.8, reviews: 1284, tags: ['Free cancellation', 'Breakfast'] },
     { id: 'acc-2', name: 'Silk Road Boutique', location: 'Bukhara', price: 48, unit: 'night', rating: 4.9, reviews: 932, tags: ['Old town', 'Courtyard'] },
     { id: 'acc-3', name: 'Hyatt Regency', location: 'Tashkent', price: 140, unit: 'night', rating: 4.7, reviews: 2210, tags: ['Pool', 'Spa'] },
     { id: 'acc-4', name: 'Orient Star Guesthouse', location: 'Khiva', price: 35, unit: 'night', rating: 4.6, reviews: 418, tags: ['Inside Itchan Kala'] },
-    { id: 'acc-5', name: 'Galata Loft Apartments', location: 'Istanbul', price: 90, unit: 'night', rating: 4.7, reviews: 1650, tags: ['Kitchen', 'City view'] },
-    { id: 'acc-6', name: 'Marina Suites', location: 'Dubai', price: 180, unit: 'night', rating: 4.8, reviews: 3120, tags: ['Sea view', 'Pool'] },
+    { id: 'acc-5', name: 'Wyndham Tashkent', location: 'Tashkent', price: 95, unit: 'night', rating: 4.7, reviews: 1650, tags: ['Pool', 'City centre'] },
+    { id: 'acc-6', name: 'Charvak Lake Resort', location: 'Tashkent region', price: 110, unit: 'night', rating: 4.8, reviews: 920, tags: ['Lake view', 'Mountains'] },
   ],
   guide: [
     { id: 'gd-1', name: 'Samarkand Old City walk', location: 'Samarkand', price: 25, unit: 'person', rating: 4.9, reviews: 2140, tags: ['3 hours', 'EN · RU · UZ'] },
@@ -39,14 +39,6 @@ export const offers = {
     { id: 'gd-4', name: 'Itchan Kala by sunset', location: 'Khiva', price: 22, unit: 'person', rating: 4.8, reviews: 540, tags: ['2.5 hours'] },
     { id: 'gd-5', name: 'Chimgan mountains hike', location: 'Tashkent region', price: 45, unit: 'person', rating: 4.7, reviews: 390, tags: ['Full day', 'Transport'] },
     { id: 'gd-6', name: 'Tashkent food tour', location: 'Tashkent', price: 35, unit: 'person', rating: 4.9, reviews: 720, tags: ['Plov tasting'] },
-  ],
-  taxi: [
-    { id: 'tx-1', name: 'Airport transfer', location: 'Tashkent (TAS)', price: 12, unit: 'ride', rating: 4.8, reviews: 8420, tags: ['Meet & greet', 'Fixed price'] },
-    { id: 'tx-2', name: 'Economy city ride', location: 'Tashkent', price: 3, unit: 'ride', rating: 4.6, reviews: 15200, tags: ['4 seats'] },
-    { id: 'tx-3', name: 'Comfort city ride', location: 'Tashkent', price: 6, unit: 'ride', rating: 4.7, reviews: 6300, tags: ['A/C', 'New cars'] },
-    { id: 'tx-4', name: 'Intercity Tashkent → Samarkand', location: 'Tashkent', price: 55, unit: 'ride', rating: 4.8, reviews: 1900, tags: ['4 hours', 'Door to door'] },
-    { id: 'tx-5', name: 'Minivan (7 seats)', location: 'All cities', price: 25, unit: 'ride', rating: 4.7, reviews: 740, tags: ['Luggage space'] },
-    { id: 'tx-6', name: 'Business class', location: 'Tashkent', price: 15, unit: 'ride', rating: 4.9, reviews: 980, tags: ['Premium cars'] },
   ],
   food: [
     { id: 'fd-1', name: 'Besh Qozon — Plov Center', location: 'Tashkent', price: 6, unit: 'meal', rating: 4.8, reviews: 9800, tags: ['Uzbek', 'Iconic'] },
@@ -62,14 +54,6 @@ export const offers = {
     { id: 'ex-3', name: 'Airport exchange TAS', location: 'Tashkent Airport', price: 0, unit: 'rate', rating: 4.3, reviews: 2980, tags: ['Arrivals hall'] },
     { id: 'ex-4', name: 'Asakabank', location: 'Bukhara, Lyabi-Hauz', price: 0, unit: 'rate', rating: 4.5, reviews: 380, tags: ['Card cash-out'] },
   ],
-  esim: [
-    { id: 'es-1', name: 'Uzbekistan 5 GB · 7 days', location: 'Uzbekistan', price: 6, unit: 'plan', rating: 4.8, reviews: 5400, tags: ['4G/5G', 'Instant QR'] },
-    { id: 'es-2', name: 'Uzbekistan 10 GB · 15 days', location: 'Uzbekistan', price: 10, unit: 'plan', rating: 4.9, reviews: 12480, tags: ['Best seller'] },
-    { id: 'es-3', name: 'Uzbekistan 20 GB · 30 days', location: 'Uzbekistan', price: 17, unit: 'plan', rating: 4.8, reviews: 3900, tags: ['Hotspot'] },
-    { id: 'es-4', name: 'Central Asia 10 GB · 30 days', location: '5 countries', price: 19, unit: 'plan', rating: 4.7, reviews: 1500, tags: ['Multi-country'] },
-    { id: 'es-5', name: 'Türkiye 10 GB · 15 days', location: 'Türkiye', price: 12, unit: 'plan', rating: 4.7, reviews: 2750, tags: ['4G/5G'] },
-    { id: 'es-6', name: 'Global 5 GB · 30 days', location: '190+ countries', price: 25, unit: 'plan', rating: 4.6, reviews: 4100, tags: ['Worldwide'] },
-  ],
   rentcar: [
     { id: 'rc-1', name: 'Chevrolet Cobalt', location: 'Tashkent', price: 30, unit: 'day', rating: 4.6, reviews: 1320, tags: ['5 seats', 'Automatic'] },
     { id: 'rc-2', name: 'Chevrolet Tracker', location: 'Tashkent', price: 45, unit: 'day', rating: 4.7, reviews: 640, tags: ['SUV', 'Automatic'] },
@@ -79,6 +63,15 @@ export const offers = {
     { id: 'rc-6', name: 'Toyota Land Cruiser', location: 'Bukhara', price: 150, unit: 'day', rating: 4.9, reviews: 210, tags: ['4x4', 'Desert trips'] },
   ],
 }
+
+export let offers = defaultOffers
+export const offerServices = Object.keys(defaultOffers)
+
+export function setOffers(next = {}) {
+  offers = { ...defaultOffers, ...Object.fromEntries(Object.entries(next).filter(([, v]) => Array.isArray(v))) }
+}
+
+export { defaultOffers }
 
 // Rates are expressed as "1 unit of currency = X USD"
 // Polish złoty (PLN) is intentionally not offered anywhere on the site.

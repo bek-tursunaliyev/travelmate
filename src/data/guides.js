@@ -5,7 +5,7 @@ export const guideCities = ['tashkent', 'samarkand', 'bukhara', 'khiva']
 
 export const guideLanguages = ['en', 'ru', 'uz', 'de', 'fr', 'ja', 'tr', 'es']
 
-export const guides = [
+const defaultGuides = [
   {
     id: 'dilnoza-karimova', name: 'Dilnoza Karimova', city: 'samarkand', languages: ['en', 'ru', 'uz'],
     rating: 4.9, reviews: 412, price: 18, years: 9, verified: true, responds: 1,
@@ -56,7 +56,16 @@ export const guides = [
   },
 ]
 
-export const guideById = Object.fromEntries(guides.map((g) => [g.id, g]))
+export let guides = defaultGuides
+export let guideById = Object.fromEntries(guides.map((g) => [g.id, g]))
+
+export function setGuides(next = {}) {
+  if (!Array.isArray(next.guides)) return
+  guides = next.guides
+  guideById = Object.fromEntries(guides.map((g) => [g.id, g]))
+}
+
+export const defaultGuideData = { guides: defaultGuides }
 
 // Booking lengths offered on the profile page (hours).
 export const guideDurations = [2, 4, 8]

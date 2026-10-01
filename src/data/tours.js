@@ -5,7 +5,7 @@
 
 export const tourCities = ['tashkent', 'samarkand', 'bukhara', 'khiva']
 
-export const operators = [
+const defaultOperators = [
   { id: 'advantour', name: 'Advantour', city: 'tashkent' },
   { id: 'global-connect', name: 'GLOBAL CONNECT', city: 'samarkand' },
   { id: 'afsona-travel', name: 'Afsona Travel LLC', city: 'tashkent' },
@@ -23,12 +23,11 @@ export const operators = [
   { id: 'dolores-travel', name: 'Dolores Travel Group', city: 'tashkent' },
 ]
 
-export const operatorById = Object.fromEntries(operators.map((o) => [o.id, o]))
 
 const BASE_INCLUDED = ['hotels', 'breakfast', 'transfers', 'guide', 'entrance']
 const BASE_EXCLUDED = ['intlFlights', 'visa', 'insurance', 'lunchDinner', 'tips']
 
-export const tours = [
+const defaultTours = [
   {
     slug: 'classic-uzbekistan', operator: 'advantour', title: 'Classic Uzbekistan', days: 8, price: 890,
     wiki: 'Registan', route: ['Tashkent', 'Samarkand', 'Bukhara', 'Khiva'], group: 'small', stay: 'comfort',
@@ -246,7 +245,28 @@ export const tours = [
   },
 ]
 
-export const tourBySlug = Object.fromEntries(tours.map((t) => [t.slug, t]))
+// Live bindings, replaced by setTours() when the admin panel saves new content.
+export let operators = defaultOperators
+export let tours = defaultTours
+export let operatorById = {}
+export let tourBySlug = {}
+
+function rebuild() {
+  operatorById = Object.fromEntries(operators.map((o) => [o.id, o]))
+  tourBySlug = Object.fromEntries(tours.map((t) => [t.slug, t]))
+}
+rebuild()
+
+export function setTours(next = {}) {
+  if (Array.isArray(next.operators)) operators = next.operators
+  if (Array.isArray(next.tours)) tours = next.tours
+  rebuild()
+}
+
+export const defaultTourData = { operators: defaultOperators, tours: defaultTours }
+
+// Operator of a tour, tolerant of a deleted operator.
+export const tourOperator = (tour) => operatorById[tour.operator] || { id: tour.operator, name: tour.operator || '—', city: 'tashkent' }
 
 export const DEPOSIT_RATE = 0.3
 export const MAX_TRAVELERS = 12

@@ -6,6 +6,7 @@ import NotFound from './NotFound'
 import { TourCard } from './Tours'
 import SearchBar from '../components/SearchBar'
 import PlaceImage from '../components/PlaceImage'
+import { placePhoto } from '../data/places'
 import Price from '../components/Price'
 import { OfferCard, CurrencyConverter } from '../components/Offers'
 import { ServiceCard, TicketItem, Tickets } from '../components/Sections'
@@ -26,7 +27,7 @@ export function SearchResults() {
 
   return (
     <>
-      <PageHero title={t('search.title')}>
+      <PageHero title={t('search.title')} photo="Tashkent">
         <div className="page-hero__search">
           <SearchBar key={q} initial={q} compact />
         </div>
@@ -60,7 +61,7 @@ export function SearchResults() {
                     {r.places.map((p) => (
                       <Link key={`${p.list}-${p.slug}`} to={`/place/${p.list}/${p.slug}`} className="place-card">
                         <div className="place-card__media">
-                          <PlaceImage wiki={p.wiki} alt={p.name} />
+                          <PlaceImage wiki={placePhoto(p)} alt={p.name} />
                           <span className="place-card__rank">{t(`place.types.${p.type}`)}</span>
                         </div>
                         <div className="place-card__body">
@@ -109,6 +110,9 @@ export function SearchResults() {
 
 /* ------------------------------ /services/:id ------------------------------ */
 
+// Header photo per service page.
+const servicePhotos = { accommodation: 'Lyab-i_Hauz', food: 'Chorsu_Bazaar', exchange: 'Amir_Timur_Square', rentcar: 'Charvak_Reservoir' }
+
 export function ServicePage() {
   const { id } = useParams()
   const { t } = useTranslation()
@@ -119,7 +123,7 @@ export function ServicePage() {
 
   return (
     <>
-      <PageHero title={t(`services.items.${id}.title`)} subtitle={t(`services.items.${id}.desc`)}>
+      <PageHero title={t(`services.items.${id}.title`)} subtitle={t(`services.items.${id}.desc`)} photo={servicePhotos[id]}>
         <Link to="/#services" className="back-link"><FaArrowLeft className="flip-rtl" /> {t('services.all')}</Link>
         <span className="page-hero__icon" style={{ '--c': service.color }}><Icon /></span>
       </PageHero>
@@ -152,7 +156,7 @@ export function TicketsPage() {
   const Icon = serviceById.tickets.icon
   return (
     <>
-      <PageHero title={t('tickets.title')} subtitle={t('tickets.subtitle')}>
+      <PageHero title={t('tickets.title')} subtitle={t('tickets.subtitle')} photo="Afrosiyob_(train)">
         <Link to="/#services" className="back-link"><FaArrowLeft className="flip-rtl" /> {t('services.all')}</Link>
         <span className="page-hero__icon" style={{ '--c': serviceById.tickets.color }}><Icon /></span>
       </PageHero>
@@ -184,7 +188,7 @@ export function Profile() {
 
   return (
     <>
-      <PageHero title={t('profile.title')}>
+      <PageHero title={t('profile.title')} photo="Shah-i-Zinda">
         <div className="profile-card">
           <img src={user.picture} alt="" referrerPolicy="no-referrer" />
           <div>

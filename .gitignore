@@ -27,3 +27,6 @@ dist-ssr
 .env
 
 .vercel
+
+# Local admin content (dev only)
+.content.local.json

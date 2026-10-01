@@ -1,10 +1,13 @@
 // POST /api/chat — TravelMate assistant.
 // Uses Google Gemini when GEMINI_API_KEY is set, otherwise Vercel AI Gateway
 // (AI_GATEWAY_API_KEY, or the project's OIDC token when deployed on Vercel).
-import { allPlaces } from '../src/data/places.js'
-import { guides } from '../src/data/guides.js'
-import { tours, operatorById } from '../src/data/tours.js'
-import { vehicleClasses, destinationById, transferDestinations, transferPrice } from '../src/data/transfers.js'
+import * as places from '../src/data/places.js'
+import * as guideData from '../src/data/guides.js'
+import * as tourData from '../src/data/tours.js'
+import * as transferData from '../src/data/transfers.js'
+import * as esimData from '../src/data/esim.js'
+import { applyContent } from '../src/content/content.js'
+import { readContent } from './_lib/store.js'
 
 const GATEWAY_URL = 'https://ai-gateway.vercel.sh/v1/chat/completions'
 const GATEWAY_MODEL = process.env.AI_MODEL || 'anthropic/claude-haiku-4.5'
@@ -17,14 +20,21 @@ const TIMEOUT_MS = 25000
 const MAX_MESSAGES = 12
 const MAX_CHARS = 1000
 
-const guideList = guides.map((g) => `${g.name} (${g.city}, $${g.price}/h, ${g.languages.join('/')}) → /guides/${g.id}`).join('; ')
-const tourList = tours.map((t) => `${t.title} — ${t.days} days, ${t.route.join('–')}, from $${t.price}/person, by ${operatorById[t.operator].name} → /tours/${t.slug}`).join('\n')
-const transferList = vehicleClasses
-  .map((v) => `${v.id} (${v.passengers} pax, ${v.luggage} bags): airport $${transferPrice(v, destinationById.airport)}, Samarkand $${transferPrice(v, destinationById.samarkand)}`)
-  .join('; ')
-const placeList = allPlaces.map((p) => `${p.name} (${p.country}) → /place/${p.list}/${p.slug}`).join('\n')
+// Built per request so the assistant sees what the admin panel saved.
+function buildSystem() {
+  const { transferPrice } = transferData
+  const airport = transferData.destinationById.airport
+  const samarkand = transferData.destinationById.samarkand
+  const guideList = guideData.guides.map((g) => `${g.name} (${g.city}, $${g.price}/h, ${(g.languages || []).join('/')}) → /guides/${g.id}`).join('; ')
+  const tourList = tourData.tours.map((t) => `${t.title} — ${t.days} days, ${(t.route || []).join('–')}, from $${t.price}/person, by ${tourData.tourOperator(t).name} → /tours/${t.slug}`).join('\n')
+  const transferList = transferData.vehicleClasses
+    .map((v) => `${v.id} (${v.passengers} pax, ${v.luggage} bags)${airport ? `: airport $${transferPrice(v, airport)}` : ''}${samarkand ? `, Samarkand $${transferPrice(v, samarkand)}` : ''}`)
+    .join('; ')
+  const esimList = esimData.esimPlans.map((p) => `${esimData.esimOperatorById(p.operator)?.name || p.operator} ${p.gb ? `${p.gb} GB` : 'unlimited'} / ${p.days} days $${p.price}`).join('; ')
+  const placeList = places.allPlaces.map((p) => `${p.name} (${p.country}) → /place/${p.list}/${p.slug}`).join('\n')
+  const transferDestinations = transferData.transferDestinations
 
-const SYSTEM = `You are TravelMate AI, the friendly travel assistant of the TravelMate website (Tashkent, Uzbekistan).
+  return `You are TravelMate AI, the friendly travel assistant of the TravelMate website (Tashkent, Uzbekistan).\nTravelMate covers travel inside Uzbekistan only; for trips abroad say politely that the site focuses on Uzbekistan.
 Help travelers plan trips, pick places and use TravelMate services. Keep answers short (2-6 sentences or a short list).
 Write plain text: no Markdown headings or tables; start list items with "• ".
 Always reply in the user's language (the site language code is given below).
@@ -39,12 +49,12 @@ TravelMate services and typical prices:
   Classes: ${transferList}. Choose a vehicle, then enter date, time and contact details.
 - Food & dining (/services/food): meals $6–18 — Besh Qozon plov center $6.
 - Currency exchange (/services/exchange): 0% commission desks; live converter on the page.
-- eSIM (/services/esim): Uzbekistan 10 GB / 15 days $10; global plans from $25.
-- Tickets (/tickets): buses & Afrosiyob trains, flights, cinema and events.
+- eSIM (/esim): Uzbekistan-only data plans from local operators, installed by QR code. Plans: ${esimList}.
+- Tickets (/tickets): buses & Afrosiyob trains, domestic flights between regions of Uzbekistan, cinema and events with venue maps.
 - Tour packages (/tours): multi-day packages by local tour operators; request free, operator confirms in 24 h, 30% deposit, balance 14 days before start. Sample prices.
   Packages:
 ${tourList}
-- Places & attractions (/places): famous landmarks, destinations and regions.
+- Places & attractions (/places): landmarks, cities and regions of Uzbekistan.
 - Rent a car (/services/rentcar): Chevrolet Cobalt $30/day up to Land Cruiser $150/day.
 Bookings require Google sign-in. Support line: +998 71 200 00 00 (24/7).
 
@@ -52,6 +62,7 @@ Places with their pages:
 ${placeList}
 
 When you recommend a page, mention its path (like /places or /place/landmarks/registan). Do not invent services TravelMate does not offer.`
+}
 
 async function askGemini(key, system, messages) {
   const body = JSON.stringify({
@@ -116,7 +127,10 @@ export async function POST(request) {
   }
   const lang = typeof body.lang === 'string' ? body.lang.slice(0, 5) : 'en'
 
-  const system = `${SYSTEM}\n\nSite language: ${lang}`
+  try {
+    applyContent(await readContent())
+  } catch { /* fall back to built-in data */ }
+  const system = `${buildSystem()}\n\nSite language: ${lang}`
   const reply = geminiKey ? await askGemini(geminiKey, system, messages) : await askGateway(gatewayToken, system, messages)
   if (!reply) return Response.json({ error: 'The assistant is unavailable right now' }, { status: 502 })
   return Response.json({ reply })

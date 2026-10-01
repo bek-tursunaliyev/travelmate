@@ -232,7 +232,7 @@ export function GuidesPage() {
 
   return (
     <>
-      <PageHero title={t('guides.title')} subtitle={t('guides.subtitle')}>
+      <PageHero title={t('guides.title')} subtitle={t('guides.subtitle')} photo="Po-i-Kalyan">
         <Link to="/#services" className="back-link"><FaArrowLeft className="flip-rtl" /> {t('services.all')}</Link>
       </PageHero>
 

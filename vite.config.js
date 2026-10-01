@@ -1,28 +1,39 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 
-// Serves /api/chat in `vite dev` with the same handler Vercel runs in production.
+// Serves /api/* in `vite dev` with the same handlers Vercel runs in production:
+// /api/admin/login → api/admin/login.js, calling its exported GET/POST/PUT function.
 function apiDevServer() {
   return {
     name: 'travelmate-api-dev',
     apply: 'serve',
     configureServer(server) {
-      server.middlewares.use('/api/chat', async (req, res) => {
+      server.middlewares.use('/api', async (req, res, next) => {
+        const route = (req.url || '').split('?')[0].replace(/^\/+|\/+$/g, '')
+        if (!/^[\w/-]+$/.test(route) || route.startsWith('_')) return next()
         try {
+          const mod = await server.ssrLoadModule(`/api/${route}.js`)
+          const handler = mod[req.method]
+          if (!handler) {
+            res.statusCode = 405
+            return res.end(JSON.stringify({ error: 'Method not allowed' }))
+          }
           const chunks = []
           for await (const chunk of req) chunks.push(chunk)
-          const { POST } = await server.ssrLoadModule('/api/chat.js')
+          const headers = new Headers()
+          for (const [k, v] of Object.entries(req.headers)) if (typeof v === 'string') headers.set(k, v)
           const request = new Request(`http://localhost${req.originalUrl}`, {
             method: req.method,
-            headers: { 'Content-Type': req.headers['content-type'] || 'application/json' },
-            body: req.method === 'POST' ? Buffer.concat(chunks) : undefined,
+            headers,
+            body: ['GET', 'HEAD'].includes(req.method) ? undefined : Buffer.concat(chunks),
           })
-          const response = req.method === 'POST' ? await POST(request) : Response.json({ error: 'Method not allowed' }, { status: 405 })
+          const response = await handler(request)
           res.statusCode = response.status
-          res.setHeader('Content-Type', 'application/json')
+          res.setHeader('Content-Type', response.headers.get('content-type') || 'application/json')
           res.end(await response.text())
         } catch (err) {
-          server.config.logger.error(`[api/chat] ${err.message}`)
+          if (/Failed to load url|does not exist/i.test(err.message)) return next()
+          server.config.logger.error(`[api/${route}] ${err.message}`)
           res.statusCode = 500
           res.end(JSON.stringify({ error: 'Internal error' }))
         }
@@ -31,12 +42,14 @@ function apiDevServer() {
   }
 }
 
+const SERVER_ENV = ['GEMINI_API_KEY', 'GEMINI_MODEL', 'AI_GATEWAY_API_KEY', 'AI_MODEL', 'ADMIN_LOGIN', 'ADMIN_PASSWORD', 'ADMIN_SECRET', 'ITICKET_API_URL', 'ITICKET_API_KEY']
+
 // Google Sign-In only works from origins registered in Google Cloud Console,
 // so the dev server always uses the same port (http://localhost:5173).
 export default defineConfig(({ mode }) => {
   // Server-only secrets from .env (no VITE_ prefix, so they never reach the browser bundle).
   const env = loadEnv(mode, process.cwd(), '')
-  for (const key of ['GEMINI_API_KEY', 'GEMINI_MODEL', 'AI_GATEWAY_API_KEY', 'AI_MODEL']) {
+  for (const key of SERVER_ENV) {
     if (env[key] && !process.env[key]) process.env[key] = env[key]
   }
   return {

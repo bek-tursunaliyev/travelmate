@@ -4,7 +4,7 @@
 export const PICKUP = 'Tashkent'
 
 // km / hours are approximate driving distance and time from Tashkent.
-export const transferDestinations = [
+const defaultDestinations = [
   { id: 'airport', name: 'Tashkent Airport (TAS)', km: 12, hours: 0.5 },
   { id: 'samarkand', name: 'Samarkand', km: 310, hours: 4 },
   { id: 'bukhara', name: 'Bukhara', km: 580, hours: 7 },
@@ -17,7 +17,7 @@ export const transferDestinations = [
 ]
 
 // `rate` is USD per km; `min` is the minimum fare for short rides.
-export const vehicleClasses = [
+const defaultVehicles = [
   { id: 'economy', passengers: 3, luggage: 2, models: 'Chevrolet Cobalt / Nexia', wiki: 'Chevrolet_Cobalt', rate: 0.1, min: 9 },
   { id: 'comfort', passengers: 4, luggage: 3, models: 'Chevrolet Malibu / Kia K5', wiki: 'Kia_K5', rate: 0.14, min: 14 },
   { id: 'business', passengers: 4, luggage: 3, models: 'Mercedes E-Class / BMW 5', wiki: 'Mercedes-Benz_E-Class', rate: 0.26, min: 30 },
@@ -25,8 +25,24 @@ export const vehicleClasses = [
   { id: 'van', passengers: 7, luggage: 7, models: 'Mercedes V-Class / Hyundai Staria', wiki: 'Mercedes-Benz_V-Class', rate: 0.22, min: 25 },
 ]
 
-export const destinationById = Object.fromEntries(transferDestinations.map((d) => [d.id, d]))
-export const vehicleById = Object.fromEntries(vehicleClasses.map((v) => [v.id, v]))
+export let transferDestinations = defaultDestinations
+export let vehicleClasses = defaultVehicles
+export let destinationById = {}
+export let vehicleById = {}
+
+function rebuild() {
+  destinationById = Object.fromEntries(transferDestinations.map((d) => [d.id, d]))
+  vehicleById = Object.fromEntries(vehicleClasses.map((v) => [v.id, v]))
+}
+rebuild()
+
+export function setTransfers(next = {}) {
+  if (Array.isArray(next.transferDestinations)) transferDestinations = next.transferDestinations
+  if (Array.isArray(next.vehicleClasses)) vehicleClasses = next.vehicleClasses
+  rebuild()
+}
+
+export const defaultTransferData = { transferDestinations: defaultDestinations, vehicleClasses: defaultVehicles }
 
 export const transferPrice = (vehicle, destination) =>
   Math.round(Math.max(vehicle.min, vehicle.rate * destination.km))

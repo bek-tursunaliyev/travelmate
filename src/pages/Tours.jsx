@@ -10,7 +10,7 @@ import NotFound from './NotFound'
 import Price from '../components/Price'
 import PlaceImage from '../components/PlaceImage'
 import {
-  tours, tourBySlug, operators, operatorById, tourCities, durationFilters, DEPOSIT_RATE, MAX_TRAVELERS, LEAD_DAYS,
+  tours, tourBySlug, operators, operatorById, tourOperator, tourCities, durationFilters, DEPOSIT_RATE, MAX_TRAVELERS, LEAD_DAYS,
 } from '../data/tours'
 import { services, serviceById, serviceHref } from '../data/services'
 import { useBook, useFormat, useWiki, sizedThumb } from '../hooks'
@@ -22,7 +22,7 @@ const SORTS = ['popular', 'price', 'duration']
 
 export function TourCard({ tour, inert = false }) {
   const { t } = useTranslation()
-  const op = operatorById[tour.operator]
+  const op = tourOperator(tour)
   return (
     <Link
       to={`/tours/${tour.slug}`}
@@ -96,13 +96,13 @@ export function ToursPage() {
   const durationTest = durationFilters.find((d) => d.id === duration)?.test
   const results = tours
     .filter((tour) => (!durationTest || durationTest(tour.days))
-      && (!city || operatorById[tour.operator].city === city)
+      && (!city || tourOperator(tour).city === city)
       && (!operator || tour.operator === operator))
     .sort((a, b) => (sort === 'price' ? a.price - b.price : sort === 'duration' ? a.days - b.days : 0))
 
   return (
     <>
-      <PageHero title={t('tours.title')} subtitle={t('tours.subtitle')}>
+      <PageHero title={t('tours.title')} subtitle={t('tours.subtitle')} photo="Khiva">
         <Link to="/#services" className="back-link"><FaArrowLeft className="flip-rtl" /> {t('services.all')}</Link>
         <span className="page-hero__icon" style={{ '--c': service.color }}><Icon /></span>
       </PageHero>
@@ -268,7 +268,7 @@ export function TourDetail() {
   const tour = tourBySlug[slug]
   const { data } = useWiki(tour?.wiki)
   if (!tour) return <NotFound />
-  const op = operatorById[tour.operator]
+  const op = tourOperator(tour)
   const more = tours.filter((x) => x.slug !== slug && x.route.some((c) => tour.route.includes(c))).slice(0, 3)
 
   const facts = [
