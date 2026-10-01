@@ -33,7 +33,7 @@ function apiDevServer() {
           const cookies = response.headers.getSetCookie?.() || []
           if (cookies.length) res.setHeader('Set-Cookie', cookies)
           if (!response.headers.get('content-type')) res.setHeader('Content-Type', 'application/json')
-          res.end(await response.text())
+          res.end(Buffer.from(await response.arrayBuffer())) // binary-safe (uploaded images)
         } catch (err) {
           if (/Failed to load url|does not exist/i.test(err.message)) return next()
           server.config.logger.error(`[api/${route}] ${err.message}`)

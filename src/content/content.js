@@ -8,6 +8,7 @@ import { defaultEsim, setEsim } from '../data/esim.js'
 import { defaultTourData, setTours } from '../data/tours.js'
 import { defaultGuideData, setGuides } from '../data/guides.js'
 import { defaultTransferData, setTransfers } from '../data/transfers.js'
+import { defaultPartnerData, setPartners } from '../data/partners.js'
 
 const CACHE_KEY = 'tm_content'
 
@@ -24,6 +25,7 @@ export function defaultContent() {
     ...defaultTourData,
     ...defaultGuideData,
     ...defaultTransferData,
+    ...defaultPartnerData,
   })
 }
 
@@ -39,6 +41,7 @@ export function applyContent(doc) {
   setTours(doc)
   setGuides(doc)
   setTransfers(doc)
+  setPartners(doc)
 }
 
 // Last content seen by this browser, so repeat visits render the latest data immediately.

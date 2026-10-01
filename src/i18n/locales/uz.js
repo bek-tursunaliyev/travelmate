@@ -151,6 +151,7 @@ export default {
     admit: 'Bir kishilik',
     countLabel_one: '{{count}} ta chipta',
   },
+  partners: { eyebrow: 'Hamkorlar', title: 'Hamkorlarimiz', subtitle: "O'zbekiston bo'ylab aviakompaniyalar, temir yo'l, mobil operatorlar va chipta xizmatlari." },
   famous: {
     eyebrow: 'Albatta ko\'ring',
     title: 'Mashhur joylar',
@@ -377,6 +378,20 @@ export default {
     count_one: '{{count}} ta tarif',
     days_one: '{{count}} kun',
   },
+  hotel: {
+    view: "Ko'rish va bron", back: 'Barcha mehmonxonalar', about: 'Mehmonxona haqida', roomsTitle: 'Xonalar', policies: 'Bilib qo‘ying', location: 'Shahar / hudud', similar: "O'xshash mehmonxonalar",
+    checkIn: 'Kirish', checkOut: 'Chiqish', from: '{{time}} dan', until: '{{time}} gacha', passport: 'Pasport',
+    passportText: "Pasportingizni oling: mehmonxonalar chet ellik mehmonlarni kelganda ro'yxatdan o'tkazadi.",
+    roomType: 'Xona turi', guests: 'Mehmonlar', rooms: 'Xonalar', nights_one: '{{count}} kecha', nights_other: '{{count}} kecha',
+    upTo_one: '{{count}} kishigacha', upTo_other: '{{count}} kishigacha', select: 'Tanlash', selected: 'Tanlangan',
+    tooMany: "Tanlangan xonalarga {{count}} kishigacha sig'adi — xona qo'shing yoki kattaroq xona tanlang.",
+    book: 'Bron qilish', note: "Hozir to'lov yo'q — bronni mehmonxona tasdiqlaydi.",
+    roomTypes: {
+      standard: { name: 'Standart xona', desc: 'Ikki kishilik yoki ikkita alohida karavot' },
+      deluxe: { name: 'Delyuks xona', desc: "Kengroq va manzarasi chiroyliroq" },
+      suite: { name: 'Lyuks', desc: 'Yotoqxona va alohida mehmonxona xonasi' },
+    },
+  },
   rich: {
     amenities: 'Qulayliklar',
     onMap: 'Xarita',
@@ -421,7 +436,7 @@ export default {
     showAll: 'hammasini ko\'rsatish',
     carsCount_one: '{{count}} ta mashina',
   },
-  admin: { autoTranslate: "Istalgan bitta tilda yozing — qolgan 14 tilga avtomatik tarjima qilinadi. Boshqasini faqat tuzatish uchun to'ldiring.",
+  admin: { opt: { night: 'Bir kecha', person: 'Bir kishi', meal: 'Bir ovqat', day: 'Bir kun', rate: 'Valyuta kursi', auto: 'Avtomat', manual: 'Mexanika', petrol: 'Benzin', diesel: 'Dizel', hybrid: 'Gibrid', electric: 'Elektr', gas: 'Gaz', guesthouse: 'Mehmon uylari', comfort: 'Qulay mehmonxonalar', luxury: 'Hashamatli mehmonxonalar', yurt: "O'tov lageri", small: 'Kichik guruh', private: 'Shaxsiy tur' }, upload: 'Yuklash', uploading: 'Yuklanmoqda…', autoTranslate: "Istalgan bitta tilda yozing — qolgan 14 tilga avtomatik tarjima qilinadi. Boshqasini faqat tuzatish uchun to'ldiring.",
     sections: 'Bo\'limlar',
     yes: 'Ha',
     no: 'Yo\'q',
@@ -460,7 +475,7 @@ export default {
       tickets: 'Chiptalar',
       transfers: 'Transfer',
     },
-    s: {
+    s: { partners: 'Hamkorlar',
       rentalCompanies: 'Ijara kompaniyalari',
       hero: 'Bosh sahifa karuseli',
       stats: 'Statistika',
@@ -485,7 +500,7 @@ export default {
       transferDestinations: 'Transfer yo\'nalishlari',
       vehicleClasses: 'Mashina klasslari',
     },
-    f: {
+    f: { url: 'Sayt', checkOut: 'Chiqish vaqti', gallery: 'Galereya',
       stars: 'Yulduz',
       checkIn: 'Joylashish vaqti',
       amenities: 'Qulayliklar',
@@ -564,7 +579,7 @@ export default {
       rate: 'Tarif, USD/km',
       min: 'Minimal narx',
     },
-    hints: {
+    hints: { partnerUrl: "Ixtiyoriy. Logo shu saytga olib boradi.", logoUpload: "Fayl yuklang yoki rasm URL'ini qo'ying.", autoText: "Istalgan bitta tilda yozing — tashrif buyuruvchilarga avtomatik tarjima qilinadi.", gallery: "Qo'shimcha rasmlar, har qatorga bittadan: rasm URL yoki Wikipedia nomi.",
       amenities: 'Kalitlar, har qatorga bittadan: pool, spa, gym, breakfast, wifi, parking, airport, restaurant',
       filmWiki: 'Filmning inglizcha Wikipedia sarlavhasi: rasmiy poster va mazmuni ko\'rsatiladi.',
       times: 'Har qatorga bitta seans, masalan 19:30',

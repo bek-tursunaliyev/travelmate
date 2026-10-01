@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaRobot, FaTimes, FaPaperPlane, FaRedo } from 'react-icons/fa'
 import { searchAll } from '../data/search'
-import { serviceHref } from '../data/services'
+import { serviceHref, hotelHref } from '../data/services'
 import { useFormat } from '../hooks'
 
 const STORAGE_KEY = 'tm_chat'
@@ -37,13 +37,13 @@ function localReply(text, t, f) {
     r.places.forEach((p) => add(`p-${p.list}-${p.slug}`, `/place/${p.list}/${p.slug}`, `${p.name} · ${p.country}`))
     r.services.forEach((s) => add(`s-${s.id}`, serviceHref(s.id), t(`services.items.${s.id}.title`)))
     r.offers.forEach((o) =>
-      add(`o-${o.id}`, serviceHref(o.service), o.price ? `${o.name} — ${f.money(o.price)} (≈ ${f.uzs(o.price)})` : o.name),
+      add(`o-${o.id}`, o.service === 'accommodation' ? hotelHref(o) : serviceHref(o.service), o.price ? `${o.name} — ${f.money(o.price)} (≈ ${f.uzs(o.price)})` : o.name),
     )
   }
   return links.length ? { text: t('chat.found'), links } : { text: t('chat.noMatch') }
 }
 
-const SITE_PATH = /(\/(?:places|place\/[\w-]+\/[\w-]+|services\/[\w-]+|guides(?:\/[\w-]+)?|tours(?:\/[\w-]+)?|transfers|tickets)\b)/g
+const SITE_PATH = /(\/(?:places|place\/[\w-]+\/[\w-]+|services\/[\w-]+|guides(?:\/[\w-]+)?|tours(?:\/[\w-]+)?|hotels\/[\w-]+|transfers|tickets)\b)/g
 
 // Light formatting for model replies: "* item" bullets, **bold**, and site paths ("/guides/…") as links.
 function RichText({ text }) {

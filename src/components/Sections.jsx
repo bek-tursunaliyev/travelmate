@@ -8,6 +8,7 @@ import {
 import { services, serviceHref } from '../data/services'
 import { ticketCategories, tickets, venueById } from '../data/tickets'
 import { famousPlaces, placePhoto } from '../data/places'
+import { partners } from '../data/partners'
 import PlaceImage from './PlaceImage'
 import Price from './Price'
 import Marquee from './Marquee'
@@ -249,6 +250,42 @@ export function FamousPlaces() {
       </div>
       <Marquee>
         {(copy) => famousPlaces.map((p) => <ExperienceCard key={`${copy}-${p.slug}`} place={p} inert={copy === 1} />)}
+      </Marquee>
+    </section>
+  )
+}
+
+/* ------------------------------ Partners ------------------------------ */
+
+// Logo strip (admin: Home page → Partners). Same auto-scrolling, draggable strip as the carousels.
+function PartnerLogo({ partner, inert }) {
+  const [broken, setBroken] = useState(false)
+  const body = (
+    <>
+      {partner.logo && !broken
+        ? <img src={partner.logo} alt="" loading="lazy" draggable="false" onError={() => setBroken(true)} />
+        : <span className="partner__initial" aria-hidden="true">{String(partner.name || '?').trim()[0]}</span>}
+      <span className="partner__name">{partner.name}</span>
+    </>
+  )
+  const common = { className: 'partner', title: partner.name, 'aria-hidden': inert || undefined, tabIndex: inert ? -1 : undefined }
+  return partner.url
+    ? <a {...common} href={partner.url} target="_blank" rel="noreferrer noopener">{body}</a>
+    : <div {...common}>{body}</div>
+}
+
+export function Partners() {
+  const { t } = useTranslation()
+  if (!partners.length) return null
+  // One copy of the strip must be wider than the screen for the loop to work, so short lists repeat.
+  const strip = Array.from({ length: Math.ceil(12 / partners.length) }, () => partners).flat()
+  return (
+    <section className="section section--partners" id="partners">
+      <div className="container">
+        <SectionHeader eyebrow={t('partners.eyebrow')} title={t('partners.title')} subtitle={t('partners.subtitle')} />
+      </div>
+      <Marquee className="marquee--partners">
+        {(copy) => strip.map((p, i) => <PartnerLogo key={`${copy}-${i}`} partner={p} inert={copy === 1 || i >= partners.length} />)}
       </Marquee>
     </section>
   )

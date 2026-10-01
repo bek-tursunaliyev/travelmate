@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAutoText, useLocalizedText } from '../i18n/auto'
 import {
@@ -9,7 +10,7 @@ import Price from './Price'
 import PlaceImage from './PlaceImage'
 import Modal from './Modal'
 import { LazyMap } from './LocationMap'
-import { rentalCompanies, companyById } from '../data/services'
+import { rentalCompanies, companyById, hotelHref } from '../data/services'
 import { useBook } from '../hooks'
 
 const MAX_COMPARE = 3
@@ -40,13 +41,14 @@ function PlaceOfferCard({ offer, service, selected, onShowMap, compare }) {
   return (
     <article className={`rich-card ${selected ? 'is-selected' : ''}`}>
       <div className="rich-card__media">
+        {isHotel && <Link to={hotelHref(offer)} className="rich-card__cover" aria-label={offer.name} tabIndex={-1} />}
         <PlaceImage wiki={offer.photo} alt={offer.name} width={500} />
         {isHotel && offer.stars ? <span className="rich-card__badge"><Stars count={offer.stars} /></span> : null}
         {!isHotel && offer.cuisine && <span className="rich-card__badge"><FaUtensils /> {at(offer.cuisine)}</span>}
       </div>
       <div className="rich-card__body">
         <div className="rich-card__top">
-          <h3>{offer.name}</h3>
+          <h3>{isHotel ? <Link to={hotelHref(offer)} className="rich-card__link">{offer.name}</Link> : offer.name}</h3>
           <Rating offer={offer} />
         </div>
         <p className="rich-card__loc"><FaMapMarkerAlt /> {[offer.address, offer.location].filter(Boolean).join(', ')}</p>
@@ -85,12 +87,16 @@ function PlaceOfferCard({ offer, service, selected, onShowMap, compare }) {
                 {inCompare ? <FaCheck /> : <FaPlus />} <span>{t('guides.compare')}</span>
               </button>
             )}
-            <button
-              className="btn btn--primary btn--sm"
-              onClick={() => book({ id: offer.id, name: offer.name, kind: service, price: Number(offer.price), meta: offer.location })}
-            >
-              {isHotel ? t('common.book') : t('rich.reserve')}
-            </button>
+            {isHotel ? (
+              <Link to={hotelHref(offer)} className="btn btn--primary btn--sm">{t('hotel.view')}</Link>
+            ) : (
+              <button
+                className="btn btn--primary btn--sm"
+                onClick={() => book({ id: offer.id, name: offer.name, kind: service, price: Number(offer.price), meta: offer.location })}
+              >
+                {t('rich.reserve')}
+              </button>
+            )}
           </div>
         </div>
       </div>

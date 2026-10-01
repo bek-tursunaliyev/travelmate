@@ -51,3 +51,21 @@ export async function saveContent(doc) {
   if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`)
   return data
 }
+
+// Uploads an image file and returns its URL (served by /api/media).
+export async function uploadImage(file) {
+  const token = getAdminToken()
+  if (!token) throw new Error('session')
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    headers: { 'Content-Type': file.type || 'application/octet-stream', Authorization: `Bearer ${token}` },
+    body: file,
+  })
+  const data = await res.json().catch(() => ({}))
+  if (res.status === 401) {
+    adminLogout()
+    throw new Error('session')
+  }
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`)
+  return data.url
+}

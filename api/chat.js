@@ -6,6 +6,7 @@ import * as guideData from '../src/data/guides.js'
 import * as tourData from '../src/data/tours.js'
 import * as transferData from '../src/data/transfers.js'
 import * as esimData from '../src/data/esim.js'
+import * as serviceData from '../src/data/services.js'
 import { applyContent } from '../src/content/content.js'
 import { readContent } from './_lib/store.js'
 
@@ -33,6 +34,7 @@ function buildSystem() {
   const esimList = esimData.esimPlans.map((p) => `${esimData.esimOperatorById(p.operator)?.name || p.operator} ${p.gb ? `${p.gb} GB` : 'unlimited'} / ${p.days} days $${p.price}`).join('; ')
   const placeList = places.allPlaces.map((p) => `${p.name} (${p.country}) → /place/${p.list}/${p.slug}`).join('\n')
   const transferDestinations = transferData.transferDestinations
+  const hotelList = (serviceData.offers.accommodation || []).map((o) => `${o.name} (${o.location}, ${o.stars || '?'}★, from $${o.price}/night) → /hotels/${o.id}`).join('; ')
 
   return `You are TravelMate AI, the friendly travel assistant of the TravelMate website (Tashkent, Uzbekistan).\nTravelMate covers travel inside Uzbekistan only; for trips abroad say politely that the site focuses on Uzbekistan.
 Help travelers plan trips, pick places and use TravelMate services. Keep answers short (2-6 sentences or a short list).
@@ -42,7 +44,8 @@ Quote prices in US dollars first, then the so'm equivalent in brackets (1 USD �
 Never show prices in Polish złoty (PLN, zł), even if asked; offer USD and UZS instead.
 
 TravelMate services and typical prices:
-- Accommodation (/services/accommodation): hotels from $35 to $180 per night — e.g. Silk Road Boutique, Bukhara $48; Registan Plaza, Samarkand $65.
+- Accommodation (/services/accommodation): each hotel has its own page with rooms (standard, deluxe, suite), dates and booking.
+  Hotels: ${hotelList}
 - Local guides (/guides): pick a city, compare verified guides and book by the hour ($11–20/hour, 2 h, 4 h or full day). Tours $20–45 per person — e.g. Samarkand Old City walk $25.
   Guides: ${guideList}
 - Taxi & transfers (/transfers): private car from Tashkent only, price per vehicle. Destinations: ${transferDestinations.map((d) => d.name).join(', ')}.

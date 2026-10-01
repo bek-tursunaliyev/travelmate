@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { FaMapMarkedAlt } from 'react-icons/fa'
 import { useWiki, sizedThumb } from '../hooks'
 
-const isUrl = (v) => /^(https?:)?\/\//.test(v || '') || /^data:image\//.test(v || '')
+// Full URLs, site paths (/partners/…, /api/media/…) and data URLs are images; anything else is a Wikipedia title.
+const isUrl = (v) => /^(https?:)?\/\//.test(v || '') || /^\/[^/]/.test(v || '') || /^data:image\//.test(v || '')
 
 // Picture for a place, tour, film…: `wiki` is either an image URL (set in the admin panel)
 // or an English Wikipedia title whose photo is loaded. Falls back to a soft gradient.

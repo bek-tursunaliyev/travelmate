@@ -42,8 +42,11 @@ const hotelFields = [
   { k: 'rating', type: 'number', step: 0.1 },
   { k: 'reviews', type: 'number' },
   { k: 'checkIn', type: 'time' },
+  { k: 'checkOut', type: 'time' },
   { k: 'amenities', type: 'list', hint: 'amenities' },
   { k: 'tags', type: 'list' },
+  { k: 'description', type: 'textarea', hint: 'autoText' },
+  { k: 'gallery', type: 'list', hint: 'gallery' },
 ]
 
 const restaurantFields = [
@@ -121,6 +124,15 @@ export const groups = [
           { k: 'image', type: 'image', required: true },
           { k: 'title', type: 'i18n', required: true },
           { k: 'text', type: 'i18n', long: true },
+        ],
+      },
+      {
+        id: 'partners', path: ['partners'], key: 'id',
+        row: (r) => ({ title: r.name, sub: r.url, image: r.logo }),
+        fields: [
+          { k: 'name', type: 'text', required: true },
+          { k: 'logo', type: 'image', required: true, hint: 'logoUpload' },
+          { k: 'url', type: 'text', hint: 'partnerUrl' },
         ],
       },
     ],

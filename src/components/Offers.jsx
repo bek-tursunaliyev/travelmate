@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAutoText } from '../i18n/auto'
 import { FaStar, FaMapMarkerAlt, FaExchangeAlt } from 'react-icons/fa'
-import { currencies, serviceById } from '../data/services'
+import { currencies, serviceById, hotelHref } from '../data/services'
 import { useBook, useFormat } from '../hooks'
 
 export function OfferCard({ offer, service }) {
@@ -33,12 +34,16 @@ export function OfferCard({ offer, service }) {
             <small className="price__uzs">≈ {f.uzs(offer.price)}</small>
           </span>
         )}
-        <button
-          className="btn btn--primary btn--sm"
-          onClick={() => book({ id: offer.id, name: offer.name, kind: service, price: offer.price, meta: offer.location })}
-        >
-          {t('common.book')}
-        </button>
+        {service === 'accommodation' ? (
+          <Link to={hotelHref(offer)} className="btn btn--primary btn--sm">{t('hotel.view')}</Link>
+        ) : (
+          <button
+            className="btn btn--primary btn--sm"
+            onClick={() => book({ id: offer.id, name: offer.name, kind: service, price: offer.price, meta: offer.location })}
+          >
+            {t('common.book')}
+          </button>
+        )}
       </div>
     </article>
   )

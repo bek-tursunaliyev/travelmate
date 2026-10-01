@@ -15,6 +15,7 @@ import EsimPage from './pages/Esim'
 import TicketPage from './pages/TicketPage'
 import NotFound from './pages/NotFound'
 import Legal from './pages/Legal'
+import Hotel from './pages/Hotel'
 import { useContent } from './context/ContentContext'
 
 // The admin panel is only loaded by the admin.
@@ -53,6 +54,7 @@ export default function App() {
           <Route path="/services/:id" element={<ServicePage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/legal/:doc" element={<Legal />} />
+          <Route path="/hotels/:id" element={<Hotel />} />
           <Route path="/admin/*" element={<Suspense fallback={<div className="admin-loading" />}><AdminPage /></Suspense>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

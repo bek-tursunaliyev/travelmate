@@ -7,7 +7,7 @@ import {
 import PlaceImage from '../components/PlaceImage'
 import { groups, allSections } from '../admin/schema'
 import { clone, defaultContent } from '../content/content'
-import { adminLogout, isAdmin, saveContent } from '../content/admin'
+import { adminLogout, isAdmin, saveContent, uploadImage } from '../content/admin'
 import { useContent } from '../context/ContentContext'
 import { useToast } from '../context/ToastContext'
 
@@ -41,12 +41,45 @@ const fromForm = (field, v) => {
   return v
 }
 
-function optionsOf(field, doc) {
+function optionsOf(field, doc, t) {
   const raw = typeof field.options === 'function' ? field.options(doc) : field.options
-  return raw.map((o) => (Array.isArray(o) ? o : [o, o]))
+  // Plain option keys (night, auto, petrol…) get a translated label.
+  return raw.map((o) => (Array.isArray(o) ? o : [o, t ? t(`admin.opt.${o}`, { defaultValue: o }) : o]))
 }
 
 /* ------------------------------ Form ------------------------------ */
+
+// Image field: paste a URL / Wikipedia title, or upload a file from the computer.
+function ImageInput({ id, value, onChange }) {
+  const { t } = useTranslation()
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const upload = async (file) => {
+    if (!file) return
+    setBusy(true)
+    setError('')
+    try {
+      onChange(await uploadImage(file))
+    } catch (err) {
+      setError(err.message === 'session' ? t('admin.sessionExpired') : err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+  return (
+    <div className="adm-image">
+      <div className="adm-image__row">
+        <input id={id} type="text" value={value} placeholder="https://… / Wikipedia_Title" onChange={(e) => onChange(e.target.value)} />
+        <label className={`btn btn--outline btn--sm adm-image__upload ${busy ? 'is-busy' : ''}`}>
+          {busy ? t('admin.uploading') : t('admin.upload')}
+          <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden disabled={busy} onChange={(e) => { upload(e.target.files?.[0]); e.target.value = '' }} />
+        </label>
+      </div>
+      {error && <small className="adm-image__error">{error}</small>}
+      {value && <div className="adm-image__preview"><PlaceImage wiki={value} alt="" width={330} /></div>}
+    </div>
+  )
+}
 
 function FieldInput({ field, value, onChange, doc }) {
   const { t } = useTranslation()
@@ -69,7 +102,7 @@ function FieldInput({ field, value, onChange, doc }) {
       return (
         <select id={id} value={value} onChange={(e) => onChange(e.target.value)}>
           <option value="">—</option>
-          {optionsOf(field, doc).map(([v, label]) => <option key={v} value={v}>{label}</option>)}
+          {optionsOf(field, doc, t).map(([v, label]) => <option key={v} value={v}>{label}</option>)}
         </select>
       )
     case 'color':
@@ -80,12 +113,7 @@ function FieldInput({ field, value, onChange, doc }) {
         </div>
       )
     case 'image':
-      return (
-        <div className="adm-image">
-          <input id={id} type="text" value={value} placeholder="https://… or Wikipedia_Title" onChange={(e) => onChange(e.target.value)} />
-          {value && <div className="adm-image__preview"><PlaceImage wiki={value} alt="" width={330} /></div>}
-        </div>
-      )
+      return <ImageInput id={id} value={value} onChange={onChange} />
     case 'i18n':
       return (
         <div className="adm-i18n">
