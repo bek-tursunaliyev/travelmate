@@ -1,19 +1,21 @@
 export default {
   nav: { theme: 'Dunkel- / Hellmodus', home: 'Start', services: 'Services', tickets: 'Tickets', favorites: 'Top-Auswahl', why: 'Warum wir', getApp: 'App holen', login: 'Anmelden', signup: 'Registrieren', logout: 'Abmelden', profile: 'Mein Profil', language: 'Sprache', menu: 'Menü' },
   subnav: { uzbekistan: 'Uzbekistan', regions: 'Beliebte Regionen', destinations: 'Beliebte Reiseziele', landmarks: 'Beliebte Sehenswürdigkeiten', viewAll: 'Alle ansehen', top10: 'Top 10', support: '24/7 Reise-Support' },
-  app: { title: 'Smarter reisen mit der TravelMate-App', text: 'Buchen, bezahlen und Tickets offline speichern – alles in deiner Tasche.', downloadOn: 'Laden im', getItOn: 'Jetzt bei' },
+  app: { soon: 'Demnächst', title: 'Smarter reisen mit der TravelMate-App', text: 'Buchen, bezahlen und Tickets offline speichern – alles in deiner Tasche.', downloadOn: 'Laden im', getItOn: 'Jetzt bei' },
+  legal: { updated: 'Zuletzt aktualisiert' },
   hero: {
     slides: [
       { title: 'Entdecke die Seidenstraße wie ein Einheimischer', text: 'Von den blauen Kuppeln Samarkands bis zu den alten Mauern von Chiwa – plane, buche und erkunde jeden Schritt mit einer App.' },
       { title: 'Gemeinsam reisen, weniger Sorgen', text: 'Hotels, Guides, Taxis, Tickets und eSIM an einem Ort. Nie wieder zehn Apps unterwegs jonglieren.' },
       { title: 'Berge, Seen und Städte warten', text: 'Ausgewählte Erlebnisse von geprüften lokalen Partnern – faire Preise und sofortige Bestätigung.' },
-      { title: 'Die ganze Welt, nur eine Buchung entfernt', text: 'In über 190 Ländern online bleiben, Geld zu fairen Kursen tauschen und sich wie ein Einheimischer bewegen.' },
+      { title: 'Ganz Usbekistan, nur eine Buchung entfernt', text: 'Lokale eSIM, Inlandsflüge, faire Wechselkurse und Fahrten zwischen allen Regionen.' },
     ],
     placeholder: 'Wohin möchtest du reisen?', search: 'Suchen', topSearches: 'Top-Suchen', trending: 'Trend-Reiseziele', recent: 'Letzte Suchen', clear: 'Löschen', suggestions: 'Vorschläge', noSuggestions: 'Keine Schnelltreffer – klicke auf Suchen für alle Ergebnisse', empty: 'Gib ein Reiseziel, einen Service oder ein Ticket ein', prev: 'Vorherige Folie', next: 'Nächste Folie',
   },
   services: {
-    title: 'Alles, was du für die Reise brauchst', subtitle: 'Acht wichtige Reiseservices, ein Konto. Tippe auf eine Karte für die Angebote.', explore: 'Entdecken', offers: '{{count}} Angebote', all: 'Alle Services',
+    title: 'Alles, was du für die Reise brauchst', subtitle: 'Zehn wichtige Reiseservices, ein Konto. Tippe auf eine Karte für die Angebote.', explore: 'Entdecken', offers: '{{count}} Angebote', all: 'Alle Services',
     items: {
+      tours: { title: 'Touren', desc: 'Mehrtägige Touren durch Usbekistan von lokalen Veranstaltern.' },
       accommodation: { title: 'Hotels', desc: 'Hotels, Gästehäuser und Apartments mit kostenloser Stornierung.' },
       guide: { title: 'Guides', desc: 'Zertifizierte Guides, die deine Sprache sprechen.' },
       taxi: { title: 'Taxi', desc: 'Flughafentransfers und Stadtfahrten zum Festpreis.' },
@@ -22,6 +24,7 @@ export default {
       esim: { title: 'eSIM', desc: 'Mobile Daten in Minuten – ohne Roaming, ohne SIM-Tausch.' },
       tickets: { title: 'Tickets', desc: 'Busse, Züge, Flüge, Kino und Events.' },
       rentcar: { title: 'Mietwagen', desc: 'Vom Kleinwagen bis zum 4x4 für die Berge.' },
+      places: { title: 'Orte', desc: 'Berühmte Sehenswürdigkeiten, Städte und Regionen Usbekistans.' },
     },
   },
   tickets: { title: 'Tickets für jede Reise', subtitle: 'Wähle eine Kategorie – Bus & Bahn, Flüge, Kino oder Events.', categories: { bus: 'Bus & Bahn', flights: 'Flüge', cinema: 'Kino', events: 'Events' }, book: 'Buchen', seatsLeft: 'Noch {{count}} Plätze', duration: 'Dauer', date: 'Datum', time: 'Uhrzeit', venue: 'Ort', hall: 'Saal', carrier: 'Anbieter', perPerson: 'pro Person', admit: 'Einzelticket' },

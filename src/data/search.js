@@ -24,7 +24,7 @@ export function searchAll(query, t) {
   const q = norm(query)
   if (!q) return { places: [], services: [], offers: [], tickets: [], tours: [] }
 
-  const placeHits = allPlaces.filter((p) => matches(q, p.name, p.country, p.tags))
+  const placeHits = allPlaces.filter((p) => matches(q, p.name, p.country, p.nameEn, p.countryEn, p.tags))
 
   const serviceHits = services.filter((s) =>
     matches(q, s.id, s.keywords, t(`services.items.${s.id}.title`), t(`services.items.${s.id}.desc`)),

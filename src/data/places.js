@@ -2,6 +2,7 @@
 // `wiki` is the English Wikipedia title used for the description; `photo` (a Wikipedia title or an
 // image URL) overrides the picture when the article's own image is a map.
 // These are defaults — the admin panel can replace every list (see setPlaces).
+import { translatePlaceText } from './placeNames'
 
 const defaultRegions = [
   { slug: 'tashkent-city', name: 'Tashkent', country: 'Capital city', wiki: 'Tashkent', photo: 'Amir_Timur_Square', tags: ['capital', 'metro', 'bazaar'] },
@@ -66,8 +67,19 @@ export let allPlaces = []
 // Famous places carousel on the home page.
 export let famousPlaces = []
 
+// Names and subtitles follow the site language (uz / ru); the English originals stay on
+// nameEn / countryEn for search.
+let lang = 'en'
+const localize = (p) => ({
+  ...p,
+  nameEn: p.nameEn || p.name,
+  countryEn: p.countryEn || p.country,
+  name: translatePlaceText(p.nameEn || p.name, lang),
+  country: translatePlaceText(p.countryEn || p.country, lang),
+})
+
 function rebuild() {
-  placeLists = { regions, destinations, landmarks }
+  placeLists = { regions: regions.map(localize), destinations: destinations.map(localize), landmarks: landmarks.map(localize) }
   allPlaces = Object.entries(placeLists).flatMap(([list, items]) =>
     items.map((p, i) => ({ ...p, list, type: typeOfList[list], rank: i + 1 })),
   )
@@ -79,6 +91,12 @@ export function setPlaces(next = {}) {
   if (Array.isArray(next.regions)) regions = next.regions
   if (Array.isArray(next.destinations)) destinations = next.destinations
   if (Array.isArray(next.landmarks)) landmarks = next.landmarks
+  rebuild()
+}
+
+export function setPlaceLanguage(lng) {
+  if (lng === lang) return
+  lang = lng
   rebuild()
 }
 

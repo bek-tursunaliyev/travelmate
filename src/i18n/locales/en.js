@@ -1,7 +1,8 @@
 export default {
   nav: { places: 'Places', famous: 'Famous places', theme: 'Toggle dark mode', home: 'Home', services: 'Services', tickets: 'Tickets', favorites: 'Top picks', why: 'Why us', getApp: 'Get the app', login: 'Log in', signup: 'Sign up', logout: 'Log out', profile: 'My profile', language: 'Language', menu: 'Menu' },
   subnav: { uzbekistan: 'Uzbekistan', regions: 'Popular regions', destinations: 'Popular destinations', landmarks: 'Popular landmarks', viewAll: 'View all', top10: 'Top 10', support: '24/7 traveler support' },
-  app: { title: 'Travel smarter with the TravelMate app', text: 'Book, pay and keep your tickets offline — everything in your pocket.', downloadOn: 'Download on the', getItOn: 'Get it on' },
+  app: { soon: 'Coming soon', title: 'Travel smarter with the TravelMate app', text: 'Book, pay and keep your tickets offline — everything in your pocket.', downloadOn: 'Download on the', getItOn: 'Get it on' },
+  legal: { updated: 'Last updated' },
   hero: {
     slides: [
       { title: 'Discover the Silk Road like a local', text: 'From the blue domes of Samarkand to the ancient walls of Khiva — plan, book and explore every step with one app.' },

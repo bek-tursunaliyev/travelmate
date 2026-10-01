@@ -8,18 +8,27 @@ const icons = { regions: FaGlobeAsia, destinations: FaMapMarkerAlt, landmarks: F
 
 function PopularMenu({ list, open, onOpen, onClose, onToggle }) {
   const { t } = useTranslation()
+  const pointerType = useRef('mouse')
   const Icon = icons[list]
   const items = placeLists[list].slice(0, 10)
 
   return (
-    <div className={`subnav__item ${open ? 'is-open' : ''}`} onMouseEnter={onOpen} onMouseLeave={onClose}>
+    <div
+      className={`subnav__item ${open ? 'is-open' : ''}`}
+      // Hover only for a real mouse: a tap also fires "mouseenter", which used to open the menu and
+      // let the same tap's click navigate away, so phones needed two taps.
+      onPointerEnter={(e) => e.pointerType === 'mouse' && onOpen()}
+      onPointerLeave={(e) => e.pointerType === 'mouse' && onClose()}
+    >
       <Link
         to={`/popular/${list}`}
         className="subnav__trigger"
         aria-expanded={open}
+        aria-haspopup="menu"
+        onPointerDown={(e) => { pointerType.current = e.pointerType }}
         onClick={(e) => {
-          // On touch devices the first tap opens the menu instead of navigating.
-          if (window.matchMedia('(hover: none)').matches && !open) {
+          // Touch and pen: one tap opens (or closes) the menu; "View all" inside navigates.
+          if (pointerType.current !== 'mouse') {
             e.preventDefault()
             onToggle()
           }
@@ -67,7 +76,21 @@ export default function SubNav() {
       return { list: typeof update === 'function' ? update(current) : update, path: pathname }
     })
 
+  const menusRef = useRef(null)
   useEffect(() => () => clearTimeout(timer.current), [])
+
+  // A tap or click outside closes an open menu; so does Escape.
+  useEffect(() => {
+    if (!openList) return undefined
+    const onDown = (e) => { if (!menusRef.current?.contains(e.target)) setMenu((m) => ({ ...m, list: null })) }
+    const onKey = (e) => { if (e.key === 'Escape') setMenu((m) => ({ ...m, list: null })) }
+    document.addEventListener('pointerdown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [openList])
 
   const open = (list) => {
     clearTimeout(timer.current)
@@ -82,7 +105,7 @@ export default function SubNav() {
   return (
     <div className="subnav">
       <div className="container subnav__inner">
-        <div className="subnav__menus">
+        <div className="subnav__menus" ref={menusRef}>
           {menuLists.map((list) => (
             <PopularMenu
               key={list}

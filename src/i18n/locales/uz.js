@@ -1,7 +1,8 @@
 export default {
   nav: { places: 'Joylar', famous: 'Mashhur joylar', theme: 'Tungi / kunduzgi rejim', home: 'Bosh sahifa', services: 'Xizmatlar', tickets: 'Chiptalar', favorites: 'Top tanlovlar', why: 'Nega biz', getApp: 'Ilovani yuklab olish', login: 'Kirish', signup: "Ro'yxatdan o'tish", logout: 'Chiqish', profile: 'Mening profilim', language: 'Til', menu: 'Menyu' },
   subnav: { uzbekistan: "O'zbekiston", regions: 'Mashhur hududlar', destinations: "Mashhur yo'nalishlar", landmarks: 'Mashhur diqqatga sazovor joylar', viewAll: "Barchasini ko'rish", top10: 'Top 10', support: "24/7 sayohatchilarni qo'llab-quvvatlash" },
-  app: { title: 'TravelMate ilovasi bilan aqlli sayohat qiling', text: "Bron qiling, to'lang va chiptalaringizni oflayn saqlang — hammasi cho'ntagingizda.", downloadOn: 'Yuklab oling', getItOn: 'Mavjud' },
+  app: { soon: 'Tez kunda', title: 'TravelMate ilovasi bilan aqlli sayohat qiling', text: "Bron qiling, to'lang va chiptalaringizni oflayn saqlang — hammasi cho'ntagingizda.", downloadOn: 'Yuklab oling', getItOn: 'Mavjud' },
+  legal: { updated: 'Oxirgi yangilanish' },
   hero: {
     slides: [
       { title: "Buyuk Ipak yo'lini mahalliy aholidek kashf eting", text: "Samarqandning moviy gumbazlaridan Xivaning qadimiy devorlarigacha — har bir qadamni bitta ilova orqali rejalashtiring va bron qiling." },

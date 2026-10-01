@@ -95,6 +95,8 @@ export default function MapView({ markers, selectedId, onSelect, height = 360, z
   const { theme } = useTheme()
   const mode = theme === 'dark' ? 'dark' : 'light'
   const [failed, setFailed] = useState(false)
+  // Until the first tiles are drawn the box shows a shimmer instead of an empty dark rectangle.
+  const [ready, setReady] = useState(false)
   const points = markers.filter((m) => Number.isFinite(Number(m.lat)) && Number.isFinite(Number(m.lng)))
   const key = points.map((m) => `${m.id}:${m.lat}:${m.lng}`).join('|')
 
@@ -117,6 +119,7 @@ export default function MapView({ markers, selectedId, onSelect, height = 360, z
           cooperativeGestures: true,
         })
         map.current = instance
+        instance.once('load', () => alive && setReady(true))
         instance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
         pins.current = new Map()
         points.forEach((m) => {
@@ -152,5 +155,5 @@ export default function MapView({ markers, selectedId, onSelect, height = 360, z
   }, [selectedId])
 
   if (!points.length || failed) return <div className="map-view map-view--empty" style={{ height }} />
-  return <div ref={el} className="map-view" style={{ height }} />
+  return <div ref={el} className={`map-view ${ready ? '' : 'map-view--loading'}`} style={{ height }} />
 }

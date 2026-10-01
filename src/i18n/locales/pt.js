@@ -1,19 +1,21 @@
 export default {
   nav: { theme: 'Modo escuro / claro', home: 'Início', services: 'Serviços', tickets: 'Bilhetes', favorites: 'Favoritos', why: 'Por que nós', getApp: 'Baixar app', login: 'Entrar', signup: 'Cadastrar', logout: 'Sair', profile: 'Meu perfil', language: 'Idioma', menu: 'Menu' },
   subnav: { uzbekistan: 'Uzbekistan', regions: 'Regiões populares', destinations: 'Destinos populares', landmarks: 'Pontos turísticos populares', viewAll: 'Ver tudo', top10: 'Top 10', support: 'Suporte 24/7 ao viajante' },
-  app: { title: 'Viaje melhor com o app TravelMate', text: 'Reserve, pague e guarde seus bilhetes offline — tudo no seu bolso.', downloadOn: 'Baixe na', getItOn: 'Disponível no' },
+  app: { soon: 'Em breve', title: 'Viaje melhor com o app TravelMate', text: 'Reserve, pague e guarde seus bilhetes offline — tudo no seu bolso.', downloadOn: 'Baixe na', getItOn: 'Disponível no' },
+  legal: { updated: 'Última atualização' },
   hero: {
     slides: [
       { title: 'Descubra a Rota da Seda como um local', text: 'Das cúpulas azuis de Samarcanda às muralhas antigas de Khiva — planeje, reserve e explore cada passo com um só app.' },
       { title: 'Viaje junto, preocupe-se menos', text: 'Hotéis, guias, táxis, bilhetes e eSIM num só lugar. Chega de usar dez apps na estrada.' },
       { title: 'Montanhas, lagos e cidades esperam por você', text: 'Experiências selecionadas de parceiros locais confiáveis, com preços honestos e confirmação imediata.' },
-      { title: 'O mundo inteiro a uma reserva de distância', text: 'Fique conectado em mais de 190 países, troque dinheiro com taxas justas e circule como um local.' },
+      { title: 'Todo o Uzbequistão a uma reserva de distância', text: 'eSIM local, voos domésticos, câmbio justo e transfers entre todas as regiões.' },
     ],
     placeholder: 'Para onde você quer ir?', search: 'Buscar', topSearches: 'Mais buscados', trending: 'Destinos em alta', recent: 'Buscas recentes', clear: 'Limpar', suggestions: 'Sugestões', noSuggestions: 'Sem resultados rápidos — clique em Buscar para ver tudo', empty: 'Digite um destino, serviço ou bilhete', prev: 'Slide anterior', next: 'Próximo slide',
   },
   services: {
-    title: 'Tudo o que você precisa para a viagem', subtitle: 'Oito serviços essenciais, uma conta. Toque em um cartão para ver as ofertas.', explore: 'Explorar', offers: '{{count}} ofertas', all: 'Todos os serviços',
+    title: 'Tudo o que você precisa para a viagem', subtitle: 'Dez serviços essenciais, uma conta. Toque em um cartão para ver as ofertas.', explore: 'Explorar', offers: '{{count}} ofertas', all: 'Todos os serviços',
     items: {
+      tours: { title: 'Tours', desc: 'Tours de vários dias pelo Uzbequistão com operadores locais.' },
       accommodation: { title: 'Hotéis', desc: 'Hotéis, pousadas e apartamentos com cancelamento grátis.' },
       guide: { title: 'Guias', desc: 'Guias certificados que falam o seu idioma.' },
       taxi: { title: 'Táxi', desc: 'Traslados do aeroporto e corridas na cidade com preço fixo.' },
@@ -22,6 +24,7 @@ export default {
       esim: { title: 'eSIM', desc: 'Dados móveis em minutos — sem roaming, sem trocar o chip.' },
       tickets: { title: 'Bilhetes', desc: 'Ônibus, trens, voos, cinema e eventos.' },
       rentcar: { title: 'Aluguel', desc: 'De compactos urbanos a 4x4 para as montanhas.' },
+      places: { title: 'Lugares', desc: 'Atrações, cidades e regiões famosas do Uzbequistão.' },
     },
   },
   tickets: { title: 'Bilhetes para cada viagem', subtitle: 'Escolha uma categoria — ônibus e trem, voos, cinema ou eventos.', categories: { bus: 'Ônibus e trem', flights: 'Voos', cinema: 'Cinema', events: 'Eventos' }, book: 'Reservar', seatsLeft: '{{count}} lugares restantes', duration: 'Duração', date: 'Data', time: 'Hora', venue: 'Local', hall: 'Sala', carrier: 'Operadora', perPerson: 'por pessoa', admit: 'Entrada individual' },

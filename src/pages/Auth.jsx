@@ -206,7 +206,10 @@ export default function AuthPage({ mode = 'login' }) {
               {isLogin ? t('nav.signup') : t('nav.login')}
             </Link>
           </p>
-          <p className="auth__terms">{t('auth.agree')}</p>
+          <p className="auth__terms">
+            {t('auth.agree')}{' '}
+            <Link to="/legal/terms">{t('footer.terms')}</Link> · <Link to="/legal/privacy">{t('footer.privacy')}</Link>
+          </p>
         </div>
       </main>
     </div>

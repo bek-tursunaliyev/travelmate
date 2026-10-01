@@ -9,6 +9,7 @@ import { localized, ticketCategories, tickets, venueById } from '../data/tickets
 import { famousPlaces, placePhoto } from '../data/places'
 import PlaceImage from './PlaceImage'
 import Price from './Price'
+import Marquee from './Marquee'
 import { useFormat } from '../hooks'
 
 
@@ -245,16 +246,9 @@ export function FamousPlaces() {
           action={<Link to="/places" className="btn btn--outline">{t('subnav.viewAll')} <FaArrowRight className="flip-rtl" /></Link>}
         />
       </div>
-      {/* Auto-scrolling strip: the list is rendered twice and the track slides by exactly one copy, so it loops seamlessly. */}
-      <div className="marquee">
-        <div className="marquee__track" style={{ '--marquee-duration': `${famousPlaces.length * 7}s` }}>
-          {[0, 1].map((copy) =>
-            famousPlaces.map((p) => (
-              <ExperienceCard key={`${copy}-${p.slug}`} place={p} inert={copy === 1} />
-            )),
-          )}
-        </div>
-      </div>
+      <Marquee>
+        {(copy) => famousPlaces.map((p) => <ExperienceCard key={`${copy}-${p.slug}`} place={p} inert={copy === 1} />)}
+      </Marquee>
     </section>
   )
 }

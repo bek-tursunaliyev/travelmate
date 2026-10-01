@@ -1,19 +1,21 @@
 export default {
   nav: { theme: '切换深色模式', home: '首页', services: '服务', tickets: '票务', favorites: '热门精选', why: '为什么选我们', getApp: '下载应用', login: '登录', signup: '注册', logout: '退出', profile: '我的主页', language: '语言', menu: '菜单' },
   subnav: { uzbekistan: 'Uzbekistan', regions: '热门地区', destinations: '热门目的地', landmarks: '热门地标', viewAll: '查看全部', top10: '前 10', support: '全天候旅客支持' },
-  app: { title: '使用 TravelMate 应用，旅行更聪明', text: '预订、支付并离线保存门票——一切尽在掌中。', downloadOn: '下载于', getItOn: '立即获取' },
+  app: { soon: '即将推出', title: '使用 TravelMate 应用，旅行更聪明', text: '预订、支付并离线保存门票——一切尽在掌中。', downloadOn: '下载于', getItOn: '立即获取' },
+  legal: { updated: '最后更新' },
   hero: {
     slides: [
       { title: '像当地人一样探索丝绸之路', text: '从撒马尔罕的蓝色穹顶到希瓦的古城墙——用一个应用规划、预订并探索每一步。' },
       { title: '结伴同行，少些烦恼', text: '酒店、导游、出租车、门票和 eSIM 一站搞定。旅途中不再切换十几个应用。' },
       { title: '山川、湖泊与城市在等你', text: '来自可信本地合作伙伴的精选体验，价格透明，即时确认。' },
-      { title: '全世界，一次预订即达', text: '在 190 多个国家保持联网，以公平汇率兑换货币，像当地人一样出行。' },
+      { title: '整个乌兹别克斯坦，一次预订即可', text: '本地eSIM、国内航班、公道汇率，以及往返各地区的交通。' },
     ],
     placeholder: '你想去哪里？', search: '搜索', topSearches: '热门搜索', trending: '热门目的地', recent: '最近搜索', clear: '清除', suggestions: '建议', noSuggestions: '没有快速匹配——点击搜索查看全部结果', empty: '输入目的地、服务或票务', prev: '上一张', next: '下一张',
   },
   services: {
-    title: '旅行所需的一切', subtitle: '八项核心旅行服务，一个账户。点击卡片查看优惠。', explore: '查看', offers: '{{count}} 个优惠', all: '全部服务',
+    title: '旅行所需的一切', subtitle: '十项核心旅行服务，一个账户。点击卡片查看优惠。', explore: '查看', offers: '{{count}} 个优惠', all: '全部服务',
     items: {
+      tours: { title: '旅游团', desc: '本地旅行社提供的乌兹别克斯坦多日游。' },
       accommodation: { title: '住宿', desc: '可免费取消的酒店、民宿和公寓。' },
       guide: { title: '本地导游', desc: '会说你的语言的认证导游。' },
       taxi: { title: '出租车', desc: '机场接送和市内出行，价格固定。' },
@@ -22,6 +24,7 @@ export default {
       esim: { title: 'eSIM', desc: '几分钟开通移动数据——无漫游，无需换卡。' },
       tickets: { title: '票务', desc: '巴士、火车、航班、电影和活动。' },
       rentcar: { title: '租车', desc: '从城市小车到山地四驱车。' },
+      places: { title: '景点', desc: '乌兹别克斯坦著名景点、城市和地区。' },
     },
   },
   tickets: { title: '每段旅程的票', subtitle: '选择类别——巴士和火车、机票、电影或活动。', categories: { bus: '巴士和火车', flights: '机票', cinema: '电影', events: '活动' }, book: '预订', seatsLeft: '剩余 {{count}} 个座位', duration: '时长', date: '日期', time: '时间', venue: '地点', hall: '影厅', carrier: '承运方', perPerson: '每人', admit: '单人票' },

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { usdToUzs } from '../data/services'
 import { useToast } from '../context/ToastContext'
+import { translatePlaceText } from '../data/placeNames'
 
 /* ---------- Wikipedia summary (real photos + descriptions) ---------- */
 
@@ -144,6 +145,7 @@ function formatUzDate(d, opts) {
   if (opts.weekday) parts.push(`${UZ_DAYS[d.getDay()]},`)
   if (opts.day) parts.push(d.getDate())
   if (opts.month) parts.push(opts.month === 'long' ? UZ_MONTHS[d.getMonth()] : UZ_MONTHS[d.getMonth()].slice(0, 3))
+  if (opts.year) parts.unshift(`${d.getFullYear()}-yil`)
   if (opts.hour) parts.push(`${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`)
   return parts.join(' ')
 }
@@ -162,4 +164,11 @@ export function useFormat() {
     uzs: (usd) => `${new Intl.NumberFormat(lng, { maximumFractionDigits: 0 }).format(Math.round(usdToUzs(usd) / 100) * 100)} UZS`,
     number: (v, digits = 0) => new Intl.NumberFormat(lng, { maximumFractionDigits: digits }).format(v),
   }
+}
+
+// Place or city name in the site language (uz / ru), e.g. transfer destinations.
+export function usePlaceName() {
+  const { i18n } = useTranslation()
+  const lng = i18n.resolvedLanguage
+  return useCallback((text) => translatePlaceText(text, lng), [lng])
 }

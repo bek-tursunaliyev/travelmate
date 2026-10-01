@@ -1,19 +1,21 @@
 export default {
   nav: { theme: 'ダーク / ライトモード', home: 'ホーム', services: 'サービス', tickets: 'チケット', favorites: '人気', why: '選ばれる理由', getApp: 'アプリを入手', login: 'ログイン', signup: '新規登録', logout: 'ログアウト', profile: 'マイページ', language: '言語', menu: 'メニュー' },
   subnav: { uzbekistan: 'Uzbekistan', regions: '人気の地域', destinations: '人気の旅行先', landmarks: '人気の名所', viewAll: 'すべて見る', top10: 'トップ10', support: '24時間トラベルサポート' },
-  app: { title: 'TravelMateアプリでもっと賢く旅を', text: '予約、支払い、オフラインでのチケット保存 — すべてポケットの中に。', downloadOn: 'ダウンロード', getItOn: '入手する' },
+  app: { soon: '近日公開', title: 'TravelMateアプリでもっと賢く旅を', text: '予約、支払い、オフラインでのチケット保存 — すべてポケットの中に。', downloadOn: 'ダウンロード', getItOn: '入手する' },
+  legal: { updated: '最終更新' },
   hero: {
     slides: [
       { title: '地元の人のようにシルクロードを旅しよう', text: 'サマルカンドの青いドームからヒヴァの古い城壁まで — ひとつのアプリで計画・予約・探索。' },
       { title: '一緒に旅して、心配は少なく', text: 'ホテル、ガイド、タクシー、チケット、eSIMをひとつに。旅先でたくさんのアプリを使い分ける必要はありません。' },
       { title: '山、湖、そして街があなたを待っています', text: '信頼できる地元パートナーによる厳選体験。明朗価格で即時確定。' },
-      { title: '世界中が、予約ひとつで', text: '190以上の国でつながり、公正なレートで両替し、地元の人のように移動しましょう。' },
+      { title: 'ウズベキスタンのすべてを、ひとつの予約で', text: '現地eSIM、国内線、公正な両替レート、全地域への移動。' },
     ],
     placeholder: 'どこへ行きたいですか？', search: '検索', topSearches: '人気の検索', trending: 'トレンドの旅行先', recent: '最近の検索', clear: 'クリア', suggestions: '候補', noSuggestions: 'クイック候補はありません — 検索ボタンですべての結果を表示', empty: '旅行先、サービス、チケットを入力', prev: '前のスライド', next: '次のスライド',
   },
   services: {
-    title: '旅に必要なすべてがここに', subtitle: '8つの主要サービスをひとつのアカウントで。カードをタップしてプランを見る。', explore: '見る', offers: '{{count}}件のプラン', all: 'すべてのサービス',
+    title: '旅に必要なすべてがここに', subtitle: '10の主要サービスをひとつのアカウントで。カードをタップしてプランを見る。', explore: '見る', offers: '{{count}}件のプラン', all: 'すべてのサービス',
     items: {
+      tours: { title: 'ツアー', desc: '地元のツアー会社による、ウズベキスタン周遊の数日間ツアー。' },
       accommodation: { title: '宿泊', desc: '無料キャンセル可能なホテル、ゲストハウス、アパート。' },
       guide: { title: '現地ガイド', desc: 'あなたの言語を話す認定ガイド。' },
       taxi: { title: 'タクシー', desc: '定額の空港送迎と市内移動。' },
@@ -22,6 +24,7 @@ export default {
       esim: { title: 'eSIM', desc: '数分でモバイルデータ — ローミングもSIM交換も不要。' },
       tickets: { title: 'チケット', desc: 'バス、列車、航空券、映画、イベント。' },
       rentcar: { title: 'レンタカー', desc: 'コンパクトカーから山道用の4WDまで。' },
+      places: { title: '観光地', desc: 'ウズベキスタンの有名な名所・都市・地方。' },
     },
   },
   tickets: { title: 'あらゆる旅のチケット', subtitle: 'カテゴリーを選択 — バス・列車、航空券、映画、イベント。', categories: { bus: 'バス・列車', flights: '航空券', cinema: '映画', events: 'イベント' }, book: '予約', seatsLeft: '残り{{count}}席', duration: '所要時間', date: '日付', time: '時間', venue: '会場', hall: 'ホール', carrier: '運航会社', perPerson: '1名あたり', admit: '1名様' },

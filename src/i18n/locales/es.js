@@ -1,19 +1,21 @@
 export default {
   nav: { theme: 'Modo oscuro / claro', home: 'Inicio', services: 'Servicios', tickets: 'Billetes', favorites: 'Favoritos', why: 'Por qué nosotros', getApp: 'Descargar app', login: 'Iniciar sesión', signup: 'Registrarse', logout: 'Cerrar sesión', profile: 'Mi perfil', language: 'Idioma', menu: 'Menú' },
   subnav: { uzbekistan: 'Uzbekistan', regions: 'Regiones populares', destinations: 'Destinos populares', landmarks: 'Monumentos populares', viewAll: 'Ver todo', top10: 'Top 10', support: 'Asistencia 24/7' },
-  app: { title: 'Viaja mejor con la app TravelMate', text: 'Reserva, paga y guarda tus billetes sin conexión: todo en tu bolsillo.', downloadOn: 'Descárgala en', getItOn: 'Disponible en' },
+  app: { soon: 'Próximamente', title: 'Viaja mejor con la app TravelMate', text: 'Reserva, paga y guarda tus billetes sin conexión: todo en tu bolsillo.', downloadOn: 'Descárgala en', getItOn: 'Disponible en' },
+  legal: { updated: 'Última actualización' },
   hero: {
     slides: [
       { title: 'Descubre la Ruta de la Seda como un local', text: 'De las cúpulas azules de Samarcanda a las antiguas murallas de Jiva: planifica, reserva y explora cada paso con una sola app.' },
       { title: 'Viaja acompañado, preocúpate menos', text: 'Hoteles, guías, taxis, billetes y eSIM en un solo lugar. Olvídate de usar diez apps en el camino.' },
       { title: 'Montañas, lagos y ciudades te esperan', text: 'Experiencias seleccionadas de socios locales de confianza, con precios honestos y confirmación inmediata.' },
-      { title: 'El mundo entero, a una reserva', text: 'Mantente conectado en más de 190 países, cambia dinero a buen precio y muévete como un local.' },
+      { title: 'Todo Uzbekistán, a una reserva de distancia', text: 'eSIM local, vuelos nacionales, cambio justo y traslados entre todas las regiones.' },
     ],
     placeholder: '¿A dónde quieres ir?', search: 'Buscar', topSearches: 'Búsquedas populares', trending: 'Destinos en tendencia', recent: 'Búsquedas recientes', clear: 'Borrar', suggestions: 'Sugerencias', noSuggestions: 'Sin coincidencias rápidas: pulsa Buscar para ver todos los resultados', empty: 'Escribe un destino, servicio o billete', prev: 'Diapositiva anterior', next: 'Diapositiva siguiente',
   },
   services: {
-    title: 'Todo lo que necesitas para tu viaje', subtitle: 'Ocho servicios esenciales, una sola cuenta. Toca una tarjeta para ver las ofertas.', explore: 'Explorar', offers: '{{count}} ofertas', all: 'Todos los servicios',
+    title: 'Todo lo que necesitas para tu viaje', subtitle: 'Diez servicios esenciales, una sola cuenta. Toca una tarjeta para ver las ofertas.', explore: 'Explorar', offers: '{{count}} ofertas', all: 'Todos los servicios',
     items: {
+      tours: { title: 'Tours', desc: 'Tours de varios días por Uzbekistán con operadores locales.' },
       accommodation: { title: 'Hoteles', desc: 'Hoteles, casas de huéspedes y apartamentos con cancelación gratuita.' },
       guide: { title: 'Guías', desc: 'Guías certificados que hablan tu idioma.' },
       taxi: { title: 'Taxi', desc: 'Traslados al aeropuerto y viajes urbanos a precio fijo.' },
@@ -22,6 +24,7 @@ export default {
       esim: { title: 'eSIM', desc: 'Datos móviles en minutos, sin roaming ni cambiar la SIM.' },
       tickets: { title: 'Billetes', desc: 'Autobuses, trenes, vuelos, cine y eventos.' },
       rentcar: { title: 'Alquiler', desc: 'Desde compactos urbanos hasta 4x4 para la montaña.' },
+      places: { title: 'Lugares', desc: 'Atracciones, ciudades y regiones famosas de Uzbekistán.' },
     },
   },
   tickets: { title: 'Billetes para cada viaje', subtitle: 'Elige una categoría: autobús y tren, vuelos, cine o eventos.', categories: { bus: 'Autobús y tren', flights: 'Vuelos', cinema: 'Cine', events: 'Eventos' }, book: 'Reservar', seatsLeft: 'Quedan {{count}} plazas', duration: 'Duración', date: 'Fecha', time: 'Hora', venue: 'Lugar', hall: 'Sala', carrier: 'Operador', perPerson: 'por persona', admit: 'Entrada individual' },

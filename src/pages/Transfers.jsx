@@ -10,7 +10,7 @@ import {
   PICKUP, transferDestinations, vehicleClasses, destinationById, vehicleById, transferPrice,
 } from '../data/transfers'
 import { useAuth } from '../context/AuthContext'
-import { useBook, useFormat } from '../hooks'
+import { useBook, useFormat, usePlaceName } from '../hooks'
 
 const DRAFT_KEY = 'tm_transfer_draft'
 const PHONE_RE = /^\+?[\d\s()-]{7,20}$/
@@ -35,11 +35,12 @@ function Steps({ step }) {
 // Tashkent is fixed; the drop-off is a select on step 1 and read-only on step 2.
 function Route({ destination, onChange }) {
   const { t } = useTranslation()
+  const place = usePlaceName()
   return (
     <div className="tf-route">
       <div className="tf-route__stop">
         <span className="tf-route__label">{t('transfer.pickup')}</span>
-        <span className="tf-route__value"><MapPin size={16} /> {PICKUP} <Lock size={13} className="tf-route__lock" aria-label={t('transfer.pickupFixed')} /></span>
+        <span className="tf-route__value"><MapPin size={16} /> {place(PICKUP)} <Lock size={13} className="tf-route__lock" aria-label={t('transfer.pickupFixed')} /></span>
       </div>
       <ArrowDown size={16} className="tf-route__arrow" aria-hidden="true" />
       <div className="tf-route__stop">
@@ -49,12 +50,12 @@ function Route({ destination, onChange }) {
             <MapPin size={16} />
             <select value={destination?.id || ''} onChange={(e) => onChange(e.target.value)} aria-label={t('transfer.dropoff')}>
               <option value="" disabled>{t('transfer.choose')}</option>
-              {transferDestinations.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+              {transferDestinations.map((d) => <option key={d.id} value={d.id}>{place(d.name)}</option>)}
             </select>
             <ChevronDown size={16} className="tf-select__chev" />
           </label>
         ) : (
-          <span className="tf-route__value"><MapPin size={16} /> {destination.name}</span>
+          <span className="tf-route__value"><MapPin size={16} /> {place(destination.name)}</span>
         )}
       </div>
       {destination && <p className="tf-route__meta">{t('transfer.duration', { hours: destination.hours, km: destination.km })}</p>}
@@ -186,6 +187,7 @@ function readDraft() {
 
 export function TransferCheckout() {
   const { t } = useTranslation()
+  const place = usePlaceName()
   const f = useFormat()
   const book = useBook()
   const { user } = useAuth()
@@ -250,7 +252,7 @@ export function TransferCheckout() {
     }
     const item = {
       id: `transfer-${destination.id}-${vehicle.id}-${form.date}-${form.time}`,
-      name: t('transfer.bookingName', { from: PICKUP, to: destination.name, vehicle: t(`transfer.vehicles.${vehicle.id}`, { defaultValue: vehicle.name || vehicle.id }) }),
+      name: t('transfer.bookingName', { from: place(PICKUP), to: place(destination.name), vehicle: t(`transfer.vehicles.${vehicle.id}`, { defaultValue: vehicle.name || vehicle.id }) }),
       kind: 'taxi',
       price,
       meta: `${f.date(form.date, { day: 'numeric', month: 'long' })} · ${form.time} · ${t('guides.book.peopleCount', { count: passengers })}`,
@@ -265,8 +267,8 @@ export function TransferCheckout() {
 
   const summaryRows = [
     ['vehicle', t(`transfer.vehicles.${vehicle.id}`, { defaultValue: vehicle.name || vehicle.id })],
-    ['pickup', PICKUP],
-    ['dropoff', destination.name],
+    ['pickup', place(PICKUP)],
+    ['dropoff', place(destination.name)],
     ['date', form.date ? f.date(form.date, { weekday: 'short', day: 'numeric', month: 'short' }) : '—'],
     ['time', form.time || '—'],
     ['passengers', passengers],

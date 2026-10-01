@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  FaFacebookF, FaInstagram, FaTelegramPlane, FaYoutube, FaLinkedinIn,
   FaMapMarkerAlt, FaPhoneAlt, FaEnvelope,
 } from 'react-icons/fa'
 import Logo from './Logo'
@@ -9,14 +8,6 @@ import { StoreButtons } from './Navbar'
 import { services, serviceHref } from '../data/services'
 
 const YEAR = new Date().getFullYear()
-
-const socials = [
-  { icon: FaTelegramPlane, href: 'https://t.me/', label: 'Telegram' },
-  { icon: FaInstagram, href: 'https://instagram.com/', label: 'Instagram' },
-  { icon: FaFacebookF, href: 'https://facebook.com/', label: 'Facebook' },
-  { icon: FaYoutube, href: 'https://youtube.com/', label: 'YouTube' },
-  { icon: FaLinkedinIn, href: 'https://linkedin.com/', label: 'LinkedIn' },
-]
 
 export default function Footer() {
   const { t } = useTranslation()
@@ -33,11 +24,6 @@ export default function Footer() {
               <li><FaPhoneAlt /> <a href="tel:+998916550112">+998 91 655 01 12</a></li>
               <li><FaEnvelope /> <a href="mailto:travelmatee@gmail.com">travelmatee@gmail.com</a></li>
             </ul>
-            <div className="socials">
-              {socials.map(({ icon: Icon, href, label }) => (
-                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}><Icon /></a>
-              ))}
-            </div>
           </div>
 
           <div>
@@ -77,9 +63,9 @@ export default function Footer() {
         <div className="footer__bottom">
           <span>© {YEAR} TravelMate. {t('footer.rights')}</span>
           <div>
-            <a href="#privacy">{t('footer.privacy')}</a>
-            <a href="#terms">{t('footer.terms')}</a>
-            <a href="#cookies">{t('footer.cookies')}</a>
+            <Link to="/legal/privacy">{t('footer.privacy')}</Link>
+            <Link to="/legal/terms">{t('footer.terms')}</Link>
+            <Link to="/legal/cookies">{t('footer.cookies')}</Link>
           </div>
         </div>
       </div>

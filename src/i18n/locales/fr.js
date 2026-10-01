@@ -1,19 +1,21 @@
 export default {
   nav: { theme: 'Mode sombre / clair', home: 'Accueil', services: 'Services', tickets: 'Billets', favorites: 'Coups de cœur', why: 'Pourquoi nous', getApp: "Télécharger l'app", login: 'Connexion', signup: 'Inscription', logout: 'Déconnexion', profile: 'Mon profil', language: 'Langue', menu: 'Menu' },
   subnav: { uzbekistan: 'Uzbekistan', regions: 'Régions populaires', destinations: 'Destinations populaires', landmarks: 'Monuments populaires', viewAll: 'Tout voir', top10: 'Top 10', support: 'Assistance 24h/24' },
-  app: { title: "Voyagez malin avec l'app TravelMate", text: 'Réservez, payez et gardez vos billets hors ligne — tout dans votre poche.', downloadOn: 'Télécharger sur', getItOn: 'Disponible sur' },
+  app: { soon: 'Bientôt', title: "Voyagez malin avec l'app TravelMate", text: 'Réservez, payez et gardez vos billets hors ligne — tout dans votre poche.', downloadOn: 'Télécharger sur', getItOn: 'Disponible sur' },
+  legal: { updated: 'Dernière mise à jour' },
   hero: {
     slides: [
       { title: 'Découvrez la Route de la soie comme un local', text: "Des coupoles bleues de Samarcande aux remparts antiques de Khiva : planifiez, réservez et explorez chaque étape avec une seule app." },
       { title: 'Voyagez ensemble, sans souci', text: "Hôtels, guides, taxis, billets et eSIM au même endroit. Fini de jongler avec dix applis en route." },
       { title: 'Montagnes, lacs et villes vous attendent', text: 'Des expériences sélectionnées auprès de partenaires locaux de confiance, à prix honnêtes et confirmées instantanément.' },
-      { title: 'Le monde entier, à une réservation', text: 'Restez connecté dans plus de 190 pays, changez votre argent au juste prix et déplacez-vous comme un local.' },
+      { title: 'Tout l\'Ouzbékistan à une réservation près', text: 'eSIM locale, vols intérieurs, taux de change équitables et trajets entre toutes les régions.' },
     ],
     placeholder: 'Où voulez-vous aller ?', search: 'Rechercher', topSearches: 'Recherches populaires', trending: 'Destinations tendance', recent: 'Recherches récentes', clear: 'Effacer', suggestions: 'Suggestions', noSuggestions: 'Aucune correspondance rapide — cliquez sur Rechercher pour tout voir', empty: 'Saisissez une destination, un service ou un billet', prev: 'Diapositive précédente', next: 'Diapositive suivante',
   },
   services: {
-    title: 'Tout ce qu’il faut pour votre voyage', subtitle: 'Huit services essentiels, un seul compte. Touchez une carte pour voir les offres.', explore: 'Explorer', offers: '{{count}} offres', all: 'Tous les services',
+    title: 'Tout ce qu’il faut pour votre voyage', subtitle: 'Dix services essentiels, un seul compte. Touchez une carte pour voir les offres.', explore: 'Explorer', offers: '{{count}} offres', all: 'Tous les services',
     items: {
+      tours: { title: 'Circuits', desc: 'Circuits de plusieurs jours en Ouzbékistan par des voyagistes locaux.' },
       accommodation: { title: 'Hôtels', desc: 'Hôtels, maisons d’hôtes et appartements avec annulation gratuite.' },
       guide: { title: 'Guides', desc: 'Des guides certifiés qui parlent votre langue.' },
       taxi: { title: 'Taxi', desc: 'Transferts aéroport et courses en ville à prix fixe.' },
@@ -22,6 +24,7 @@ export default {
       esim: { title: 'eSIM', desc: 'Des données mobiles en quelques minutes, sans roaming.' },
       tickets: { title: 'Billets', desc: 'Bus, trains, vols, cinéma et événements.' },
       rentcar: { title: 'Location', desc: 'De la citadine au 4x4 pour la montagne.' },
+      places: { title: 'Lieux', desc: 'Sites célèbres, villes et régions d\'Ouzbékistan à découvrir.' },
     },
   },
   tickets: { title: 'Des billets pour chaque trajet', subtitle: 'Choisissez une catégorie : bus et train, vols, cinéma ou événements.', categories: { bus: 'Bus et train', flights: 'Vols', cinema: 'Cinéma', events: 'Événements' }, book: 'Réserver', seatsLeft: '{{count}} places restantes', duration: 'Durée', date: 'Date', time: 'Heure', venue: 'Lieu', hall: 'Salle', carrier: 'Transporteur', perPerson: 'par personne', admit: 'Entrée unique' },

@@ -9,6 +9,7 @@ import { PageHero } from './Places'
 import NotFound from './NotFound'
 import Price from '../components/Price'
 import PlaceImage from '../components/PlaceImage'
+import Marquee from '../components/Marquee'
 import {
   tours, tourBySlug, operators, operatorById, tourOperator, tourCities, durationFilters, DEPOSIT_RATE, MAX_TRAVELERS, LEAD_DAYS,
 } from '../data/tours'
@@ -63,12 +64,9 @@ export function ToursCarousel() {
           <Link to="/tours" className="btn btn--outline">{t('subnav.viewAll')} <FaArrowRight className="flip-rtl" /></Link>
         </div>
       </div>
-      {/* Same seamless loop as the famous-places strip: two copies, the second hidden from assistive tech. */}
-      <div className="marquee">
-        <div className="marquee__track" style={{ '--marquee-duration': `${tours.length * 6}s` }}>
-          {[0, 1].map((copy) => tours.map((tour) => <TourCard key={`${copy}-${tour.slug}`} tour={tour} inert={copy === 1} />))}
-        </div>
-      </div>
+      <Marquee>
+        {(copy) => tours.map((tour) => <TourCard key={`${copy}-${tour.slug}`} tour={tour} inert={copy === 1} />)}
+      </Marquee>
     </section>
   )
 }

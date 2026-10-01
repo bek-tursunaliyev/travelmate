@@ -96,14 +96,15 @@ export function StoreButtons({ small = false }) {
   const { t } = useTranslation()
   return (
     <div className={`store-buttons ${small ? 'store-buttons--small' : ''}`}>
-      <a className="store-btn" href="https://www.apple.com/app-store/" target="_blank" rel="noreferrer">
+      {/* The mobile apps are not published yet, so the badges are not links. */}
+      <span className="store-btn is-soon" aria-disabled="true" title={t('app.soon', { defaultValue: 'Coming soon' })}>
         <FaApple />
-        <span><small>{t('app.downloadOn')}</small>App Store</span>
-      </a>
-      <a className="store-btn" href="https://play.google.com/store/search?q=TravelMate&c=apps" target="_blank" rel="noreferrer">
+        <span><small>{t('app.soon', { defaultValue: 'Coming soon' })}</small>App Store</span>
+      </span>
+      <span className="store-btn is-soon" aria-disabled="true" title={t('app.soon', { defaultValue: 'Coming soon' })}>
         <FaGooglePlay />
-        <span><small>{t('app.getItOn')}</small>Google Play</span>
-      </a>
+        <span><small>{t('app.soon', { defaultValue: 'Coming soon' })}</small>Google Play</span>
+      </span>
     </div>
   )
 }
