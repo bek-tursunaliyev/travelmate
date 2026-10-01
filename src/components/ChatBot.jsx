@@ -43,7 +43,7 @@ function localReply(text, t, f) {
   return links.length ? { text: t('chat.found'), links } : { text: t('chat.noMatch') }
 }
 
-const SITE_PATH = /(\/(?:places|place\/[\w-]+\/[\w-]+|services\/[\w-]+|guides(?:\/[\w-]+)?|tours(?:\/[\w-]+)?|tickets)\b)/g
+const SITE_PATH = /(\/(?:places|place\/[\w-]+\/[\w-]+|services\/[\w-]+|guides(?:\/[\w-]+)?|tours(?:\/[\w-]+)?|transfers|tickets)\b)/g
 
 // Light formatting for model replies: "* item" bullets, **bold**, and site paths ("/guides/…") as links.
 function RichText({ text }) {

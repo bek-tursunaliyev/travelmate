@@ -4,6 +4,7 @@
 import { allPlaces } from '../src/data/places.js'
 import { guides } from '../src/data/guides.js'
 import { tours, operatorById } from '../src/data/tours.js'
+import { vehicleClasses, destinationById, transferDestinations, transferPrice } from '../src/data/transfers.js'
 
 const GATEWAY_URL = 'https://ai-gateway.vercel.sh/v1/chat/completions'
 const GATEWAY_MODEL = process.env.AI_MODEL || 'anthropic/claude-haiku-4.5'
@@ -18,6 +19,9 @@ const MAX_CHARS = 1000
 
 const guideList = guides.map((g) => `${g.name} (${g.city}, $${g.price}/h, ${g.languages.join('/')}) → /guides/${g.id}`).join('; ')
 const tourList = tours.map((t) => `${t.title} — ${t.days} days, ${t.route.join('–')}, from $${t.price}/person, by ${operatorById[t.operator].name} → /tours/${t.slug}`).join('\n')
+const transferList = vehicleClasses
+  .map((v) => `${v.id} (${v.passengers} pax, ${v.luggage} bags): airport $${transferPrice(v, destinationById.airport)}, Samarkand $${transferPrice(v, destinationById.samarkand)}`)
+  .join('; ')
 const placeList = allPlaces.map((p) => `${p.name} (${p.country}) → /place/${p.list}/${p.slug}`).join('\n')
 
 const SYSTEM = `You are TravelMate AI, the friendly travel assistant of the TravelMate website (Tashkent, Uzbekistan).
@@ -31,7 +35,8 @@ TravelMate services and typical prices:
 - Accommodation (/services/accommodation): hotels from $35 to $180 per night — e.g. Silk Road Boutique, Bukhara $48; Registan Plaza, Samarkand $65.
 - Local guides (/guides): pick a city, compare verified guides and book by the hour ($11–20/hour, 2 h, 4 h or full day). Tours $20–45 per person — e.g. Samarkand Old City walk $25.
   Guides: ${guideList}
-- Taxi (/services/taxi): city rides from $3, Tashkent airport transfer $12, Tashkent → Samarkand $55.
+- Taxi & transfers (/transfers): private car from Tashkent only, price per vehicle. Destinations: ${transferDestinations.map((d) => d.name).join(', ')}.
+  Classes: ${transferList}. Choose a vehicle, then enter date, time and contact details.
 - Food & dining (/services/food): meals $6–18 — Besh Qozon plov center $6.
 - Currency exchange (/services/exchange): 0% commission desks; live converter on the page.
 - eSIM (/services/esim): Uzbekistan 10 GB / 15 days $10; global plans from $25.
