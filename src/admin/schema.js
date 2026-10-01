@@ -5,6 +5,7 @@
 // i18n ({ en, uz, ru }), list (one value per line), pairs (lines "title | text"), select.
 import { tourCities } from '../data/tours'
 import { guideCities } from '../data/guides'
+import { localized } from '../data/tickets'
 
 const placeFields = [
   { k: 'name', type: 'text', required: true },
@@ -85,7 +86,7 @@ const routeFields = [
 ]
 
 const showFields = [
-  { k: 'title', type: 'text', required: true },
+  { k: 'title', type: 'i18n', required: true },
   { k: 'photo', type: 'image' },
   { k: 'wiki', type: 'text', hint: 'filmWiki' },
   { k: 'description', type: 'i18n', long: true },
@@ -95,8 +96,8 @@ const showFields = [
   { k: 'venue', type: 'select', options: (doc) => doc.venues.map((v) => [v.id, `${v.name} · ${v.city}`]) },
   { k: 'date', type: 'date' },
   { k: 'time', type: 'time' },
-  { k: 'hall', type: 'text' },
-  { k: 'genre', type: 'text' },
+  { k: 'hall', type: 'i18n' },
+  { k: 'genre', type: 'i18n' },
   { k: 'price', type: 'number' },
   { k: 'seats', type: 'number' },
 ]
@@ -106,7 +107,7 @@ const offerRow = (r) => ({ title: r.name, sub: `${r.location || ''} · $${r.pric
 const routeRow = (r) => ({ title: `${r.from} → ${r.to}`, sub: `${r.date || ''} ${r.depart || ''} · ${r.carrier || ''} · $${r.price}` })
 const showRow = (doc) => (r) => {
   const v = doc.venues.find((x) => x.id === r.venue)
-  return { title: r.title, sub: `${r.date || ''} ${(r.times || [r.time]).join(' ')} · ${v ? v.name : r.venue || ''} · $${r.price}`, image: r.photo || r.wiki }
+  return { title: localized(r.title, 'en'), sub: `${r.date || ''} ${(r.times || [r.time]).join(' ')} · ${v ? v.name : r.venue || ''} · $${r.price}`, image: r.photo || r.wiki }
 }
 
 export const groups = [
@@ -120,16 +121,6 @@ export const groups = [
           { k: 'image', type: 'image', required: true },
           { k: 'title', type: 'i18n', required: true },
           { k: 'text', type: 'i18n', long: true },
-        ],
-      },
-      {
-        id: 'stats', path: ['stats'], key: 'key',
-        row: (r) => ({ title: `${r.value}${r.suffix || ''}`, sub: r.label || r.key }),
-        fields: [
-          { k: 'label', type: 'text', hint: 'statLabel' },
-          { k: 'value', type: 'number', step: 0.1, required: true },
-          { k: 'suffix', type: 'text' },
-          { k: 'digits', type: 'number' },
         ],
       },
     ],

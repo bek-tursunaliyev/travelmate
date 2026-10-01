@@ -29,7 +29,7 @@ const newId = (base) => `${slugify(base)}-${Math.random().toString(36).slice(2, 
 const toForm = (field, v) => {
   if (field.type === 'list') return (v || []).join('\n')
   if (field.type === 'pairs') return (v || []).map((p) => (Array.isArray(p) ? p.join(' | ') : p)).join('\n')
-  if (field.type === 'i18n') return { uz: '', en: '', ru: '', ...(v || {}) }
+  if (field.type === 'i18n') return { uz: '', en: '', ru: '', ...(typeof v === 'string' ? { en: v } : v || {}) }
   if (field.type === 'bool') return Boolean(v)
   return v ?? ''
 }

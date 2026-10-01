@@ -1,4 +1,4 @@
-// Home-page content the admin panel edits: hero carousel and the "Why us" statistics.
+// Home-page content the admin panel edits: the hero carousel.
 // Slide text is per language ({ en, uz, ru }); other languages fall back to the
 // translation files for the default slides (`i18n` index), then to English.
 
@@ -45,7 +45,7 @@ const defaultHeroSlides = [
   },
 ]
 
-// `key` maps to why.stats.<key> for the label.
+// Legacy home-page statistics (no longer shown or edited; kept so older saved content still loads).
 const defaultStats = [
   { key: 'travelers', value: 2.4, suffix: 'M+', digits: 1 },
   { key: 'countries', value: 190, suffix: '+', digits: 0 },

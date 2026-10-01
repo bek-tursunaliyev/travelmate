@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  FaLayerGroup, FaHandshake, FaTags,
   FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChair, FaArrowRight,
 } from 'react-icons/fa'
 import { services, serviceHref } from '../data/services'
-import { ticketCategories, tickets, venueById } from '../data/tickets'
+import { localized, ticketCategories, tickets, venueById } from '../data/tickets'
 import { famousPlaces, placePhoto } from '../data/places'
-import { stats } from '../data/site'
 import PlaceImage from './PlaceImage'
-import { useCountUp, useFormat, useInView } from '../hooks'
+import Price from './Price'
+import { useFormat } from '../hooks'
 
 
 export function SectionHeader({ eyebrow, title, subtitle, action }) {
@@ -70,7 +69,8 @@ export function ticketVenue(tk) {
 
 // A ticket card; the whole card opens the ticket page where the booking happens.
 export function TicketItem({ tk, cat }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const lng = i18n.resolvedLanguage
   const f = useFormat()
   const isRoute = cat === 'bus' || cat === 'flights'
   const Icon = ticketCategories.find((c) => c.id === cat).icon
@@ -108,7 +108,7 @@ export function TicketItem({ tk, cat }) {
           </div>
         ) : (
           <div className="pass__show">
-            <strong>{tk.title}</strong>
+            <strong>{localized(tk.title, lng)}</strong>
             {venue && <span><FaMapMarkerAlt /> {[venue.name, venue.city].filter(Boolean).join(', ')}</span>}
           </div>
         )}
@@ -119,8 +119,8 @@ export function TicketItem({ tk, cat }) {
           ) : (
             <>
               <span><FaClock /> {(tk.times && tk.times.length > 1) ? tk.times.join(' · ') : tk.time}</span>
-              {tk.hall && <span><FaChair /> {tk.hall}</span>}
-              {tk.genre && <span className="pass__genre">{tk.genre}</span>}
+              {tk.hall && <span><FaChair /> {localized(tk.hall, lng)}</span>}
+              {tk.genre && <span className="pass__genre">{localized(tk.genre, lng)}</span>}
             </>
           )}
         </div>
@@ -259,46 +259,65 @@ export function FamousPlaces() {
   )
 }
 
-/* ------------------------------ Why choose ------------------------------ */
+/* ------------------------------ FAQ ------------------------------ */
 
-const whyItems = [
-  { key: 'allinone', icon: FaLayerGroup },
-  { key: 'local', icon: FaHandshake },
-  { key: 'prices', icon: FaTags },
+// Average spend of one traveller per day (USD, mid-range: 3–4★ hotel, cafés, taxis, entry tickets).
+const cityCosts = [
+  { key: 'tashkent', days: 3, hotel: 45, food: 20, transport: 8, sights: 10 },
+  { key: 'samarkand', days: 3, hotel: 40, food: 18, transport: 6, sights: 15 },
+  { key: 'bukhara', days: 2, hotel: 35, food: 15, transport: 5, sights: 12 },
+  { key: 'khiva', days: 2, hotel: 35, food: 15, transport: 5, sights: 14 },
+  { key: 'fergana', days: 2, hotel: 30, food: 14, transport: 7, sights: 8 },
 ]
+const costParts = ['hotel', 'food', 'transport', 'sights']
+const faqGroups = ['costs', 'site']
 
-
-function Stat({ stat, start }) {
+export function Faq() {
   const { t } = useTranslation()
-  const f = useFormat()
-  const v = useCountUp(Number(stat.value) || 0, start, 1800)
-  // A label typed in the admin panel wins over the translated default.
+  const [city, setCity] = useState(cityCosts[0].key)
+  const [group, setGroup] = useState(faqGroups[0])
+  const c = cityCosts.find((x) => x.key === city)
+  const perDay = costParts.reduce((sum, k) => sum + c[k], 0)
   return (
-    <div className="stat">
-      <strong>{f.number(v, Number(stat.digits) || 0)}{stat.suffix}</strong>
-      <span>{stat.label || t(`why.stats.${stat.key}`)}</span>
-    </div>
-  )
-}
-
-export function WhyChoose() {
-  const { t } = useTranslation()
-  const [ref, inView] = useInView()
-  return (
-    <section className="section section--tint" id="why" ref={ref}>
+    <section className="section section--tint" id="faq">
       <div className="container">
-        <SectionHeader eyebrow="TravelMate" title={t('why.title')} subtitle={t('why.subtitle')} />
-        <div className="why-grid">
-          {whyItems.map(({ key, icon: Icon }, i) => (
-            <article key={key} className={`why ${inView ? 'is-in' : ''}`} style={{ transitionDelay: `${i * 70}ms` }}>
-              <span className="why__icon"><Icon /></span>
-              <h3>{t(`why.items.${key}.title`)}</h3>
-              <p>{t(`why.items.${key}.desc`)}</p>
-            </article>
-          ))}
-        </div>
-        <div className="stats">
-          {stats.map((s) => <Stat key={s.key} stat={s} start={inView} />)}
+        <SectionHeader eyebrow="TravelMate" title={t('faq.title')} subtitle={t('faq.subtitle')} />
+        <div className="faq">
+          <aside className="faq-cost">
+            <h3>{t('faq.costTitle')}</h3>
+            <p className="faq-cost__note">{t('faq.costNote')}</p>
+            <div className="chips faq-cost__cities">
+              {cityCosts.map(({ key }) => (
+                <button key={key} className={`chip ${key === city ? 'is-active' : 'chip--muted'}`} onClick={() => setCity(key)} aria-pressed={key === city}>
+                  {t(`faq.cities.${key}`)}
+                </button>
+              ))}
+            </div>
+            <ul className="faq-cost__list">
+              {costParts.map((k) => (
+                <li key={k}><span>{t(`faq.parts.${k}`)}</span><Price usd={c[k]} /></li>
+              ))}
+            </ul>
+            <div className="faq-cost__total">
+              <div><span>{t('faq.perDay')}</span><Price usd={perDay} /></div>
+              <div><span>{t('faq.perTrip', { count: c.days })}</span><Price usd={perDay * c.days} /></div>
+            </div>
+          </aside>
+          <div className="faq-list">
+            <div className="faq-tabs" role="tablist">
+              {faqGroups.map((g) => (
+                <button key={g} role="tab" aria-selected={g === group} className={g === group ? 'is-active' : ''} onClick={() => setGroup(g)}>
+                  {t(`faq.groups.${g}`)}
+                </button>
+              ))}
+            </div>
+            {t(`faq.items.${group}`, { returnObjects: true }).map(([q, a]) => (
+              <details key={q}>
+                <summary>{q}</summary>
+                <p>{a}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </div>
     </section>

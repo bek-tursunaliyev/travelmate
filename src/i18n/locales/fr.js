@@ -25,18 +25,6 @@ export default {
     },
   },
   tickets: { title: 'Des billets pour chaque trajet', subtitle: 'Choisissez une catégorie : bus et train, vols, cinéma ou événements.', categories: { bus: 'Bus et train', flights: 'Vols', cinema: 'Cinéma', events: 'Événements' }, book: 'Réserver', seatsLeft: '{{count}} places restantes', duration: 'Durée', date: 'Date', time: 'Heure', venue: 'Lieu', hall: 'Salle', carrier: 'Transporteur', perPerson: 'par personne', admit: 'Entrée unique' },
-  why: {
-    title: 'Pourquoi choisir TravelMate', subtitle: 'Conçu par des voyageurs, pour des voyageurs — voici ce qui fait la différence.',
-    items: {
-      allinone: { title: 'Tout-en-un', desc: 'Hébergement, trajets, guides, billets et forfaits data avec un seul compte et un seul paiement.' },
-      local: { title: 'Partenaires locaux fiables', desc: 'Chaque hôtel, guide et chauffeur est vérifié en personne par notre équipe régionale.' },
-      prices: { title: 'Prix honnêtes', desc: 'Aucun frais caché. Le prix affiché est le prix payé.' },
-      support: { title: 'Assistance humaine 24h/24', desc: 'De vraies personnes en 11 langues, jour et nuit.' },
-      secure: { title: 'Paiements sécurisés', desc: 'Chiffrement bancaire et connexion Google protègent votre compte.' },
-      offline: { title: 'Fonctionne hors ligne', desc: 'Billets, bons et réservations accessibles sans internet.' },
-    },
-    stats: { travelers: 'Voyageurs satisfaits', countries: 'Pays', partners: 'Partenaires locaux', rating: 'Note moyenne' },
-  },
   footer: { about: 'TravelMate est votre compagnon de voyage tout-en-un : hébergement, guides, trajets, billets et data mobile, réservés en quelques secondes.', company: 'Entreprise', aboutUs: 'À propos', support: 'Assistance', help: "Centre d'aide", contact: 'Nous contacter', myBookings: 'Mes réservations', servicesCol: 'Services', newsletter: 'Recevez nos bons plans', newsletterText: 'Un e-mail par semaine avec les meilleures offres. Sans spam.', email: 'Votre e-mail', subscribe: "S'abonner", rights: 'Tous droits réservés.', privacy: 'Confidentialité', terms: 'Conditions', cookies: 'Cookies', address: 'Tachkent, Ouzbékistan' },
   auth: { loginTitle: 'Bon retour', loginSubtitle: 'Connectez-vous pour gérer vos voyages et réservations.', signupTitle: 'Créez votre compte', signupSubtitle: 'Rejoignez des milliers de voyageurs — en un clic.', noAccount: "Pas encore de compte ?", haveAccount: 'Déjà un compte ?', agree: 'En continuant, vous acceptez nos Conditions et notre Politique de confidentialité.', welcome: 'Bienvenue, {{name}} !', failed: 'La connexion Google a échoué. Réessayez.', loggedOut: 'Vous êtes déconnecté.', required: 'Connectez-vous pour réserver.', perks: ['Confirmation instantanée', 'Tous vos billets et bons au même endroit', 'Prix exclusifs membres'], secure: 'Connexion sécurisée avec Google', or: 'ou' },
   popular: { subtitle: 'Le top 10 choisi par les voyageurs TravelMate.', explore: 'Explorer' },

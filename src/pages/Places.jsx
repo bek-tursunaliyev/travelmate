@@ -8,14 +8,10 @@ import { ServiceCard, PlaceCard } from '../components/Sections'
 import { useWiki, sizedThumb } from '../hooks'
 import NotFound from './NotFound'
 
-const isUrl = (v) => /^(https?:)?\/\//.test(v || '')
-
-// Large page header with a photo. `photo` is a Wikipedia title or an image URL; `image` a ready URL.
-export function PageHero({ title, subtitle, children, image, photo }) {
-  const { data } = useWiki(photo && !isUrl(photo) ? photo : null)
-  const bg = image || (isUrl(photo) ? photo : sizedThumb(data?.thumb, 1280))
+// Page header: just the title block in the page container (no photo banner).
+export function PageHero({ title, subtitle, children }) {
   return (
-    <section className={`page-hero ${bg ? 'has-photo' : ''}`} style={bg ? { '--img': `url("${bg}")` } : undefined}>
+    <section className="page-hero">
       <div className="container">
         {children}
         <h1>{title}</h1>

@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import * as maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
+// MapLibre finds its worker next to its own file, which breaks once Vite bundles it (blank maps).
+// Let Vite build the worker and hand MapLibre the resulting URL instead.
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { useTheme } from '../context/ThemeContext'
 
 // Vector map in the site's own colours: OpenFreeMap tiles (free, no API key) with the
@@ -8,6 +11,8 @@ import { useTheme } from '../context/ThemeContext'
 // Loaded lazily (React.lazy) so MapLibre is only downloaded when a map is shown.
 
 const STYLE_URL = 'https://tiles.openfreemap.org/styles/positron'
+
+maplibregl.setWorkerUrl(workerUrl)
 
 const PALETTE = {
   light: {
@@ -34,24 +39,33 @@ async function loadStyle() {
 // Repaint each layer of the base style by its role.
 function themed(style, mode) {
   const c = PALETTE[mode]
-  const paint = (layer, values) => { layer.paint = { ...(layer.paint || {}), ...values } }
+  // Only set properties that exist for the layer's type: a stray "line-color" on a fill layer makes the style invalid.
+  const paint = (layer, values) => {
+    const prefix = layer.type === 'symbol' ? 'text-' : `${layer.type}-`
+    const valid = Object.fromEntries(Object.entries(values).filter(([k]) => k.startsWith(prefix)))
+    layer.paint = { ...(layer.paint || {}), ...valid }
+  }
+  // Main colour of fill/line/circle layers; labels (symbol layers) are coloured separately below.
+  const color = (layer, value) => {
+    if (['fill', 'line', 'circle', 'background'].includes(layer.type)) paint(layer, { [`${layer.type}-color`]: value })
+  }
   for (const layer of style.layers) {
     const id = layer.id
     if (layer.type === 'background') paint(layer, { 'background-color': c.background })
-    else if (id === 'water' || id.startsWith('landcover_ice') || id.startsWith('landcover_glacier')) paint(layer, { 'fill-color': c.water })
-    else if (id === 'waterway') paint(layer, { 'line-color': c.water })
-    else if (id === 'park' || id === 'landcover_wood') paint(layer, { 'fill-color': c.park, 'fill-opacity': 1 })
+    else if (id === 'water' || id.startsWith('landcover_ice') || id.startsWith('landcover_glacier')) color(layer, c.water)
+    else if (id === 'waterway') color(layer, c.water)
+    else if (id === 'park' || id === 'landcover_wood') paint(layer, { 'fill-color': c.park, 'fill-opacity': 1, 'line-color': c.park })
     else if (id === 'landuse_residential') paint(layer, { 'fill-color': c.residential, 'fill-opacity': 1 })
     else if (id === 'building') paint(layer, { 'fill-color': c.building, 'fill-outline-color': c.building })
-    else if (id.startsWith('aeroway') && layer.type === 'fill') paint(layer, { 'fill-color': c.residential })
-    else if (id.startsWith('aeroway')) paint(layer, { 'line-color': c.roadCasing })
-    else if (id.includes('motorway') && id.includes('casing')) paint(layer, { 'line-color': c.motorwayCasing })
-    else if (id.includes('motorway')) paint(layer, { 'line-color': c.motorway })
-    else if (id.includes('casing')) paint(layer, { 'line-color': c.roadCasing })
-    else if (id.startsWith('highway_major')) paint(layer, { 'line-color': c.major })
-    else if (id.startsWith('highway') || id.startsWith('road')) paint(layer, layer.type === 'fill' ? { 'fill-color': c.road } : { 'line-color': c.road })
-    else if (id.startsWith('railway')) paint(layer, { 'line-color': c.rail })
-    else if (id.startsWith('boundary')) paint(layer, { 'line-color': c.boundary })
+    else if (id.startsWith('aeroway') && layer.type === 'fill') color(layer, c.residential)
+    else if (id.startsWith('aeroway')) color(layer, c.roadCasing)
+    else if (id.includes('motorway') && id.includes('casing')) color(layer, c.motorwayCasing)
+    else if (id.includes('motorway')) color(layer, c.motorway)
+    else if (id.includes('casing')) color(layer, c.roadCasing)
+    else if (id.startsWith('highway_major')) color(layer, c.major)
+    else if (id.startsWith('highway') || id.startsWith('road')) color(layer, c.road)
+    else if (id.startsWith('railway')) color(layer, c.rail)
+    else if (id.startsWith('boundary')) color(layer, c.boundary)
     if (layer.type === 'symbol') {
       const major = /city|country|state/.test(id)
       paint(layer, { 'text-color': major ? c.text : c.textMuted, 'text-halo-color': c.halo, 'text-halo-width': 1.4 })

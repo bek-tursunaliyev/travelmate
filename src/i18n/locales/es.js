@@ -25,18 +25,6 @@ export default {
     },
   },
   tickets: { title: 'Billetes para cada viaje', subtitle: 'Elige una categoría: autobús y tren, vuelos, cine o eventos.', categories: { bus: 'Autobús y tren', flights: 'Vuelos', cinema: 'Cine', events: 'Eventos' }, book: 'Reservar', seatsLeft: 'Quedan {{count}} plazas', duration: 'Duración', date: 'Fecha', time: 'Hora', venue: 'Lugar', hall: 'Sala', carrier: 'Operador', perPerson: 'por persona', admit: 'Entrada individual' },
-  why: {
-    title: 'Por qué elegir TravelMate', subtitle: 'Creado por viajeros, para viajeros: esto es lo que marca la diferencia.',
-    items: {
-      allinone: { title: 'Todo en una app', desc: 'Alojamiento, transporte, guías, billetes y datos con una cuenta y un solo pago.' },
-      local: { title: 'Socios locales de confianza', desc: 'Cada hotel, guía y conductor es verificado en persona por nuestro equipo regional.' },
-      prices: { title: 'Precios honestos', desc: 'Sin cargos ocultos. Pagas exactamente lo que ves.' },
-      support: { title: 'Atención humana 24/7', desc: 'Personas reales en 11 idiomas, día y noche, estés donde estés.' },
-      secure: { title: 'Pagos seguros', desc: 'Cifrado de nivel bancario e inicio de sesión con Google.' },
-      offline: { title: 'Funciona sin conexión', desc: 'Billetes, bonos y reservas disponibles sin internet.' },
-    },
-    stats: { travelers: 'Viajeros felices', countries: 'Países', partners: 'Socios locales', rating: 'Valoración media' },
-  },
   footer: { about: 'TravelMate es tu compañero de viaje todo en uno: alojamiento, guías, transporte, billetes y datos móviles, reservados en segundos.', company: 'Empresa', aboutUs: 'Sobre nosotros', support: 'Soporte', help: 'Centro de ayuda', contact: 'Contacto', myBookings: 'Mis reservas', servicesCol: 'Servicios', newsletter: 'Recibe ofertas de viaje', newsletterText: 'Un correo a la semana con las mejores ofertas. Sin spam.', email: 'Tu email', subscribe: 'Suscribirse', rights: 'Todos los derechos reservados.', privacy: 'Privacidad', terms: 'Términos', cookies: 'Cookies', address: 'Taskent, Uzbekistán' },
   auth: { loginTitle: 'Bienvenido de nuevo', loginSubtitle: 'Inicia sesión para gestionar tus viajes y reservas.', signupTitle: 'Crea tu cuenta', signupSubtitle: 'Únete a miles de viajeros: solo un clic.', noAccount: '¿No tienes cuenta?', haveAccount: '¿Ya tienes cuenta?', agree: 'Al continuar aceptas nuestros Términos y la Política de privacidad.', welcome: '¡Bienvenido, {{name}}!', failed: 'Error al iniciar sesión con Google. Inténtalo de nuevo.', loggedOut: 'Has cerrado sesión.', required: 'Inicia sesión para reservar.', perks: ['Confirmación inmediata', 'Todos tus billetes y bonos en un lugar', 'Precios exclusivos para miembros'], secure: 'Inicio de sesión seguro con Google', or: 'o' },
   popular: { subtitle: 'Los 10 favoritos de los viajeros de TravelMate.', explore: 'Explorar' },

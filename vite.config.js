@@ -60,6 +60,8 @@ export default defineConfig(({ mode }) => {
   }
   return {
     plugins: [react(), apiDevServer()],
+    // MapLibre's worker uses ES imports, so it must be built as a module worker.
+    worker: { format: 'es' },
     server: { port: 5173, strictPort: true },
     preview: { port: 5173, strictPort: true },
   }

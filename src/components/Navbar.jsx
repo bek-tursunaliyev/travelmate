@@ -20,7 +20,6 @@ const navLinks = [
   { to: '/#services', key: 'services' },
   { to: '/places', key: 'places' },
   { to: '/tickets', key: 'tickets' },
-  { to: '/#why', key: 'why' },
 ]
 
 function useDropdown() {

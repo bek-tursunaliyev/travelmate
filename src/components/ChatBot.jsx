@@ -60,7 +60,7 @@ function RichText({ text }) {
 }
 
 export default function ChatBot() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const f = useFormat()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState(loadHistory)
@@ -92,8 +92,8 @@ export default function ChatBot() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        // No site language here: the assistant answers in the language the question was asked in.
         body: JSON.stringify({
-          lang: i18n.resolvedLanguage,
           messages: history.map((m) => ({ role: m.role, content: m.text })),
         }),
       })

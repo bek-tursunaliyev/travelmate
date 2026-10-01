@@ -53,15 +53,15 @@ const defaultTickets = {
     { id: 'cn-6', title: 'Project Hail Mary', wiki: 'Project_Hail_Mary_(film)', venue: 'cinematica', date: '2026-10-05', times: ['15:10', '20:15'], time: '20:15', hall: 'VIP', price: 9, seats: 6, genre: 'Sci-fi · Drama', age: '12+', lang: 'RU · EN' },
   ],
   events: [
-    { id: 'ev-0', title: 'Tashkent Beer Festival', venue: 'tashkent-city-park', photo: 'Oktoberfest', date: '2026-10-10', time: '16:00', hall: 'Open air · 18+', price: 8, seats: 400, genre: 'Festival',
+    { id: 'ev-0', title: { en: 'Tashkent Beer Festival', uz: 'Toshkent pivo festivali', ru: 'Ташкентский фестиваль пива' }, venue: 'tashkent-city-park', photo: 'Oktoberfest', date: '2026-10-10', time: '16:00', hall: { en: 'Open air · 18+', uz: 'Ochiq havoda · 18+', ru: 'Под открытым небом · 18+' }, price: 8, seats: 400, genre: { en: 'Festival', uz: 'Festival', ru: 'Фестиваль' },
       description: { en: 'Two days of craft and local beer, live bands, street food and games in Tashkent City Park. Entry ticket includes a festival glass. 18+, ID required.', uz: "Tashkent City Park'da ikki kunlik mahalliy va kraft pivo, jonli musiqa, ko'cha taomlari va o'yinlar. Kirish chiptasiga festival stakani kiradi. 18+, hujjat talab qilinadi.", ru: 'Два дня крафтового и местного пива, живая музыка, уличная еда и игры в Tashkent City Park. В билет входит фирменный бокал. 18+, нужен документ.' } },
-    { id: 'ev-1', title: 'Tashkent Jazz Night', venue: 'ilkhom', photo: 'Amir_Timur_Square', date: '2026-10-11', time: '20:00', hall: 'Standing', price: 15, seats: 48, genre: 'Concert',
+    { id: 'ev-1', title: { en: 'Tashkent Jazz Night', uz: 'Toshkent jaz oqshomi', ru: 'Ташкентский вечер джаза' }, venue: 'ilkhom', photo: 'Amir_Timur_Square', date: '2026-10-11', time: '20:00', hall: { en: 'Standing', uz: 'Tik turgan holda', ru: 'Стоячие места' }, price: 15, seats: 48, genre: { en: 'Concert', uz: 'Konsert', ru: 'Концерт' },
       description: { en: 'An evening of jazz standards and Uzbek folk themes with local and guest musicians at the Ilkhom Theatre.', uz: "Ilhom teatrida mahalliy va mehmon musiqachilar ijrosida jaz standartlari va o'zbek xalq kuylari oqshomi.", ru: 'Вечер джазовых стандартов и узбекских народных мотивов с местными и приглашёнными музыкантами в театре «Ильхом».' } },
-    { id: 'ev-2', title: 'Silk & Spices Festival', venue: 'lyabi-hauz', photo: 'Lyab-i_Hauz', date: '2026-10-17', time: '11:00', hall: 'Open air', price: 10, seats: 120, genre: 'Festival',
+    { id: 'ev-2', title: { en: 'Silk & Spices Festival', uz: 'Ipak va ziravorlar festivali', ru: 'Фестиваль «Шёлк и специи»' }, venue: 'lyabi-hauz', photo: 'Lyab-i_Hauz', date: '2026-10-17', time: '11:00', hall: { en: 'Open air', uz: 'Ochiq havoda', ru: 'Под открытым небом' }, price: 10, seats: 120, genre: { en: 'Festival', uz: 'Festival', ru: 'Фестиваль' },
       description: { en: 'Crafts fair, silk and spice market, folk dance and music around the Lyab-i Hauz pool in old Bukhara.', uz: "Eski Buxoroda Labi hovuz atrofida hunarmandlar yarmarkasi, ipak va ziravorlar bozori, xalq raqslari va musiqasi.", ru: 'Ярмарка ремёсел, рынок шёлка и специй, народные танцы и музыка у Ляби-хауза в старой Бухаре.' } },
-    { id: 'ev-3', title: 'Registan Light Show', venue: 'registan', photo: 'Registan', date: '2026-10-18', time: '21:00', hall: 'Open air', price: 12, seats: 64, genre: 'Show',
+    { id: 'ev-3', title: { en: 'Registan Light Show', uz: 'Registon yorug‘lik shousi', ru: 'Световое шоу на Регистане' }, venue: 'registan', photo: 'Registan', date: '2026-10-18', time: '21:00', hall: { en: 'Open air', uz: 'Ochiq havoda', ru: 'Под открытым небом' }, price: 12, seats: 64, genre: { en: 'Show', uz: 'Shou', ru: 'Шоу' },
       description: { en: 'A light and sound show projected onto the three madrasas of the Registan, telling the story of Samarkand.', uz: "Registonning uchta madrasasiga proyeksiya qilinadigan, Samarqand tarixini hikoya qiluvchi yorug'lik va ovoz shousi.", ru: 'Световое шоу на фасадах трёх медресе Регистана, рассказывающее историю Самарканда.' } },
-    { id: 'ev-4', title: 'Uzbekistan vs Iran — Football', venue: 'milliy-stadium', photo: 'Tashkent', date: '2026-11-14', time: '19:00', hall: 'Sector B', price: 18, seats: 230, genre: 'Sport',
+    { id: 'ev-4', title: { en: 'Uzbekistan vs Iran — Football', uz: 'O‘zbekiston — Eron: futbol', ru: 'Узбекистан — Иран: футбол' }, venue: 'milliy-stadium', photo: 'Tashkent', date: '2026-11-14', time: '19:00', hall: { en: 'Sector B', uz: 'B sektor', ru: 'Сектор B' }, price: 18, seats: 230, genre: { en: 'Sport', uz: 'Sport', ru: 'Спорт' },
       description: { en: 'International friendly at the Milliy Stadium. Gates open 90 minutes before kick-off.', uz: "Milliy stadionda xalqaro o'rtoqlik o'yini. Darvozalar o'yin boshlanishidan 90 daqiqa oldin ochiladi.", ru: 'Товарищеский матч на стадионе «Миллий». Вход открывается за 90 минут до начала.' } },
   ],
 }
@@ -98,4 +98,7 @@ export const venueLabel = (tk) => {
   return v ? `${v.name}, ${v.city}` : tk.venue || ''
 }
 
-export const ticketName = (tk) => tk.title || `${tk.from} → ${tk.to}`
+export const ticketName = (tk, lng) => localized(tk.title, lng) || `${tk.from} → ${tk.to}`
+
+// Every language version of a field, for search.
+export const allLanguages = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? Object.values(v) : v)

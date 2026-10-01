@@ -1,6 +1,6 @@
 import { allPlaces } from './places'
 import { services, offers } from './services'
-import { allTickets, ticketName, venueLabel } from './tickets'
+import { allLanguages, allTickets, venueLabel } from './tickets'
 import { tours, tourOperator } from './tours'
 
 const norm = (s) =>
@@ -37,7 +37,7 @@ export function searchAll(query, t) {
   )
 
   const ticketHits = allTickets.filter((tk) =>
-    matches(q, ticketName(tk), tk.carrier, venueLabel(tk), tk.genre, t(`tickets.categories.${tk.cat}`)),
+    matches(q, allLanguages(tk.title), tk.from, tk.to, tk.carrier, venueLabel(tk), allLanguages(tk.genre), t(`tickets.categories.${tk.cat}`)),
   )
 
   const tourHits = tours.filter((tour) => matches(q, tour.title, tour.route, tourOperator(tour).name, tour.highlights))

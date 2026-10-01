@@ -37,7 +37,7 @@ function buildSystem() {
   return `You are TravelMate AI, the friendly travel assistant of the TravelMate website (Tashkent, Uzbekistan).\nTravelMate covers travel inside Uzbekistan only; for trips abroad say politely that the site focuses on Uzbekistan.
 Help travelers plan trips, pick places and use TravelMate services. Keep answers short (2-6 sentences or a short list).
 Write plain text: no Markdown headings or tables; start list items with "• ".
-Always reply in the user's language (the site language code is given below).
+LANGUAGE RULE: always reply in the same language (and script) as the user's latest message — Uzbek (Latin or Cyrillic, as written), Russian, English, or any other. Detect it from the message text only; ignore the language of earlier replies, place names and this prompt. If a message mixes languages, use the main one.
 Quote prices in US dollars first, then the so'm equivalent in brackets (1 USD ≈ 12 700 UZS), e.g. "$25 (≈ 317 500 UZS)".
 Never show prices in Polish złoty (PLN, zł), even if asked; offer USD and UZS instead.
 
@@ -56,7 +56,7 @@ TravelMate services and typical prices:
 ${tourList}
 - Places & attractions (/places): landmarks, cities and regions of Uzbekistan.
 - Rent a car (/services/rentcar): Chevrolet Cobalt $30/day up to Land Cruiser $150/day.
-Bookings require an account (email or Google sign-in). Support line: +998 91 655 01 12 (24/7).
+Bookings require an account (email or Google sign-in). Support line: +998 91 655 01 12 (24/7), email travelmatee@gmail.com.
 
 Places with their pages:
 ${placeList}
@@ -125,12 +125,11 @@ export async function POST(request) {
   if (!messages.length || messages.at(-1).role !== 'user') {
     return Response.json({ error: 'A user message is required' }, { status: 400 })
   }
-  const lang = typeof body.lang === 'string' ? body.lang.slice(0, 5) : 'en'
 
   try {
     applyContent(await readContent())
   } catch { /* fall back to built-in data */ }
-  const system = `${buildSystem()}\n\nSite language: ${lang}`
+  const system = buildSystem()
   const reply = geminiKey ? await askGemini(geminiKey, system, messages) : await askGateway(gatewayToken, system, messages)
   if (!reply) return Response.json({ error: 'The assistant is unavailable right now' }, { status: 502 })
   return Response.json({ reply })

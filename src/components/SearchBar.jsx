@@ -18,7 +18,7 @@ const readRecent = () => {
 }
 
 export default function SearchBar({ initial = '', compact = false }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [query, setQuery] = useState(initial)
   const [open, setOpen] = useState(false)
@@ -38,10 +38,10 @@ export default function SearchBar({ initial = '', compact = false }) {
       ...r.tours.map((tour) => ({ key: `tr-${tour.slug}`, icon: FaRoute, label: tour.title, sub: `${t('services.items.tours.title')} · ${tour.days} d`, to: `/tours/${tour.slug}` })),
       ...r.places.map((p) => ({ key: `p-${p.list}-${p.slug}`, icon: FaMapMarkerAlt, label: p.name, sub: p.country, to: `/place/${p.list}/${p.slug}` })),
       ...r.services.map((s) => ({ key: `s-${s.id}`, icon: FaConciergeBell, label: t(`services.items.${s.id}.title`), sub: t('search.services'), to: serviceHref(s.id) })),
-      ...r.tickets.map((tk) => ({ key: `t-${tk.id}`, icon: FaTicketAlt, label: ticketName(tk), sub: t(`tickets.categories.${tk.cat}`), to: `/tickets?cat=${tk.cat}` })),
+      ...r.tickets.map((tk) => ({ key: `t-${tk.id}`, icon: FaTicketAlt, label: ticketName(tk, i18n.resolvedLanguage), sub: t(`tickets.categories.${tk.cat}`), to: `/tickets?cat=${tk.cat}` })),
       ...r.offers.map((o) => ({ key: `o-${o.id}`, icon: FaTag, label: o.name, sub: `${t(`services.items.${o.service}.title`)} · ${o.location}`, to: serviceHref(o.service) })),
     ].slice(0, 7)
-  }, [query, t])
+  }, [query, t, i18n.resolvedLanguage])
 
   const saveRecent = (q) => {
     const next = [q, ...recent.filter((r) => r.toLowerCase() !== q.toLowerCase())].slice(0, 5)

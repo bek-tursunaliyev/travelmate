@@ -31,7 +31,7 @@ export default function Footer() {
             <ul className="footer__contact">
               <li><FaMapMarkerAlt /> {t('footer.address')}</li>
               <li><FaPhoneAlt /> <a href="tel:+998916550112">+998 91 655 01 12</a></li>
-              <li><FaEnvelope /> <a href="mailto:support@travelmate.uz">support@travelmate.uz</a></li>
+              <li><FaEnvelope /> <a href="mailto:travelmatee@gmail.com">travelmatee@gmail.com</a></li>
             </ul>
             <div className="socials">
               {socials.map(({ icon: Icon, href, label }) => (
@@ -43,7 +43,7 @@ export default function Footer() {
           <div>
             <h4>{t('footer.company')}</h4>
             <ul>
-              <li><Link to="/#why">{t('footer.aboutUs')}</Link></li>
+              <li><Link to="/#faq">{t('footer.aboutUs')}</Link></li>
               <li><Link to="/#famous">{t('famous.title')}</Link></li>
               <li><Link to="/popular/destinations">{t('subnav.destinations')}</Link></li>
               <li><Link to="/popular/landmarks">{t('subnav.landmarks')}</Link></li>
@@ -63,7 +63,7 @@ export default function Footer() {
           <div>
             <h4>{t('footer.support')}</h4>
             <ul>
-              <li><a href="mailto:support@travelmate.uz">{t('footer.help')}</a></li>
+              <li><a href="mailto:travelmatee@gmail.com">{t('footer.help')}</a></li>
               <li><a href="tel:+998916550112">{t('footer.contact')}</a></li>
               <li><Link to="/profile#bookings">{t('footer.myBookings')}</Link></li>
               <li><Link to="/login">{t('nav.login')}</Link></li>

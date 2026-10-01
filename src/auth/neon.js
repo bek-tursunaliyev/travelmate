@@ -33,32 +33,39 @@ function failure(error) {
   if (code.includes('PASSWORD_TOO_SHORT') || code.includes('PASSWORD_TOO_LONG')) return new AuthFailure('weakPassword')
   if (code.includes('INVALID_EMAIL')) return new AuthFailure('badEmail')
   if (error?.status === 429) return new AuthFailure('tooMany')
+  // The site's domain is missing from Neon Auth → Domains, so Neon refuses to redirect back here.
+  if (code.includes('INVALID_CALLBACKURL') || code.includes('INVALID_ORIGIN')) {
+    console.error(`Google sign-in: add ${window.location.origin} to Neon Auth trusted domains.`)
+    return new AuthFailure('google')
+  }
   return new AuthFailure('generic')
 }
 
-// Short-lived Neon JWT for the current Neon session.
-async function neonJwt() {
+// Proof of the current Neon session for our server: the short-lived JWT when the browser can read it,
+// plus the session token (the server checks it against Neon Auth's tables when the JWT is missing).
+async function neonProof() {
   let jwt = null
   const auth = await authClient()
   const res = await auth.getSession({
     fetchOptions: { onSuccess: (ctx) => { jwt = ctx.response.headers.get('set-auth-jwt') } },
   })
-  if (!res?.data?.session) return null
+  const session = res?.data?.session
+  if (!session) return null
   if (!jwt) {
-    const t = await auth.token()
+    const t = await auth.token().catch(() => null)
     jwt = t?.data?.token || null
   }
-  return jwt
+  return { token: jwt, sessionToken: session.token || null }
 }
 
-// Exchange the Neon JWT for our own HttpOnly session cookie and return the user.
+// Exchange the Neon session for our own HttpOnly session cookie and return the user.
 async function exchange() {
-  const token = await neonJwt()
-  if (!token) throw new AuthFailure('generic')
+  const proof = await neonProof()
+  if (!proof || (!proof.token && !proof.sessionToken)) throw new AuthFailure('google')
   const res = await fetch('/api/auth/session', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify(proof),
   })
   if (!res.ok) throw new AuthFailure(res.status === 401 ? 'invalid' : 'server')
   return (await res.json()).user

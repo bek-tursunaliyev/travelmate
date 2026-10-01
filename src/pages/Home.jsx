@@ -1,5 +1,5 @@
 import HeroCarousel from '../components/HeroCarousel'
-import { Services, FamousPlaces, WhyChoose } from '../components/Sections'
+import { Services, FamousPlaces, Faq } from '../components/Sections'
 import { ToursCarousel } from './Tours'
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
       <Services />
       <ToursCarousel />
       <FamousPlaces />
-      <WhyChoose />
+      <Faq />
     </>
   )
 }

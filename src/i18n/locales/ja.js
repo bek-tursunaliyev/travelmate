@@ -25,18 +25,6 @@ export default {
     },
   },
   tickets: { title: 'あらゆる旅のチケット', subtitle: 'カテゴリーを選択 — バス・列車、航空券、映画、イベント。', categories: { bus: 'バス・列車', flights: '航空券', cinema: '映画', events: 'イベント' }, book: '予約', seatsLeft: '残り{{count}}席', duration: '所要時間', date: '日付', time: '時間', venue: '会場', hall: 'ホール', carrier: '運航会社', perPerson: '1名あたり', admit: '1名様' },
-  why: {
-    title: 'TravelMateが選ばれる理由', subtitle: '旅行者による、旅行者のためのアプリ — その違いがここに。',
-    items: {
-      allinone: { title: 'オールインワン', desc: '宿泊、移動、ガイド、チケット、データプランをひとつのアカウントと決済で。' },
-      local: { title: '信頼できる地元パートナー', desc: 'すべてのホテル、ガイド、ドライバーを地域チームが直接確認しています。' },
-      prices: { title: '明朗価格', desc: '隠れた手数料なし。表示価格がお支払い額です。' },
-      support: { title: '24時間の有人サポート', desc: '11言語で、昼夜を問わず本物のスタッフが対応。' },
-      secure: { title: '安全な決済', desc: '銀行レベルの暗号化とGoogleログインでアカウントを保護。' },
-      offline: { title: 'オフライン対応', desc: 'チケット、バウチャー、予約はネットなしでも確認可能。' },
-    },
-    stats: { travelers: '満足した旅行者', countries: 'か国', partners: '地元パートナー', rating: '平均評価' },
-  },
   footer: { about: 'TravelMateはオールインワンの旅の相棒。宿泊、ガイド、移動、チケット、モバイルデータを数秒で予約。', company: '会社情報', aboutUs: '私たちについて', support: 'サポート', help: 'ヘルプセンター', contact: 'お問い合わせ', myBookings: '予約一覧', servicesCol: 'サービス', newsletter: 'お得な旅情報を受け取る', newsletterText: '週1回、最高のプランをお届け。スパムはありません。', email: 'メールアドレス', subscribe: '登録', rights: 'All rights reserved.', privacy: 'プライバシー', terms: '利用規約', cookies: 'Cookie', address: 'ウズベキスタン・タシケント' },
   auth: { loginTitle: 'おかえりなさい', loginSubtitle: 'ログインして旅と予約を管理しましょう。', signupTitle: 'アカウント作成', signupSubtitle: '何千人もの旅行者の仲間入り — ワンクリックで。', noAccount: 'アカウントをお持ちでない方', haveAccount: 'すでにアカウントをお持ちの方', agree: '続行すると、利用規約とプライバシーポリシーに同意したことになります。', welcome: 'ようこそ、{{name}}さん！', failed: 'Googleログインに失敗しました。もう一度お試しください。', loggedOut: 'ログアウトしました。', required: '予約するにはログインしてください。', perks: ['即時予約確定', 'すべてのチケットとバウチャーを一か所に', '会員限定価格'], secure: 'Googleで安全にログイン', or: 'または' },
   popular: { subtitle: 'TravelMateの旅行者が選んだトップ10。', explore: '見る' },

@@ -25,18 +25,6 @@ export default {
     },
   },
   tickets: { title: '每段旅程的票', subtitle: '选择类别——巴士和火车、机票、电影或活动。', categories: { bus: '巴士和火车', flights: '机票', cinema: '电影', events: '活动' }, book: '预订', seatsLeft: '剩余 {{count}} 个座位', duration: '时长', date: '日期', time: '时间', venue: '地点', hall: '影厅', carrier: '承运方', perPerson: '每人', admit: '单人票' },
-  why: {
-    title: '为什么选择 TravelMate', subtitle: '由旅行者打造，为旅行者服务——这就是不同之处。',
-    items: {
-      allinone: { title: '一站式旅行应用', desc: '住宿、出行、导游、门票和流量套餐——一个账户，一次结账。' },
-      local: { title: '可信的本地伙伴', desc: '每家酒店、每位导游和司机都经过我们区域团队的实地审核。' },
-      prices: { title: '价格透明', desc: '没有隐藏费用。所见即所付。' },
-      support: { title: '全天候人工客服', desc: '11 种语言的真人客服，无论何时何地。' },
-      secure: { title: '安全支付', desc: '银行级加密和 Google 登录保护你的账户。' },
-      offline: { title: '离线可用', desc: '门票、凭证和预订无需网络也能查看。' },
-    },
-    stats: { travelers: '满意的旅行者', countries: '国家', partners: '本地合作伙伴', rating: '平均评分' },
-  },
   footer: { about: 'TravelMate 是你的一站式旅行伙伴：住宿、导游、出行、门票和移动数据，几秒即可预订。', company: '公司', aboutUs: '关于我们', support: '支持', help: '帮助中心', contact: '联系我们', myBookings: '我的预订', servicesCol: '服务', newsletter: '获取旅行优惠', newsletterText: '每周一封邮件，精选最佳优惠。绝无垃圾邮件。', email: '你的邮箱', subscribe: '订阅', rights: '版权所有。', privacy: '隐私', terms: '条款', cookies: 'Cookies', address: '乌兹别克斯坦 塔什干' },
   auth: { loginTitle: '欢迎回来', loginSubtitle: '登录以管理你的行程和预订。', signupTitle: '创建账户', signupSubtitle: '加入成千上万的旅行者——只需一键。', noAccount: '还没有账户？', haveAccount: '已有账户？', agree: '继续即表示你同意我们的条款和隐私政策。', welcome: '欢迎，{{name}}！', failed: 'Google 登录失败，请重试。', loggedOut: '你已退出登录。', required: '请登录后再预订。', perks: ['即时预订确认', '所有门票和凭证集中管理', '会员专享价格'], secure: '通过 Google 安全登录', or: '或' },
   popular: { subtitle: 'TravelMate 旅行者评选的前 10 名。', explore: '查看' },
