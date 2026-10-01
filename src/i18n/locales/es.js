@@ -14,14 +14,14 @@ export default {
   services: {
     title: 'Todo lo que necesitas para tu viaje', subtitle: 'Ocho servicios esenciales, una sola cuenta. Toca una tarjeta para ver las ofertas.', explore: 'Explorar', offers: '{{count}} ofertas', all: 'Todos los servicios',
     items: {
-      accommodation: { title: 'Alojamiento', desc: 'Hoteles, casas de huéspedes y apartamentos con cancelación gratuita.' },
-      guide: { title: 'Guías locales', desc: 'Guías certificados que hablan tu idioma.' },
+      accommodation: { title: 'Hoteles', desc: 'Hoteles, casas de huéspedes y apartamentos con cancelación gratuita.' },
+      guide: { title: 'Guías', desc: 'Guías certificados que hablan tu idioma.' },
       taxi: { title: 'Taxi', desc: 'Traslados al aeropuerto y viajes urbanos a precio fijo.' },
       food: { title: 'Restaurantes', desc: 'Reserva mesa en los mejores restaurantes locales.' },
-      exchange: { title: 'Cambio de divisas', desc: 'Tipos de cambio en vivo y casas de cambio fiables cerca.' },
+      exchange: { title: 'Cambio', desc: 'Tipos de cambio en vivo y casas de cambio fiables cerca.' },
       esim: { title: 'eSIM', desc: 'Datos móviles en minutos, sin roaming ni cambiar la SIM.' },
       tickets: { title: 'Billetes', desc: 'Autobuses, trenes, vuelos, cine y eventos.' },
-      rentcar: { title: 'Alquiler de coches', desc: 'Desde compactos urbanos hasta 4x4 para la montaña.' },
+      rentcar: { title: 'Alquiler', desc: 'Desde compactos urbanos hasta 4x4 para la montaña.' },
     },
   },
   tickets: { title: 'Billetes para cada viaje', subtitle: 'Elige una categoría: autobús y tren, vuelos, cine o eventos.', categories: { bus: 'Autobús y tren', flights: 'Vuelos', cinema: 'Cine', events: 'Eventos' }, book: 'Reservar', seatsLeft: 'Quedan {{count}} plazas', duration: 'Duración', date: 'Fecha', time: 'Hora', venue: 'Lugar', hall: 'Sala', carrier: 'Operador', perPerson: 'por persona', admit: 'Entrada individual' },

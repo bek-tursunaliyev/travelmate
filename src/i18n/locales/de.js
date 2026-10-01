@@ -14,11 +14,11 @@ export default {
   services: {
     title: 'Alles, was du für die Reise brauchst', subtitle: 'Acht wichtige Reiseservices, ein Konto. Tippe auf eine Karte für die Angebote.', explore: 'Entdecken', offers: '{{count}} Angebote', all: 'Alle Services',
     items: {
-      accommodation: { title: 'Unterkunft', desc: 'Hotels, Gästehäuser und Apartments mit kostenloser Stornierung.' },
-      guide: { title: 'Lokale Guides', desc: 'Zertifizierte Guides, die deine Sprache sprechen.' },
+      accommodation: { title: 'Hotels', desc: 'Hotels, Gästehäuser und Apartments mit kostenloser Stornierung.' },
+      guide: { title: 'Guides', desc: 'Zertifizierte Guides, die deine Sprache sprechen.' },
       taxi: { title: 'Taxi', desc: 'Flughafentransfers und Stadtfahrten zum Festpreis.' },
       food: { title: 'Restaurants', desc: 'Reserviere Tische in den besten lokalen Restaurants.' },
-      exchange: { title: 'Geldwechsel', desc: 'Live-Kurse und vertrauenswürdige Wechselstuben in der Nähe.' },
+      exchange: { title: 'Wechsel', desc: 'Live-Kurse und vertrauenswürdige Wechselstuben in der Nähe.' },
       esim: { title: 'eSIM', desc: 'Mobile Daten in Minuten – ohne Roaming, ohne SIM-Tausch.' },
       tickets: { title: 'Tickets', desc: 'Busse, Züge, Flüge, Kino und Events.' },
       rentcar: { title: 'Mietwagen', desc: 'Vom Kleinwagen bis zum 4x4 für die Berge.' },
