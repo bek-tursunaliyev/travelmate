@@ -1,13 +1,15 @@
 // Traveller sign-in through Neon Auth (Managed Better Auth), then a first-party session on our API.
-import { createAuthClient } from '@neondatabase/neon-js/auth'
-
 const AUTH_URL = import.meta.env.VITE_NEON_AUTH_URL || ''
 export const authConfigured = Boolean(AUTH_URL)
 
+// The Neon SDK is only downloaded when someone actually signs in (keeps it out of the main bundle).
 let client
-const authClient = () => {
-  // The auth service lives on another origin, so its session cookie must be sent cross-origin.
-  client ??= createAuthClient(AUTH_URL, { fetchOptions: { credentials: 'include' } })
+const authClient = async () => {
+  if (!client) {
+    const { createAuthClient } = await import('@neondatabase/neon-js/auth')
+    // The auth service lives on another origin, so its session cookie must be sent cross-origin.
+    client = createAuthClient(AUTH_URL, { fetchOptions: { credentials: 'include' } })
+  }
   return client
 }
 
@@ -24,9 +26,10 @@ export class AuthFailure extends Error {
 
 function failure(error) {
   if (error instanceof AuthFailure) return error
-  const code = String(error?.code || error?.message || '').toUpperCase()
+  // The SDK puts the server code in different places depending on the call; check them all.
+  const code = [error?.code, error?.message, error?.error?.code, error?.error?.message, error?.statusText].filter(Boolean).join(' ').toUpperCase()
   if (/INVALID_EMAIL_OR_PASSWORD|INVALID_CREDENTIALS|INVALID_PASSWORD|USER_NOT_FOUND|CREDENTIAL_ACCOUNT_NOT_FOUND/.test(code) || error?.status === 401) return new AuthFailure('invalid')
-  if (code.includes('ALREADY_EXISTS') || code.includes('USER_ALREADY')) return new AuthFailure('exists')
+  if (/ALREADY[ _]EXISTS|USER[ _]ALREADY/.test(code)) return new AuthFailure('exists')
   if (code.includes('PASSWORD_TOO_SHORT') || code.includes('PASSWORD_TOO_LONG')) return new AuthFailure('weakPassword')
   if (code.includes('INVALID_EMAIL')) return new AuthFailure('badEmail')
   if (error?.status === 429) return new AuthFailure('tooMany')
@@ -36,12 +39,13 @@ function failure(error) {
 // Short-lived Neon JWT for the current Neon session.
 async function neonJwt() {
   let jwt = null
-  const res = await authClient().getSession({
+  const auth = await authClient()
+  const res = await auth.getSession({
     fetchOptions: { onSuccess: (ctx) => { jwt = ctx.response.headers.get('set-auth-jwt') } },
   })
   if (!res?.data?.session) return null
   if (!jwt) {
-    const t = await authClient().token()
+    const t = await auth.token()
     jwt = t?.data?.token || null
   }
   return jwt
@@ -72,20 +76,29 @@ async function attempt(run) {
   return result
 }
 
+// A fresh sign-in or sign-up never reuses a Neon session left over in this page.
+async function freshClient() {
+  if (client) await client.signOut().catch(() => {})
+  return authClient()
+}
+
 export async function signInWithPassword(email, password) {
-  await attempt(() => authClient().signIn.email({ email, password }))
+  const auth = await freshClient()
+  await attempt(() => auth.signIn.email({ email, password }))
   return exchange()
 }
 
 export async function signUpWithPassword(name, email, password) {
-  await attempt(() => authClient().signUp.email({ name, email, password }))
+  const auth = await freshClient()
+  await attempt(() => auth.signUp.email({ name, email, password }))
   return exchange()
 }
 
 // Redirects to Google; the browser comes back to `returnPath` with the verifier parameter.
 export async function signInWithGoogle(returnPath = '/login') {
   const origin = window.location.origin
-  const result = await attempt(() => authClient().signIn.social({
+  const auth = await authClient()
+  const result = await attempt(() => auth.signIn.social({
     provider: 'google',
     callbackURL: `${origin}${returnPath}`,
     errorCallbackURL: `${origin}/login?oauth=error`,
@@ -107,5 +120,5 @@ export async function fetchSessionUser() {
 
 export async function signOutEverywhere() {
   await fetch('/api/auth/session', { method: 'DELETE' }).catch(() => {})
-  if (authConfigured) await authClient().signOut().catch(() => {})
+  if (client) await client.signOut().catch(() => {})
 }

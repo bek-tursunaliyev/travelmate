@@ -30,7 +30,7 @@ export default function Footer() {
             <p>{t('footer.about')}</p>
             <ul className="footer__contact">
               <li><FaMapMarkerAlt /> {t('footer.address')}</li>
-              <li><FaPhoneAlt /> <a href="tel:+998712000000">+998 71 200 00 00</a></li>
+              <li><FaPhoneAlt /> <a href="tel:+998916550112">+998 91 655 01 12</a></li>
               <li><FaEnvelope /> <a href="mailto:support@travelmate.uz">support@travelmate.uz</a></li>
             </ul>
             <div className="socials">
@@ -64,7 +64,7 @@ export default function Footer() {
             <h4>{t('footer.support')}</h4>
             <ul>
               <li><a href="mailto:support@travelmate.uz">{t('footer.help')}</a></li>
-              <li><a href="tel:+998712000000">{t('footer.contact')}</a></li>
+              <li><a href="tel:+998916550112">{t('footer.contact')}</a></li>
               <li><Link to="/profile#bookings">{t('footer.myBookings')}</Link></li>
               <li><Link to="/login">{t('nav.login')}</Link></li>
               <li><Link to="/signup">{t('nav.signup')}</Link></li>

@@ -9,6 +9,7 @@ import PlaceImage from '../components/PlaceImage'
 import { placePhoto } from '../data/places'
 import Price from '../components/Price'
 import { OfferCard, CurrencyConverter } from '../components/Offers'
+import { PlaceOffers, CarRental } from '../components/RichOffers'
 import { ServiceCard, TicketItem, Tickets } from '../components/Sections'
 import { services, serviceById, serviceHref, offers } from '../data/services'
 import { searchAll, countResults } from '../data/search'
@@ -45,11 +46,38 @@ export function SearchResults() {
             <>
               <p className="results-count">{t('search.resultsFor', { count: total, q })}</p>
 
+              {r.offers.length > 0 && (
+                <div className="result-group">
+                  <h2>{t('search.offers')} <span>{r.offers.length}</span></h2>
+                  <div className="offers-grid">
+                    {r.offers.map((o) => <OfferCard key={o.id} offer={o} service={o.service} />)}
+                  </div>
+                </div>
+              )}
+
               {r.tours.length > 0 && (
                 <div className="result-group">
                   <h2>{t('search.tours')} <span>{r.tours.length}</span></h2>
                   <div className="tour-grid">
                     {r.tours.map((tour) => <TourCard key={tour.slug} tour={tour} />)}
+                  </div>
+                </div>
+              )}
+
+              {r.tickets.length > 0 && (
+                <div className="result-group">
+                  <h2>{t('search.tickets')} <span>{r.tickets.length}</span></h2>
+                  <div className="passes">
+                    {r.tickets.map((tk) => <TicketItem key={tk.id} tk={tk} cat={tk.cat} />)}
+                  </div>
+                </div>
+              )}
+
+              {r.services.length > 0 && (
+                <div className="result-group">
+                  <h2>{t('search.services')} <span>{r.services.length}</span></h2>
+                  <div className="services-grid">
+                    {r.services.map((s) => <ServiceCard key={s.id} service={s} />)}
                   </div>
                 </div>
               )}
@@ -70,33 +98,6 @@ export function SearchResults() {
                         </div>
                       </Link>
                     ))}
-                  </div>
-                </div>
-              )}
-
-              {r.services.length > 0 && (
-                <div className="result-group">
-                  <h2>{t('search.services')} <span>{r.services.length}</span></h2>
-                  <div className="services-grid">
-                    {r.services.map((s) => <ServiceCard key={s.id} service={s} />)}
-                  </div>
-                </div>
-              )}
-
-              {r.tickets.length > 0 && (
-                <div className="result-group">
-                  <h2>{t('search.tickets')} <span>{r.tickets.length}</span></h2>
-                  <div className="passes">
-                    {r.tickets.map((tk) => <TicketItem key={tk.id} tk={tk} cat={tk.cat} />)}
-                  </div>
-                </div>
-              )}
-
-              {r.offers.length > 0 && (
-                <div className="result-group">
-                  <h2>{t('search.offers')} <span>{r.offers.length}</span></h2>
-                  <div className="offers-grid">
-                    {r.offers.map((o) => <OfferCard key={o.id} offer={o} service={o.service} />)}
                   </div>
                 </div>
               )}
@@ -139,10 +140,16 @@ export function ServicePage() {
       <section className="section section--flush">
         <div className="container">
           {id === 'exchange' && <CurrencyConverter />}
-          <h2 className="section-title">{t('service.offers')}</h2>
-          <div className="offers-grid">
-            {offers[id].map((o) => <OfferCard key={o.id} offer={o} service={id} />)}
-          </div>
+          {(id === 'accommodation' || id === 'food') && <PlaceOffers service={id} offers={offers[id]} />}
+          {id === 'rentcar' && <CarRental cars={offers[id]} />}
+          {!['accommodation', 'food', 'rentcar'].includes(id) && (
+            <>
+              <h2 className="section-title">{t('service.offers')}</h2>
+              <div className="offers-grid">
+                {offers[id].map((o) => <OfferCard key={o.id} offer={o} service={id} />)}
+              </div>
+            </>
+          )}
         </div>
       </section>
     </>

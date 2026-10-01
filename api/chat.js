@@ -56,7 +56,7 @@ TravelMate services and typical prices:
 ${tourList}
 - Places & attractions (/places): landmarks, cities and regions of Uzbekistan.
 - Rent a car (/services/rentcar): Chevrolet Cobalt $30/day up to Land Cruiser $150/day.
-Bookings require Google sign-in. Support line: +998 71 200 00 00 (24/7).
+Bookings require an account (email or Google sign-in). Support line: +998 91 655 01 12 (24/7).
 
 Places with their pages:
 ${placeList}

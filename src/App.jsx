@@ -12,6 +12,7 @@ import { GuidesPage, GuideProfile } from './pages/Guides'
 import { ToursPage, TourDetail } from './pages/Tours'
 import { TransferSelect, TransferCheckout } from './pages/Transfers'
 import EsimPage from './pages/Esim'
+import TicketPage from './pages/TicketPage'
 import NotFound from './pages/NotFound'
 import { useContent } from './context/ContentContext'
 
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/place/:list/:slug" element={<Place />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/tickets" element={<TicketsPage />} />
+          <Route path="/tickets/:cat/:id" element={<TicketPage />} />
           <Route path="/places" element={<PlacesPage />} />
           <Route path="/esim" element={<EsimPage />} />
           <Route path="/transfers" element={<TransferSelect />} />

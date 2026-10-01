@@ -24,6 +24,54 @@ const offerFields = [
   { k: 'tags', type: 'list' },
 ]
 
+const geoFields = [
+  { k: 'address', type: 'text' },
+  { k: 'lat', type: 'number', step: 0.0001, hint: 'coords' },
+  { k: 'lng', type: 'number', step: 0.0001 },
+]
+
+const hotelFields = [
+  { k: 'name', type: 'text', required: true },
+  { k: 'photo', type: 'image' },
+  { k: 'location', type: 'text' },
+  ...geoFields,
+  { k: 'stars', type: 'number' },
+  { k: 'price', type: 'number' },
+  { k: 'unit', type: 'select', options: ['night'] },
+  { k: 'rating', type: 'number', step: 0.1 },
+  { k: 'reviews', type: 'number' },
+  { k: 'checkIn', type: 'time' },
+  { k: 'amenities', type: 'list', hint: 'amenities' },
+  { k: 'tags', type: 'list' },
+]
+
+const restaurantFields = [
+  { k: 'name', type: 'text', required: true },
+  { k: 'photo', type: 'image' },
+  { k: 'cuisine', type: 'text' },
+  { k: 'hours', type: 'text' },
+  { k: 'location', type: 'text' },
+  ...geoFields,
+  { k: 'price', type: 'number' },
+  { k: 'unit', type: 'select', options: ['meal'] },
+  { k: 'rating', type: 'number', step: 0.1 },
+  { k: 'reviews', type: 'number' },
+  { k: 'tags', type: 'list' },
+]
+
+const carFields = [
+  { k: 'name', type: 'text', required: true },
+  { k: 'photo', type: 'image' },
+  { k: 'company', type: 'select', options: (doc) => (doc.rentalCompanies || []).map((c) => [c.id, c.name]) },
+  { k: 'location', type: 'text' },
+  { k: 'seats', type: 'number' },
+  { k: 'transmission', type: 'select', options: ['auto', 'manual'] },
+  { k: 'fuel', type: 'select', options: ['petrol', 'diesel', 'hybrid', 'electric', 'gas'] },
+  { k: 'price', type: 'number' },
+  { k: 'unit', type: 'select', options: ['day'] },
+  { k: 'tags', type: 'list' },
+]
+
 const routeFields = [
   { k: 'from', type: 'text', required: true },
   { k: 'to', type: 'text', required: true },
@@ -39,6 +87,11 @@ const routeFields = [
 const showFields = [
   { k: 'title', type: 'text', required: true },
   { k: 'photo', type: 'image' },
+  { k: 'wiki', type: 'text', hint: 'filmWiki' },
+  { k: 'description', type: 'i18n', long: true },
+  { k: 'times', type: 'list', hint: 'times' },
+  { k: 'age', type: 'text' },
+  { k: 'lang', type: 'text' },
   { k: 'venue', type: 'select', options: (doc) => doc.venues.map((v) => [v.id, `${v.name} · ${v.city}`]) },
   { k: 'date', type: 'date' },
   { k: 'time', type: 'time' },
@@ -53,7 +106,7 @@ const offerRow = (r) => ({ title: r.name, sub: `${r.location || ''} · $${r.pric
 const routeRow = (r) => ({ title: `${r.from} → ${r.to}`, sub: `${r.date || ''} ${r.depart || ''} · ${r.carrier || ''} · $${r.price}` })
 const showRow = (doc) => (r) => {
   const v = doc.venues.find((x) => x.id === r.venue)
-  return { title: r.title, sub: `${r.date || ''} ${r.time || ''} · ${v ? v.name : r.venue || ''} · $${r.price}`, image: r.photo }
+  return { title: r.title, sub: `${r.date || ''} ${(r.times || [r.time]).join(' ')} · ${v ? v.name : r.venue || ''} · $${r.price}`, image: r.photo || r.wiki }
 }
 
 export const groups = [
@@ -147,9 +200,26 @@ export const groups = [
   },
   {
     id: 'offers',
-    sections: ['accommodation', 'food', 'exchange', 'rentcar', 'guide'].map((id) => ({
-      id: `offers-${id}`, path: ['offers', id], key: 'id', row: offerRow, fields: offerFields,
-    })),
+    sections: [
+      { id: 'offers-accommodation', path: ['offers', 'accommodation'], key: 'id', row: (r) => ({ ...offerRow(r), image: r.photo }), fields: hotelFields },
+      { id: 'offers-food', path: ['offers', 'food'], key: 'id', row: (r) => ({ ...offerRow(r), image: r.photo }), fields: restaurantFields },
+      {
+        id: 'offers-rentcar', path: ['offers', 'rentcar'], key: 'id',
+        row: (r) => ({ title: r.name, sub: `${r.company || ''} · ${r.location || ''} · $${r.price}/day`, image: r.photo }),
+        fields: carFields,
+      },
+      {
+        id: 'rentalCompanies', path: ['rentalCompanies'], key: 'id',
+        row: (r) => ({ title: r.name, sub: r.website }),
+        fields: [
+          { k: 'name', type: 'text', required: true },
+          { k: 'website', type: 'text' },
+          { k: 'info', type: 'i18n', long: true },
+        ],
+      },
+      { id: 'offers-exchange', path: ['offers', 'exchange'], key: 'id', row: offerRow, fields: offerFields },
+      { id: 'offers-guide', path: ['offers', 'guide'], key: 'id', row: offerRow, fields: offerFields },
+    ],
   },
   {
     id: 'esim',

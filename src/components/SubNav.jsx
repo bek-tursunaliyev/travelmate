@@ -94,7 +94,7 @@ export default function SubNav() {
             />
           ))}
         </div>
-        <a className="subnav__support" href="tel:+998712000000">
+        <a className="subnav__support" href="tel:+998916550112">
           <FaHeadset /> {t('subnav.support')}
         </a>
       </div>

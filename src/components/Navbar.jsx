@@ -113,7 +113,7 @@ function AppButton() {
   const { t } = useTranslation()
   const { open, setOpen, ref } = useDropdown()
   return (
-    <div className="dropdown" ref={ref}>
+    <div className="dropdown nav-app" ref={ref}>
       <button className="btn-ghost" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
         <FaMobileAlt />
         <span className="hide-lg">{t('nav.getApp')}</span>
@@ -216,6 +216,11 @@ function MobileMenu({ open, onClose }) {
             <Link key={list} to={`/popular/${list}`} onClick={onClose}>{t(`subnav.${list}`)}</Link>
           ))}
         </nav>
+
+        <div className="drawer__theme">
+          <span>{t('nav.theme')}</span>
+          <ThemeToggle />
+        </div>
 
         <p className="drawer__label">{t('nav.language')}</p>
         <LanguageSwitcher inline />

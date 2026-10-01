@@ -2,7 +2,7 @@
 // The data modules keep working as plain imports; applyContent() swaps their live bindings.
 import { defaultSite, setSite } from '../data/site.js'
 import { defaultPlaces, setPlaces } from '../data/places.js'
-import { defaultOffers, setOffers } from '../data/services.js'
+import { defaultOffers, setOffers, defaultCompanies, setRentalCompanies } from '../data/services.js'
 import { defaultTicketData, setTickets } from '../data/tickets.js'
 import { defaultEsim, setEsim } from '../data/esim.js'
 import { defaultTourData, setTours } from '../data/tours.js'
@@ -18,6 +18,7 @@ export function defaultContent() {
     ...defaultSite,
     places: defaultPlaces,
     offers: defaultOffers,
+    rentalCompanies: defaultCompanies,
     ...defaultTicketData,
     ...defaultEsim,
     ...defaultTourData,
@@ -32,6 +33,7 @@ export function applyContent(doc) {
   setSite(doc)
   setPlaces(doc.places)
   setOffers(doc.offers)
+  setRentalCompanies(doc.rentalCompanies)
   setTickets(doc)
   setEsim(doc)
   setTours(doc)
