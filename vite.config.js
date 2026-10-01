@@ -29,7 +29,10 @@ function apiDevServer() {
           })
           const response = await handler(request)
           res.statusCode = response.status
-          res.setHeader('Content-Type', response.headers.get('content-type') || 'application/json')
+          response.headers.forEach((value, key) => { if (key !== 'set-cookie') res.setHeader(key, value) })
+          const cookies = response.headers.getSetCookie?.() || []
+          if (cookies.length) res.setHeader('Set-Cookie', cookies)
+          if (!response.headers.get('content-type')) res.setHeader('Content-Type', 'application/json')
           res.end(await response.text())
         } catch (err) {
           if (/Failed to load url|does not exist/i.test(err.message)) return next()
@@ -42,7 +45,10 @@ function apiDevServer() {
   }
 }
 
-const SERVER_ENV = ['GEMINI_API_KEY', 'GEMINI_MODEL', 'AI_GATEWAY_API_KEY', 'AI_MODEL', 'ADMIN_LOGIN', 'ADMIN_PASSWORD', 'ADMIN_SECRET', 'ITICKET_API_URL', 'ITICKET_API_KEY']
+const SERVER_ENV = [
+  'GEMINI_API_KEY', 'GEMINI_MODEL', 'AI_GATEWAY_API_KEY', 'AI_MODEL', 'ADMIN_LOGIN', 'ADMIN_PASSWORD', 'ADMIN_SECRET',
+  'ITICKET_API_URL', 'ITICKET_API_KEY', 'DATABASE_URL', 'NEON_AUTH_BASE_URL', 'SESSION_SECRET',
+]
 
 // Google Sign-In only works from origins registered in Google Cloud Console,
 // so the dev server always uses the same port (http://localhost:5173).

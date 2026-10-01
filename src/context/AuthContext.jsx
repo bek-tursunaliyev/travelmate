@@ -1,133 +1,132 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { jwtDecode } from 'jwt-decode'
-import { googleLogout } from '@react-oauth/google'
+import { useTranslation } from 'react-i18next'
+import { useToast } from './ToastContext'
+import {
+  completeOAuth, fetchSessionUser, signInWithGoogle, signInWithPassword, signOutEverywhere, signUpWithPassword,
+} from '../auth/neon'
 
-export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
-
-const USER_KEY = 'tm_user'
-const SESSION_DAYS = 7
+// Travellers sign in with Neon Auth (email + password or Google); the server keeps the session in an
+// HttpOnly cookie and stores bookings in Postgres. See src/auth/neon.js and api/auth, api/bookings.
 
 const AuthContext = createContext(null)
+const HINT_KEY = 'tm_signed_in' // only a UI hint so the header doesn't flash "Log in"; not a credential
 
-function readJSON(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key)
-    return raw ? JSON.parse(raw) : fallback
-  } catch {
-    return fallback
-  }
-}
-
-function loadUser() {
-  const user = readJSON(USER_KEY, null)
-  if (!user || !user.expiresAt || user.expiresAt < Date.now()) {
-    localStorage.removeItem(USER_KEY)
-    return null
-  }
-  return user
-}
-
-const bookingsKey = (user) => `tm_bookings_${user.id}`
-
-// Round avatar with the user's initials, as a data URL (demo accounts have no Google photo).
+// Round avatar with the user's initials, as a data URL (accounts without a Google photo).
 function initialsAvatar(name) {
-  const letters = name.trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" rx="48" fill="#0a717b"/><text x="50%" y="50%" dy=".35em" text-anchor="middle" font-family="Marcellus,Georgia,serif" font-size="38" font-weight="700" fill="#fff">${letters}</text></svg>`
+  const letters = String(name || '?').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" rx="48" fill="#0a717b"/><text x="50%" y="50%" dy=".35em" text-anchor="middle" font-family="Marcellus,Georgia,serif" font-size="38" fill="#fff">${letters}</text></svg>`
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
 }
 
+const shapeUser = (u) => (u ? {
+  ...u,
+  givenName: String(u.name || u.email || '').split(/\s+/)[0],
+  picture: u.image || initialsAvatar(u.name || u.email),
+} : null)
+
+const readHint = () => {
+  try { return JSON.parse(localStorage.getItem(HINT_KEY)) } catch { return null }
+}
+const writeHint = (u) => {
+  try {
+    if (u) localStorage.setItem(HINT_KEY, JSON.stringify(u))
+    else localStorage.removeItem(HINT_KEY)
+  } catch { /* ignore */ }
+}
+
+async function api(path, options = {}) {
+  const res = await fetch(path, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } })
+  const data = await res.json().catch(() => ({}))
+  return { ok: res.ok, status: res.status, data }
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(loadUser)
-  const [bookings, setBookings] = useState(() => (user ? readJSON(bookingsKey(user), []) : []))
+  const { t } = useTranslation()
+  const toast = useToast()
+  // Start from the last known user so the header renders instantly; the server confirms below.
+  const [user, setUser] = useState(() => shapeUser(readHint()))
+  const [checked, setChecked] = useState(false)
+  const [bookings, setBookings] = useState([])
 
+  const adopt = useCallback((u) => {
+    const shaped = shapeUser(u)
+    writeHint(u || null)
+    setUser(shaped)
+    return shaped
+  }, [])
+
+  // Confirm the session with the server on load.
   useEffect(() => {
-    if (user) localStorage.setItem(bookingsKey(user), JSON.stringify(bookings))
-  }, [user, bookings])
+    let alive = true
+    fetchSessionUser()
+      .then((u) => { if (alive) adopt(u) })
+      .catch(() => {})
+      .finally(() => alive && setChecked(true))
+    return () => { alive = false }
+  }, [adopt])
 
-  // Keep several open tabs in sync (login/logout in one tab updates the others).
+  // Bookings live on the server, per user.
   useEffect(() => {
-    const onStorage = (e) => {
-      if (e.key !== USER_KEY) return
-      const next = loadUser()
-      setUser(next)
-      setBookings(next ? readJSON(bookingsKey(next), []) : [])
-    }
-    window.addEventListener('storage', onStorage)
-    return () => window.removeEventListener('storage', onStorage)
-  }, [])
+    if (!user) return undefined
+    let alive = true
+    api('/api/bookings').then(({ ok, status, data }) => {
+      if (!alive) return
+      if (ok) setBookings(data.bookings || [])
+      else if (status === 401) adopt(null)
+    })
+    return () => { alive = false }
+  }, [user?.id, adopt]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  /**
-   * Accepts the ID token (JWT) that Google Identity Services returns and
-   * validates the claims we can check client-side before trusting it.
-   */
-  const loginWithGoogle = useCallback((credential) => {
-    const p = jwtDecode(credential)
-    const validIssuer = p.iss === 'accounts.google.com' || p.iss === 'https://accounts.google.com'
-    if (!validIssuer || p.aud !== GOOGLE_CLIENT_ID || p.exp * 1000 < Date.now()) {
-      throw new Error('Invalid Google token')
-    }
-    const next = {
-      id: p.sub,
-      name: p.name || p.given_name || p.email,
-      givenName: p.given_name || p.name,
-      email: p.email,
-      emailVerified: p.email_verified,
-      picture: p.picture,
-      locale: p.locale,
-      joinedAt: readJSON(USER_KEY, null)?.id === p.sub ? readJSON(USER_KEY, null).joinedAt : Date.now(),
-      expiresAt: Date.now() + SESSION_DAYS * 864e5,
-    }
-    localStorage.setItem(USER_KEY, JSON.stringify(next))
-    setUser(next)
-    setBookings(readJSON(bookingsKey(next), []))
-    return next
-  }, [])
-
-  // Demo sign-in for when Google Sign-In is unavailable (no client ID, or the origin is not authorised).
-  const loginDemo = useCallback(({ name, email }) => {
-    const id = `demo-${email.trim().toLowerCase()}`
-    const prev = readJSON(USER_KEY, null)
-    const next = {
-      id,
-      demo: true,
-      name: name.trim(),
-      givenName: name.trim().split(/\s+/)[0],
-      email: email.trim(),
-      emailVerified: false,
-      picture: initialsAvatar(name),
-      joinedAt: prev?.id === id ? prev.joinedAt : Date.now(),
-      expiresAt: Date.now() + SESSION_DAYS * 864e5,
-    }
-    localStorage.setItem(USER_KEY, JSON.stringify(next))
-    setUser(next)
-    setBookings(readJSON(bookingsKey(next), []))
-    return next
-  }, [])
+  const login = useCallback(async (email, password) => adopt(await signInWithPassword(email, password)), [adopt])
+  const signup = useCallback(async (name, email, password) => adopt(await signUpWithPassword(name, email, password)), [adopt])
+  const loginWithGoogle = useCallback((returnPath) => signInWithGoogle(returnPath), [])
+  const finishGoogle = useCallback(async () => adopt(await completeOAuth()), [adopt])
 
   const logout = useCallback(() => {
-    googleLogout()
-    window.google?.accounts?.id?.disableAutoSelect?.()
-    localStorage.removeItem(USER_KEY)
-    setUser(null)
+    adopt(null)
     setBookings([])
-  }, [])
+    signOutEverywhere()
+  }, [adopt])
 
+  // Returns false for a duplicate (synchronously, as the booking buttons expect); saves in the background.
   const addBooking = useCallback(
     (item) => {
       if (bookings.some((b) => b.id === item.id)) return false
-      setBookings((list) => [{ ...item, bookedAt: Date.now() }, ...list.filter((b) => b.id !== item.id)])
+      const optimistic = { ...item, bookedAt: Date.now() }
+      setBookings((list) => [optimistic, ...list])
+      api('/api/bookings', { method: 'POST', body: JSON.stringify(item) }).then(({ ok, status, data }) => {
+        if (ok) {
+          setBookings((list) => list.map((b) => (b.id === item.id ? data.booking : b)))
+          return
+        }
+        if (status === 409) return
+        setBookings((list) => list.filter((b) => b.id !== item.id))
+        if (status === 401) adopt(null)
+        toast(t('auth.errors.server'), 'error')
+      })
       return true
     },
-    [bookings],
+    [bookings, adopt, toast, t],
   )
 
   const removeBooking = useCallback((id) => {
-    setBookings((list) => list.filter((b) => b.id !== id))
-  }, [])
+    let removed
+    setBookings((list) => {
+      removed = list.find((b) => b.id === id)
+      return list.filter((b) => b.id !== id)
+    })
+    api(`/api/bookings?id=${encodeURIComponent(id)}`, { method: 'DELETE' }).then(({ ok }) => {
+      if (!ok && removed) {
+        setBookings((list) => [removed, ...list])
+        toast(t('auth.errors.server'), 'error')
+      }
+    })
+  }, [toast, t])
 
   const value = useMemo(
-    () => ({ user, bookings, loginWithGoogle, loginDemo, logout, addBooking, removeBooking }),
-    [user, bookings, loginWithGoogle, loginDemo, logout, addBooking, removeBooking],
+    // Bookings of a signed-out visitor are never shown, even for a moment.
+    () => ({ user, checked, bookings: user ? bookings : [], login, signup, loginWithGoogle, finishGoogle, logout, addBooking, removeBooking }),
+    [user, checked, bookings, login, signup, loginWithGoogle, finishGoogle, logout, addBooking, removeBooking],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

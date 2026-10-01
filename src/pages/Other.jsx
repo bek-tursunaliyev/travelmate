@@ -194,7 +194,7 @@ export function Profile() {
           <div>
             <strong>{user.name}</strong>
             <span>{user.email}</span>
-            <small><FaCheckCircle /> {user.demo ? t('profile.demo') : t('profile.signedIn')}</small>
+            <small><FaCheckCircle /> {user.provider === 'google' ? t('profile.signedIn') : t('profile.signedInEmail')}</small>
           </div>
         </div>
       </PageHero>
