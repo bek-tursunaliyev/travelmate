@@ -1,6 +1,6 @@
 export default {
   nav: { theme: 'الوضع الداكن / الفاتح', home: 'الرئيسية', services: 'الخدمات', tickets: 'التذاكر', favorites: 'الأكثر اختيارًا', why: 'لماذا نحن', getApp: 'حمّل التطبيق', login: 'تسجيل الدخول', signup: 'إنشاء حساب', logout: 'تسجيل الخروج', profile: 'ملفي الشخصي', language: 'اللغة', menu: 'القائمة' },
-  subnav: { regions: 'مناطق شائعة', destinations: 'وجهات شائعة', landmarks: 'معالم شائعة', viewAll: 'عرض الكل', top10: 'أفضل 10', support: 'دعم المسافرين على مدار الساعة' },
+  subnav: { uzbekistan: 'Uzbekistan', regions: 'مناطق شائعة', destinations: 'وجهات شائعة', landmarks: 'معالم شائعة', viewAll: 'عرض الكل', top10: 'أفضل 10', support: 'دعم المسافرين على مدار الساعة' },
   app: { title: 'سافر بذكاء مع تطبيق TravelMate', text: 'احجز وادفع واحتفظ بتذاكرك دون إنترنت — كل شيء في جيبك.', downloadOn: 'حمّله من', getItOn: 'متوفر على' },
   hero: {
     slides: [
@@ -25,7 +25,6 @@ export default {
     },
   },
   tickets: { title: 'تذاكر لكل رحلة', subtitle: 'اختر فئة — حافلات وقطارات، طيران، سينما أو فعاليات.', categories: { bus: 'حافلات وقطارات', flights: 'طيران', cinema: 'سينما', events: 'فعاليات' }, book: 'احجز', seatsLeft: 'تبقى {{count}} مقاعد', duration: 'المدة', date: 'التاريخ', time: 'الوقت', venue: 'المكان', hall: 'القاعة', carrier: 'الناقل', perPerson: 'للشخص', admit: 'دخول فردي' },
-  favorites: { title: 'اختيارات المسافرين المفضلة', subtitle: 'ما يحجزه المسافرون أكثر الآن — يُحدَّث مباشرة.', bookings: 'حجز هذا الشهر', live: 'مباشر', book: 'احجز الآن', items: { esim: 'eSIM أوزبكستان · 10 جيجابايت', taxi: 'تاكسي مطار طشقند', guide: 'جولة في سمرقند القديمة', train: 'قطار أفروسياب طشقند ← سمرقند', hotel: 'فندق Silk Road Boutique، بخارى' } },
   why: {
     title: 'لماذا تختار TravelMate', subtitle: 'صُمم بواسطة مسافرين من أجل المسافرين — وهذا ما يصنع الفرق.',
     items: {

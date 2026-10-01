@@ -40,9 +40,28 @@ export const landmarks = [
   { slug: 'petra', name: 'Petra', country: 'Jordan', wiki: 'Petra', tags: ['jordan', 'ancient'] },
 ]
 
-export const placeLists = { regions, destinations, landmarks }
+// Attractions in Uzbekistan — the home page "Famous places" carousel and the /places default tab.
+export const uzbekistan = [
+  { slug: 'registan', name: 'Registan', country: 'Samarkand', wiki: 'Registan', tags: ['samarkand', 'madrasa', 'uzbekistan'] },
+  { slug: 'shah-i-zinda', name: 'Shah-i-Zinda', country: 'Samarkand', wiki: 'Shah-i-Zinda', tags: ['samarkand', 'necropolis', 'uzbekistan'] },
+  { slug: 'itchan-kala', name: 'Itchan Kala', country: 'Khiva', wiki: 'Itchan_Kala', tags: ['khiva', 'old town', 'uzbekistan'] },
+  { slug: 'po-i-kalyan', name: 'Po-i-Kalyan', country: 'Bukhara', wiki: 'Po-i-Kalyan', tags: ['bukhara', 'minaret', 'uzbekistan'] },
+  { slug: 'gur-e-amir', name: 'Gur-e-Amir', country: 'Samarkand', wiki: 'Gur-e-Amir', tags: ['samarkand', 'mausoleum', 'uzbekistan'] },
+  { slug: 'ark-of-bukhara', name: 'Ark of Bukhara', country: 'Bukhara', wiki: 'Ark_of_Bukhara', tags: ['bukhara', 'fortress', 'uzbekistan'] },
+  { slug: 'bibi-khanym', name: 'Bibi-Khanym Mosque', country: 'Samarkand', wiki: 'Bibi-Khanym_Mosque', tags: ['samarkand', 'mosque', 'uzbekistan'] },
+  { slug: 'chor-minor', name: 'Chor Minor', country: 'Bukhara', wiki: 'Chor_Minor', tags: ['bukhara', 'uzbekistan'] },
+  { slug: 'lyab-i-hauz', name: 'Lyab-i Hauz', country: 'Bukhara', wiki: 'Lyab-i_Hauz', tags: ['bukhara', 'old town', 'uzbekistan'] },
+  { slug: 'samanid-mausoleum', name: 'Samanid Mausoleum', country: 'Bukhara', wiki: 'Samanid_Mausoleum', tags: ['bukhara', 'mausoleum', 'uzbekistan'] },
+  { slug: 'ulugh-beg-observatory', name: 'Ulugh Beg Observatory', country: 'Samarkand', wiki: 'Ulugh_Beg_Observatory', tags: ['samarkand', 'science', 'uzbekistan'] },
+  { slug: 'shahrisabz', name: 'Shahrisabz', country: 'Kashkadarya', wiki: 'Shahrisabz', tags: ['amir temur', 'ak-saray', 'uzbekistan'] },
+]
 
-export const typeOfList = { regions: 'region', destinations: 'destination', landmarks: 'landmark' }
+export const placeLists = { regions, destinations, landmarks, uzbekistan }
+
+// Menus shown in the sub-navbar and the mobile drawer.
+export const menuLists = ['regions', 'destinations']
+
+export const typeOfList = { regions: 'region', destinations: 'destination', landmarks: 'landmark', uzbekistan: 'landmark' }
 
 export const allPlaces = Object.entries(placeLists).flatMap(([list, items]) =>
   items.map((p, i) => ({ ...p, list, type: typeOfList[list], rank: i + 1 })),
@@ -51,6 +70,9 @@ export const allPlaces = Object.entries(placeLists).flatMap(([list, items]) =>
 export function findPlace(list, slug) {
   return allPlaces.find((p) => p.list === list && p.slug === slug)
 }
+
+// Famous places carousel on the home page: Uzbekistan only.
+export const famousPlaces = allPlaces.filter((p) => p.list === 'uzbekistan')
 
 export const heroSlides = [
   'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/1280px-RegistanSquare_Samarkand.jpg',

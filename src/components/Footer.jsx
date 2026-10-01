@@ -1,14 +1,12 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  FaFacebookF, FaInstagram, FaTelegramPlane, FaYoutube, FaLinkedinIn, FaPaperPlane,
+  FaFacebookF, FaInstagram, FaTelegramPlane, FaYoutube, FaLinkedinIn,
   FaMapMarkerAlt, FaPhoneAlt, FaEnvelope,
 } from 'react-icons/fa'
 import Logo from './Logo'
 import { StoreButtons } from './Navbar'
 import { services, serviceHref } from '../data/services'
-import { useToast } from '../context/ToastContext'
 
 const YEAR = new Date().getFullYear()
 
@@ -22,43 +20,10 @@ const socials = [
 
 export default function Footer() {
   const { t } = useTranslation()
-  const toast = useToast()
-  const [email, setEmail] = useState('')
-
-  const subscribe = (e) => {
-    e.preventDefault()
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
-      toast(t('toast.invalidEmail'), 'error')
-      return
-    }
-    const list = JSON.parse(localStorage.getItem('tm_newsletter') || '[]')
-    localStorage.setItem('tm_newsletter', JSON.stringify([...new Set([...list, email.trim()])]))
-    setEmail('')
-    toast(t('toast.subscribed'))
-  }
 
   return (
     <footer className="footer">
       <div className="container">
-        <div className="footer__newsletter">
-          <div>
-            <h3>{t('footer.newsletter')}</h3>
-            <p>{t('footer.newsletterText')}</p>
-          </div>
-          <form onSubmit={subscribe} className="newsletter">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('footer.email')}
-              aria-label={t('footer.email')}
-            />
-            <button className="btn btn--accent" type="submit">
-              <FaPaperPlane /> <span className="hide-xs">{t('footer.subscribe')}</span>
-            </button>
-          </form>
-        </div>
-
         <div className="footer__grid">
           <div className="footer__brand">
             <Logo light />
@@ -79,7 +44,7 @@ export default function Footer() {
             <h4>{t('footer.company')}</h4>
             <ul>
               <li><Link to="/#why">{t('footer.aboutUs')}</Link></li>
-              <li><Link to="/#favorites">{t('favorites.title')}</Link></li>
+              <li><Link to="/#famous">{t('famous.title')}</Link></li>
               <li><Link to="/popular/destinations">{t('subnav.destinations')}</Link></li>
               <li><Link to="/popular/landmarks">{t('subnav.landmarks')}</Link></li>
               <li><Link to="/popular/regions">{t('subnav.regions')}</Link></li>

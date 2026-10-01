@@ -1,6 +1,6 @@
 export default {
   nav: { theme: 'डार्क / लाइट मोड', home: 'होम', services: 'सेवाएँ', tickets: 'टिकट', favorites: 'टॉप पसंद', why: 'हम क्यों', getApp: 'ऐप पाएँ', login: 'लॉग इन', signup: 'साइन अप', logout: 'लॉग आउट', profile: 'मेरी प्रोफ़ाइल', language: 'भाषा', menu: 'मेनू' },
-  subnav: { regions: 'लोकप्रिय क्षेत्र', destinations: 'लोकप्रिय गंतव्य', landmarks: 'लोकप्रिय स्थल', viewAll: 'सभी देखें', top10: 'टॉप 10', support: '24/7 यात्री सहायता' },
+  subnav: { uzbekistan: 'Uzbekistan', regions: 'लोकप्रिय क्षेत्र', destinations: 'लोकप्रिय गंतव्य', landmarks: 'लोकप्रिय स्थल', viewAll: 'सभी देखें', top10: 'टॉप 10', support: '24/7 यात्री सहायता' },
   app: { title: 'TravelMate ऐप के साथ स्मार्ट यात्रा करें', text: 'बुक करें, भुगतान करें और टिकट ऑफ़लाइन रखें — सब कुछ आपकी जेब में।', downloadOn: 'डाउनलोड करें', getItOn: 'उपलब्ध है' },
   hero: {
     slides: [
@@ -17,7 +17,7 @@ export default {
       accommodation: { title: 'आवास', desc: 'मुफ़्त रद्दीकरण के साथ होटल, गेस्टहाउस और अपार्टमेंट।' },
       guide: { title: 'स्थानीय गाइड', desc: 'आपकी भाषा बोलने वाले प्रमाणित गाइड।' },
       taxi: { title: 'टैक्सी', desc: 'तय कीमत पर एयरपोर्ट ट्रांसफ़र और शहर की सवारी।' },
-      food: { title: 'खाना-पीना', desc: 'सबसे अच्छे स्थानीय रेस्तराँ में टेबल बुक करें।' },
+      food: { title: 'रेस्टोरेंट', desc: 'सबसे अच्छे स्थानीय रेस्तराँ में टेबल बुक करें।' },
       exchange: { title: 'मुद्रा विनिमय', desc: 'लाइव दरें और पास के भरोसेमंद विनिमय केंद्र।' },
       esim: { title: 'eSIM', desc: 'मिनटों में मोबाइल डेटा — बिना रोमिंग, बिना सिम बदले।' },
       tickets: { title: 'टिकट', desc: 'बस, ट्रेन, उड़ानें, सिनेमा और इवेंट।' },
@@ -25,7 +25,6 @@ export default {
     },
   },
   tickets: { title: 'हर सफ़र के लिए टिकट', subtitle: 'श्रेणी चुनें — बस और ट्रेन, उड़ानें, सिनेमा या इवेंट।', categories: { bus: 'बस और ट्रेन', flights: 'उड़ानें', cinema: 'सिनेमा', events: 'इवेंट' }, book: 'बुक करें', seatsLeft: '{{count}} सीटें बाकी', duration: 'अवधि', date: 'तारीख', time: 'समय', venue: 'स्थान', hall: 'हॉल', carrier: 'वाहक', perPerson: 'प्रति व्यक्ति', admit: 'एक व्यक्ति' },
-  favorites: { title: 'यात्रियों की पसंदीदा चीज़ें', subtitle: 'यात्री अभी सबसे ज़्यादा क्या बुक कर रहे हैं — लाइव अपडेट।', bookings: 'इस महीने बुकिंग', live: 'लाइव', book: 'अभी बुक करें', items: { esim: 'उज़्बेकिस्तान eSIM · 10 GB', taxi: 'ताशकंद एयरपोर्ट टैक्सी', guide: 'समरकंद पुराने शहर की सैर', train: 'अफ़रोसियाब ट्रेन ताशकंद → समरकंद', hotel: 'Silk Road Boutique, बुखारा' } },
   why: {
     title: 'TravelMate क्यों चुनें', subtitle: 'यात्रियों द्वारा, यात्रियों के लिए बनाया गया — यही फ़र्क है।',
     items: {

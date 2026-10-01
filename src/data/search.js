@@ -1,6 +1,7 @@
 import { allPlaces } from './places'
 import { services, offers } from './services'
 import { allTickets, ticketName } from './tickets'
+import { tours, operatorById } from './tours'
 
 const norm = (s) =>
   String(s || '')
@@ -21,7 +22,7 @@ function matches(query, ...fields) {
 
 export function searchAll(query, t) {
   const q = norm(query)
-  if (!q) return { places: [], services: [], offers: [], tickets: [] }
+  if (!q) return { places: [], services: [], offers: [], tickets: [], tours: [] }
 
   const placeHits = allPlaces.filter((p) => matches(q, p.name, p.country, p.tags))
 
@@ -39,8 +40,10 @@ export function searchAll(query, t) {
     matches(q, ticketName(tk), tk.carrier, tk.venue, tk.genre, t(`tickets.categories.${tk.cat}`)),
   )
 
-  return { places: placeHits, services: serviceHits, offers: offerHits, tickets: ticketHits }
+  const tourHits = tours.filter((tour) => matches(q, tour.title, tour.route, operatorById[tour.operator].name, tour.highlights))
+
+  return { places: placeHits, services: serviceHits, offers: offerHits, tickets: ticketHits, tours: tourHits }
 }
 
 export const countResults = (r) =>
-  r.places.length + r.services.length + r.offers.length + r.tickets.length
+  r.places.length + r.services.length + r.offers.length + r.tickets.length + r.tours.length

@@ -1,10 +1,10 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaArrowRight, FaArrowLeft, FaSearch, FaExternalLinkAlt, FaMapMarkerAlt } from 'react-icons/fa'
-import { placeLists, findPlace, typeOfList } from '../data/places'
-import { services } from '../data/services'
+import { placeLists, findPlace, typeOfList, allPlaces } from '../data/places'
+import { services, serviceById, serviceHref } from '../data/services'
 import PlaceImage from '../components/PlaceImage'
-import { ServiceCard } from '../components/Sections'
+import { ServiceCard, PlaceCard } from '../components/Sections'
 import { useWiki, sizedThumb } from '../hooks'
 import NotFound from './NotFound'
 
@@ -17,6 +17,58 @@ export function PageHero({ title, subtitle, children, image }) {
         {subtitle && <p>{subtitle}</p>}
       </div>
     </section>
+  )
+}
+
+/* ------------------------------ /places (attractions service) ------------------------------ */
+
+const placeTabs = ['uzbekistan', 'landmarks', 'destinations', 'regions']
+
+export function PlacesPage() {
+  const { t } = useTranslation()
+  const [params, setParams] = useSearchParams()
+  const list = placeTabs.includes(params.get('list')) ? params.get('list') : 'uzbekistan'
+  const service = serviceById.places
+  const Icon = service.icon
+  const items = allPlaces.filter((p) => p.list === list)
+
+  return (
+    <>
+      <PageHero title={t('services.items.places.title')} subtitle={t('services.items.places.desc')}>
+        <Link to="/#services" className="back-link"><FaArrowLeft className="flip-rtl" /> {t('services.all')}</Link>
+        <span className="page-hero__icon" style={{ '--c': service.color }}><Icon /></span>
+      </PageHero>
+
+      <div className="container service-tabs">
+        {services.map((s) => (
+          <Link key={s.id} to={serviceHref(s.id)} className={`pill ${s.id === 'places' ? 'is-active' : ''}`}>
+            <s.icon /> {t(`services.items.${s.id}.title`)}
+          </Link>
+        ))}
+      </div>
+
+      <section className="section section--flush">
+        <div className="container">
+          <div className="tabs" role="tablist">
+            {placeTabs.map((l) => (
+              <button
+                key={l}
+                role="tab"
+                aria-selected={list === l}
+                className={`tab ${list === l ? 'is-active' : ''}`}
+                onClick={() => setParams({ list: l }, { replace: true })}
+              >
+                {t(`subnav.${l}`)}
+                <span className="tab__count">{placeLists[l].length}</span>
+              </button>
+            ))}
+          </div>
+          <div className="place-grid place-grid--4" key={list}>
+            {items.map((p) => <PlaceCard key={p.slug} place={p} badge={`#${p.rank}`} />)}
+          </div>
+        </div>
+      </section>
+    </>
   )
 }
 

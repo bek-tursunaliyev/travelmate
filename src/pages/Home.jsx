@@ -1,12 +1,14 @@
 import HeroCarousel from '../components/HeroCarousel'
-import { Services, Favorites, WhyChoose } from '../components/Sections'
+import { Services, FamousPlaces, WhyChoose } from '../components/Sections'
+import { ToursCarousel } from './Tours'
 
 export default function Home() {
   return (
     <>
       <HeroCarousel />
       <Services />
-      <Favorites />
+      <ToursCarousel />
+      <FamousPlaces />
       <WhyChoose />
     </>
   )

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaGlobeAsia, FaMapMarkerAlt, FaLandmark, FaChevronDown, FaArrowRight, FaHeadset } from 'react-icons/fa'
-import { placeLists } from '../data/places'
+import { placeLists, menuLists } from '../data/places'
 
 const icons = { regions: FaGlobeAsia, destinations: FaMapMarkerAlt, landmarks: FaLandmark }
 
@@ -83,7 +83,7 @@ export default function SubNav() {
     <div className="subnav">
       <div className="container subnav__inner">
         <div className="subnav__menus">
-          {Object.keys(placeLists).map((list) => (
+          {menuLists.map((list) => (
             <PopularMenu
               key={list}
               list={list}

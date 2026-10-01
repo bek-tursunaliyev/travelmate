@@ -13,13 +13,13 @@ import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { useTheme } from '../context/ThemeContext'
 import { useClickOutside } from '../hooks'
-import { placeLists } from '../data/places'
+import { menuLists } from '../data/places'
 
 const navLinks = [
   { to: '/', key: 'home', end: true },
   { to: '/#services', key: 'services' },
+  { to: '/places', key: 'places' },
   { to: '/tickets', key: 'tickets' },
-  { to: '/#favorites', key: 'favorites' },
   { to: '/#why', key: 'why' },
 ]
 
@@ -212,7 +212,7 @@ function MobileMenu({ open, onClose }) {
           {navLinks.map((l) => (
             <Link key={l.key} to={l.to} onClick={onClose}>{t(`nav.${l.key}`)}</Link>
           ))}
-          {Object.keys(placeLists).map((list) => (
+          {menuLists.map((list) => (
             <Link key={list} to={`/popular/${list}`} onClick={onClose}>{t(`subnav.${list}`)}</Link>
           ))}
         </nav>

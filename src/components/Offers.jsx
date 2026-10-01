@@ -27,7 +27,8 @@ export function OfferCard({ offer, service }) {
           <span className="offer__price"><b>{t('common.free')}</b></span>
         ) : (
           <span className="offer__price">
-            <small>{t('common.from')}</small> <b>{f.money(offer.price)}</b> <small>{t(`common.per.${offer.unit}`)}</small>
+            <span><small>{t('common.from')}</small> <b>{f.money(offer.price)}</b> <small>{t(`common.per.${offer.unit}`)}</small></span>
+            <small className="price__uzs">≈ {f.uzs(offer.price)}</small>
           </span>
         )}
         <button

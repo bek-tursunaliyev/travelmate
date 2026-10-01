@@ -29,6 +29,13 @@ function loadUser() {
 
 const bookingsKey = (user) => `tm_bookings_${user.id}`
 
+// Round avatar with the user's initials, as a data URL (demo accounts have no Google photo).
+function initialsAvatar(name) {
+  const letters = name.trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" rx="48" fill="#0a717b"/><text x="50%" y="50%" dy=".35em" text-anchor="middle" font-family="Marcellus,Georgia,serif" font-size="38" font-weight="700" fill="#fff">${letters}</text></svg>`
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(loadUser)
   const [bookings, setBookings] = useState(() => (user ? readJSON(bookingsKey(user), []) : []))
@@ -76,6 +83,27 @@ export function AuthProvider({ children }) {
     return next
   }, [])
 
+  // Demo sign-in for when Google Sign-In is unavailable (no client ID, or the origin is not authorised).
+  const loginDemo = useCallback(({ name, email }) => {
+    const id = `demo-${email.trim().toLowerCase()}`
+    const prev = readJSON(USER_KEY, null)
+    const next = {
+      id,
+      demo: true,
+      name: name.trim(),
+      givenName: name.trim().split(/\s+/)[0],
+      email: email.trim(),
+      emailVerified: false,
+      picture: initialsAvatar(name),
+      joinedAt: prev?.id === id ? prev.joinedAt : Date.now(),
+      expiresAt: Date.now() + SESSION_DAYS * 864e5,
+    }
+    localStorage.setItem(USER_KEY, JSON.stringify(next))
+    setUser(next)
+    setBookings(readJSON(bookingsKey(next), []))
+    return next
+  }, [])
+
   const logout = useCallback(() => {
     googleLogout()
     window.google?.accounts?.id?.disableAutoSelect?.()
@@ -98,8 +126,8 @@ export function AuthProvider({ children }) {
   }, [])
 
   const value = useMemo(
-    () => ({ user, bookings, loginWithGoogle, logout, addBooking, removeBooking }),
-    [user, bookings, loginWithGoogle, logout, addBooking, removeBooking],
+    () => ({ user, bookings, loginWithGoogle, loginDemo, logout, addBooking, removeBooking }),
+    [user, bookings, loginWithGoogle, loginDemo, logout, addBooking, removeBooking],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

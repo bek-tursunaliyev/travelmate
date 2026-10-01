@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { FaArrowLeft, FaMapMarkerAlt, FaSearch, FaTrashAlt, FaCheckCircle, FaSuitcaseRolling } from 'react-icons/fa'
 import { PageHero } from './Places'
 import NotFound from './NotFound'
+import { TourCard } from './Tours'
 import SearchBar from '../components/SearchBar'
 import PlaceImage from '../components/PlaceImage'
+import Price from '../components/Price'
 import { OfferCard, CurrencyConverter } from '../components/Offers'
 import { ServiceCard, TicketItem, Tickets } from '../components/Sections'
 import { services, serviceById, serviceHref, offers } from '../data/services'
@@ -41,6 +43,15 @@ export function SearchResults() {
           ) : (
             <>
               <p className="results-count">{t('search.resultsFor', { count: total, q })}</p>
+
+              {r.tours.length > 0 && (
+                <div className="result-group">
+                  <h2>{t('search.tours')} <span>{r.tours.length}</span></h2>
+                  <div className="tour-grid">
+                    {r.tours.map((tour) => <TourCard key={tour.slug} tour={tour} />)}
+                  </div>
+                </div>
+              )}
 
               {r.places.length > 0 && (
                 <div className="result-group">
@@ -102,7 +113,7 @@ export function ServicePage() {
   const { id } = useParams()
   const { t } = useTranslation()
   const service = serviceById[id]
-  if (id === 'tickets') return <Navigate to="/tickets" replace />
+  if (serviceHref(id) !== `/services/${id}`) return <Navigate to={serviceHref(id)} replace />
   if (!service) return <NotFound />
   const Icon = service.icon
 
@@ -179,7 +190,7 @@ export function Profile() {
           <div>
             <strong>{user.name}</strong>
             <span>{user.email}</span>
-            <small><FaCheckCircle /> {t('profile.signedIn')}</small>
+            <small><FaCheckCircle /> {user.demo ? t('profile.demo') : t('profile.signedIn')}</small>
           </div>
         </div>
       </PageHero>
@@ -210,7 +221,7 @@ export function Profile() {
                         {t('profile.bookedOn')} {f.date(b.bookedAt, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                       </small>
                     </div>
-                    <span className="booking__price">{b.price ? f.money(b.price) : t('common.free')}</span>
+                    {b.price ? <Price usd={b.price} className="booking__price" /> : <span className="booking__price">{t('common.free')}</span>}
                     <button
                       className="btn btn--danger btn--sm"
                       onClick={() => { removeBooking(b.id); toast(t('toast.canceled'), 'info') }}
@@ -220,7 +231,7 @@ export function Profile() {
                   </li>
                 ))}
               </ul>
-              <p className="bookings__total">Σ <b>{f.money(total)}</b></p>
+              <p className="bookings__total">Σ <Price usd={total} /></p>
             </>
           )}
         </div>

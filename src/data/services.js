@@ -1,9 +1,10 @@
 import {
-  FaHotel, FaUserTie, FaTaxi, FaUtensils, FaExchangeAlt, FaSimCard, FaTicketAlt, FaCar,
+  FaHotel, FaUserTie, FaTaxi, FaUtensils, FaExchangeAlt, FaSimCard, FaTicketAlt, FaCar, FaLandmark, FaRoute,
 } from 'react-icons/fa'
 
 // Service ids double as i18n keys: services.items.<id>.title / .desc
 export const services = [
+  { id: 'tours', icon: FaRoute, keywords: ['tour', 'tours', 'package', 'trip', 'tur', 'paket', 'тур'], color: '#0a717b' },
   { id: 'accommodation', icon: FaHotel, keywords: ['hotel', 'hostel', 'stay', 'mehmonxona', 'отель'], color: '#0A717B' },
   { id: 'guide', icon: FaUserTie, keywords: ['guide', 'tour', 'gid', 'экскурсия'], color: '#0d8a6a' },
   { id: 'taxi', icon: FaTaxi, keywords: ['taxi', 'transfer', 'ride', 'taksi', 'такси'], color: '#e0892b' },
@@ -11,13 +12,15 @@ export const services = [
   { id: 'exchange', icon: FaExchangeAlt, keywords: ['exchange', 'currency', 'money', 'valyuta', 'обмен'], color: '#3f7fbf' },
   { id: 'esim', icon: FaSimCard, keywords: ['esim', 'sim', 'internet', 'data', 'mobile'], color: '#7a5bc4' },
   { id: 'tickets', icon: FaTicketAlt, keywords: ['ticket', 'bus', 'flight', 'cinema', 'event', 'chipta', 'bilet'], color: '#F4A37A' },
+  { id: 'places', icon: FaLandmark, keywords: ['places', 'attractions', 'sights', 'landmark', 'joylar', 'достопримечательности'], color: '#b5527a' },
   { id: 'rentcar', icon: FaCar, keywords: ['car', 'rent', 'rental', 'avto', 'аренда'], color: '#2d6f8f' },
 ]
 
 export const serviceById = Object.fromEntries(services.map((s) => [s.id, s]))
 
-// Tickets have their own page; every other service lists offers on /services/:id
-export const serviceHref = (id) => (id === 'tickets' ? '/tickets' : `/services/${id}`)
+// Tickets, places and guides have their own pages; every other service lists offers on /services/:id
+const ownPages = { tickets: '/tickets', places: '/places', guide: '/guides', tours: '/tours', taxi: '/transfers' }
+export const serviceHref = (id) => ownPages[id] || `/services/${id}`
 
 // Offers shown on /services/:id — unit maps to common.per.<unit>
 export const offers = {
@@ -78,16 +81,11 @@ export const offers = {
 }
 
 // Rates are expressed as "1 unit of currency = X USD"
+// Polish złoty (PLN) is intentionally not offered anywhere on the site.
 export const currencies = {
   USD: 1, EUR: 1.08, GBP: 1.27, RUB: 0.011, UZS: 0.0000787, TRY: 0.029,
   AED: 0.2723, CNY: 0.138, JPY: 0.0067, KZT: 0.0021,
 }
 
-// Favorites shown on the home page (name is translated via favorites.items.<key>)
-export const favorites = [
-  { key: 'esim', service: 'esim', offerId: 'es-2', count: 12480, rating: 4.9 },
-  { key: 'taxi', service: 'taxi', offerId: 'tx-1', count: 8420, rating: 4.8 },
-  { key: 'guide', service: 'guide', offerId: 'gd-1', count: 2140, rating: 4.9 },
-  { key: 'train', service: 'tickets', offerId: 'bus-1', count: 6930, rating: 4.8 },
-  { key: 'hotel', service: 'accommodation', offerId: 'acc-2', count: 1932, rating: 4.9 },
-]
+// Prices are stored in USD; UZS is shown underneath as a reference.
+export const usdToUzs = (usd) => usd / currencies.UZS

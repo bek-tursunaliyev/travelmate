@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
+import { usdToUzs } from '../data/services'
 import { useToast } from '../context/ToastContext'
 
 /* ---------- Wikipedia summary (real photos + descriptions) ---------- */
@@ -150,8 +151,11 @@ export function useFormat() {
     lng === 'uz' ? formatUzDate(new Date(d), opts) : new Intl.DateTimeFormat(lng, opts).format(new Date(d))
   return {
     date: dateFmt,
+    // narrowSymbol keeps USD as "$" in every locale (not "US$").
     money: (v, currency = 'USD') =>
-      new Intl.NumberFormat(lng, { style: 'currency', currency, maximumFractionDigits: v < 1 ? 4 : 2, minimumFractionDigits: 0 }).format(v),
+      new Intl.NumberFormat(lng, { style: 'currency', currency, currencyDisplay: 'narrowSymbol', maximumFractionDigits: v < 1 ? 4 : 2, minimumFractionDigits: 0 }).format(v),
+    // USD amount shown in so'm, rounded to the nearest 100.
+    uzs: (usd) => `${new Intl.NumberFormat(lng, { maximumFractionDigits: 0 }).format(Math.round(usdToUzs(usd) / 100) * 100)} UZS`,
     number: (v, digits = 0) => new Intl.NumberFormat(lng, { maximumFractionDigits: digits }).format(v),
   }
 }

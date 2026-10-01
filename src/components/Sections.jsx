@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  FaStar, FaCircle, FaLayerGroup, FaHandshake, FaTags, FaHeadset, FaLock, FaWifi,
-  FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChair, FaCrown,
+  FaLayerGroup, FaHandshake, FaTags,
+  FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChair, FaArrowRight,
 } from 'react-icons/fa'
-import { services, serviceById, serviceHref, offers, favorites } from '../data/services'
-import { ticketCategories, tickets, ticketName, allTickets } from '../data/tickets'
+import { services, serviceHref } from '../data/services'
+import { ticketCategories, tickets, ticketName } from '../data/tickets'
+import { famousPlaces } from '../data/places'
+import PlaceImage from './PlaceImage'
 import { useBook, useCountUp, useFormat, useInView } from '../hooks'
 
 export function SectionHeader({ eyebrow, title, subtitle, action }) {
@@ -110,6 +111,7 @@ export function TicketItem({ tk, cat }) {
       <div className="pass__stub">
         <small>{t('common.from')}</small>
         <strong>{f.money(tk.price)}</strong>
+        <small className="price__uzs">≈ {f.uzs(tk.price)}</small>
         <small>{t('tickets.perPerson')}</small>
         <span className={`pass__seats ${low ? 'is-low' : ''}`}>{t('tickets.seatsLeft', { count: tk.seats })}</span>
         <button
@@ -158,85 +160,67 @@ export function Tickets() {
   )
 }
 
-/* ------------------------------ Favorites ------------------------------ */
+/* ------------------------------ Famous places ------------------------------ */
 
-function findOffer(fav) {
-  if (fav.service === 'tickets') {
-    const tk = allTickets.find((x) => x.id === fav.offerId)
-    return { name: ticketName(tk), price: tk.price, cat: tk.cat }
-  }
-  return offers[fav.service].find((o) => o.id === fav.offerId)
-}
-
-function FavoriteCard({ fav, rank, start, bump }) {
+export function PlaceCard({ place, badge }) {
   const { t } = useTranslation()
-  const f = useFormat()
-  const book = useBook()
-  const offer = findOffer(fav)
-  const service = serviceById[fav.service]
-  const Icon = service.icon
-  const value = useCountUp(fav.count + bump, start)
-  const name = t(`favorites.items.${fav.key}`)
-  const max = favorites[0].count + 200
-
+  const href = `/place/${place.list}/${place.slug}`
   return (
-    <article className="fav" style={{ '--c': service.color }}>
-      <div className="fav__rank">{rank === 1 ? <FaCrown /> : `#${rank}`}</div>
-      <span className="fav__icon"><Icon /></span>
-      <span className="fav__service">{t(`services.items.${fav.service}.title`)}</span>
-      <h3>{name}</h3>
-      <div className="fav__count">
-        <strong>{f.number(value)}</strong>
-        <small>{t('favorites.bookings')}</small>
+    <article className="place-card place-card--explore">
+      <Link to={href} className="place-card__media" tabIndex={-1} aria-hidden="true">
+        <PlaceImage wiki={place.wiki} alt={place.name} />
+        {badge && <span className="place-card__rank">{badge}</span>}
+      </Link>
+      <div className="place-card__body">
+        <h3>{place.name}</h3>
+        <p><FaMapMarkerAlt /> {place.country}</p>
+        <Link to={href} className="btn btn--primary btn--sm place-card__btn">
+          {t('popular.explore')} <FaArrowRight className="flip-rtl" />
+        </Link>
       </div>
-      <div className="fav__bar"><span style={{ width: start ? `${Math.min(100, ((fav.count + bump) / max) * 100)}%` : 0 }} /></div>
-      <div className="fav__foot">
-        <span className="rating"><FaStar /> {fav.rating}</span>
-        <span className="fav__price">{t('common.from')} <b>{f.money(offer.price)}</b></span>
-      </div>
-      <button
-        className="btn btn--outline btn--block"
-        onClick={() => book({ id: fav.offerId, name, kind: offer.cat || fav.service, price: offer.price })}
-      >
-        {t('favorites.book')}
-      </button>
     </article>
   )
 }
 
-export function Favorites() {
-  const { t } = useTranslation()
-  const [ref, inView] = useInView()
-  // Simulated live counter: every few seconds a random card gets new bookings.
-  const [bumps, setBumps] = useState(() => favorites.map(() => 0))
-
-  useEffect(() => {
-    if (!inView) return undefined
-    const id = setInterval(() => {
-      setBumps((b) => {
-        const i = Math.floor(Math.random() * b.length)
-        return b.map((v, j) => (j === i ? v + 1 + Math.floor(Math.random() * 3) : v))
-      })
-    }, 2800)
-    return () => clearInterval(id)
-  }, [inView])
-
-  const ranked = favorites
-    .map((fav, i) => ({ fav, bump: bumps[i] }))
-    .sort((a, b) => b.fav.count + b.bump - (a.fav.count + a.bump))
-
+// Full-bleed photo card with the place name over the image; the whole card is the link.
+// `inert` cards are the carousel's duplicated half: visible, but skipped by keyboard and screen readers.
+function ExperienceCard({ place, inert }) {
   return (
-    <section className="section" id="favorites" ref={ref}>
+    <Link
+      to={`/place/${place.list}/${place.slug}`}
+      className="xp-card"
+      tabIndex={inert ? -1 : undefined}
+      aria-hidden={inert || undefined}
+    >
+      <PlaceImage wiki={place.wiki} alt={place.name} width={640} />
+      <span className="xp-card__text">
+        <small>{place.country}</small>
+        <strong>{place.name}</strong>
+      </span>
+    </Link>
+  )
+}
+
+export function FamousPlaces() {
+  const { t } = useTranslation()
+  return (
+    <section className="section" id="famous">
       <div className="container">
         <SectionHeader
-          eyebrow={<><FaCircle className="live-dot" /> {t('favorites.live')}</>}
-          title={t('favorites.title')}
-          subtitle={t('favorites.subtitle')}
+          eyebrow={t('famous.eyebrow')}
+          title={t('famous.title')}
+          subtitle={t('famous.subtitle')}
+          action={<Link to="/places?list=uzbekistan" className="btn btn--outline">{t('subnav.viewAll')} <FaArrowRight className="flip-rtl" /></Link>}
         />
-        <div className="favs">
-          {ranked.map(({ fav, bump }, i) => (
-            <FavoriteCard key={fav.key} fav={fav} rank={i + 1} start={inView} bump={bump} />
-          ))}
+      </div>
+      {/* Auto-scrolling strip: the list is rendered twice and the track slides by exactly one copy, so it loops seamlessly. */}
+      <div className="marquee">
+        <div className="marquee__track" style={{ '--marquee-duration': `${famousPlaces.length * 7}s` }}>
+          {[0, 1].map((copy) =>
+            famousPlaces.map((p) => (
+              <ExperienceCard key={`${copy}-${p.slug}`} place={p} inert={copy === 1} />
+            )),
+          )}
         </div>
       </div>
     </section>
@@ -249,9 +233,6 @@ const whyItems = [
   { key: 'allinone', icon: FaLayerGroup },
   { key: 'local', icon: FaHandshake },
   { key: 'prices', icon: FaTags },
-  { key: 'support', icon: FaHeadset },
-  { key: 'secure', icon: FaLock },
-  { key: 'offline', icon: FaWifi },
 ]
 
 const stats = [

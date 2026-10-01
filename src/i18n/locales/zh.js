@@ -1,6 +1,6 @@
 export default {
   nav: { theme: '切换深色模式', home: '首页', services: '服务', tickets: '票务', favorites: '热门精选', why: '为什么选我们', getApp: '下载应用', login: '登录', signup: '注册', logout: '退出', profile: '我的主页', language: '语言', menu: '菜单' },
-  subnav: { regions: '热门地区', destinations: '热门目的地', landmarks: '热门地标', viewAll: '查看全部', top10: '前 10', support: '全天候旅客支持' },
+  subnav: { uzbekistan: 'Uzbekistan', regions: '热门地区', destinations: '热门目的地', landmarks: '热门地标', viewAll: '查看全部', top10: '前 10', support: '全天候旅客支持' },
   app: { title: '使用 TravelMate 应用，旅行更聪明', text: '预订、支付并离线保存门票——一切尽在掌中。', downloadOn: '下载于', getItOn: '立即获取' },
   hero: {
     slides: [
@@ -17,7 +17,7 @@ export default {
       accommodation: { title: '住宿', desc: '可免费取消的酒店、民宿和公寓。' },
       guide: { title: '本地导游', desc: '会说你的语言的认证导游。' },
       taxi: { title: '出租车', desc: '机场接送和市内出行，价格固定。' },
-      food: { title: '美食餐饮', desc: '预订当地最好的餐厅。' },
+      food: { title: '餐厅', desc: '预订当地最好的餐厅。' },
       exchange: { title: '货币兑换', desc: '实时汇率和附近可靠的兑换点。' },
       esim: { title: 'eSIM', desc: '几分钟开通移动数据——无漫游，无需换卡。' },
       tickets: { title: '票务', desc: '巴士、火车、航班、电影和活动。' },
@@ -25,7 +25,6 @@ export default {
     },
   },
   tickets: { title: '每段旅程的票', subtitle: '选择类别——巴士和火车、机票、电影或活动。', categories: { bus: '巴士和火车', flights: '机票', cinema: '电影', events: '活动' }, book: '预订', seatsLeft: '剩余 {{count}} 个座位', duration: '时长', date: '日期', time: '时间', venue: '地点', hall: '影厅', carrier: '承运方', perPerson: '每人', admit: '单人票' },
-  favorites: { title: '旅行者的最爱', subtitle: '旅行者此刻预订最多的服务——实时更新。', bookings: '本月预订', live: '实时', book: '立即预订', items: { esim: '乌兹别克斯坦 eSIM · 10 GB', taxi: '塔什干机场出租车', guide: '撒马尔罕老城徒步', train: 'Afrosiyob 列车 塔什干 → 撒马尔罕', hotel: '布哈拉丝路精品酒店' } },
   why: {
     title: '为什么选择 TravelMate', subtitle: '由旅行者打造，为旅行者服务——这就是不同之处。',
     items: {

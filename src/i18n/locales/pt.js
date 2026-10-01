@@ -1,6 +1,6 @@
 export default {
   nav: { theme: 'Modo escuro / claro', home: 'Início', services: 'Serviços', tickets: 'Bilhetes', favorites: 'Favoritos', why: 'Por que nós', getApp: 'Baixar app', login: 'Entrar', signup: 'Cadastrar', logout: 'Sair', profile: 'Meu perfil', language: 'Idioma', menu: 'Menu' },
-  subnav: { regions: 'Regiões populares', destinations: 'Destinos populares', landmarks: 'Pontos turísticos populares', viewAll: 'Ver tudo', top10: 'Top 10', support: 'Suporte 24/7 ao viajante' },
+  subnav: { uzbekistan: 'Uzbekistan', regions: 'Regiões populares', destinations: 'Destinos populares', landmarks: 'Pontos turísticos populares', viewAll: 'Ver tudo', top10: 'Top 10', support: 'Suporte 24/7 ao viajante' },
   app: { title: 'Viaje melhor com o app TravelMate', text: 'Reserve, pague e guarde seus bilhetes offline — tudo no seu bolso.', downloadOn: 'Baixe na', getItOn: 'Disponível no' },
   hero: {
     slides: [
@@ -17,7 +17,7 @@ export default {
       accommodation: { title: 'Hospedagem', desc: 'Hotéis, pousadas e apartamentos com cancelamento grátis.' },
       guide: { title: 'Guias locais', desc: 'Guias certificados que falam o seu idioma.' },
       taxi: { title: 'Táxi', desc: 'Traslados do aeroporto e corridas na cidade com preço fixo.' },
-      food: { title: 'Gastronomia', desc: 'Reserve mesas nos melhores restaurantes locais.' },
+      food: { title: 'Restaurantes', desc: 'Reserve mesas nos melhores restaurantes locais.' },
       exchange: { title: 'Câmbio', desc: 'Cotações ao vivo e casas de câmbio confiáveis por perto.' },
       esim: { title: 'eSIM', desc: 'Dados móveis em minutos — sem roaming, sem trocar o chip.' },
       tickets: { title: 'Bilhetes', desc: 'Ônibus, trens, voos, cinema e eventos.' },
@@ -25,7 +25,6 @@ export default {
     },
   },
   tickets: { title: 'Bilhetes para cada viagem', subtitle: 'Escolha uma categoria — ônibus e trem, voos, cinema ou eventos.', categories: { bus: 'Ônibus e trem', flights: 'Voos', cinema: 'Cinema', events: 'Eventos' }, book: 'Reservar', seatsLeft: '{{count}} lugares restantes', duration: 'Duração', date: 'Data', time: 'Hora', venue: 'Local', hall: 'Sala', carrier: 'Operadora', perPerson: 'por pessoa', admit: 'Entrada individual' },
-  favorites: { title: 'As escolhas favoritas dos viajantes', subtitle: 'O que os viajantes mais reservam agora — atualizado ao vivo.', bookings: 'reservas este mês', live: 'Ao vivo', book: 'Reservar agora', items: { esim: 'eSIM Uzbequistão · 10 GB', taxi: 'Táxi aeroporto de Tashkent', guide: 'Passeio pela cidade velha de Samarcanda', train: 'Trem Afrosiyob Tashkent → Samarcanda', hotel: 'Silk Road Boutique, Bukhara' } },
   why: {
     title: 'Por que escolher o TravelMate', subtitle: 'Feito por viajantes, para viajantes — é isso que faz a diferença.',
     items: {

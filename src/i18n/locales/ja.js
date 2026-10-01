@@ -1,6 +1,6 @@
 export default {
   nav: { theme: 'ダーク / ライトモード', home: 'ホーム', services: 'サービス', tickets: 'チケット', favorites: '人気', why: '選ばれる理由', getApp: 'アプリを入手', login: 'ログイン', signup: '新規登録', logout: 'ログアウト', profile: 'マイページ', language: '言語', menu: 'メニュー' },
-  subnav: { regions: '人気の地域', destinations: '人気の旅行先', landmarks: '人気の名所', viewAll: 'すべて見る', top10: 'トップ10', support: '24時間トラベルサポート' },
+  subnav: { uzbekistan: 'Uzbekistan', regions: '人気の地域', destinations: '人気の旅行先', landmarks: '人気の名所', viewAll: 'すべて見る', top10: 'トップ10', support: '24時間トラベルサポート' },
   app: { title: 'TravelMateアプリでもっと賢く旅を', text: '予約、支払い、オフラインでのチケット保存 — すべてポケットの中に。', downloadOn: 'ダウンロード', getItOn: '入手する' },
   hero: {
     slides: [
@@ -17,7 +17,7 @@ export default {
       accommodation: { title: '宿泊', desc: '無料キャンセル可能なホテル、ゲストハウス、アパート。' },
       guide: { title: '現地ガイド', desc: 'あなたの言語を話す認定ガイド。' },
       taxi: { title: 'タクシー', desc: '定額の空港送迎と市内移動。' },
-      food: { title: 'グルメ', desc: '地元の人気レストランを予約。' },
+      food: { title: 'レストラン', desc: '地元の人気レストランを予約。' },
       exchange: { title: '両替', desc: 'リアルタイムのレートと近くの信頼できる両替所。' },
       esim: { title: 'eSIM', desc: '数分でモバイルデータ — ローミングもSIM交換も不要。' },
       tickets: { title: 'チケット', desc: 'バス、列車、航空券、映画、イベント。' },
@@ -25,7 +25,6 @@ export default {
     },
   },
   tickets: { title: 'あらゆる旅のチケット', subtitle: 'カテゴリーを選択 — バス・列車、航空券、映画、イベント。', categories: { bus: 'バス・列車', flights: '航空券', cinema: '映画', events: 'イベント' }, book: '予約', seatsLeft: '残り{{count}}席', duration: '所要時間', date: '日付', time: '時間', venue: '会場', hall: 'ホール', carrier: '運航会社', perPerson: '1名あたり', admit: '1名様' },
-  favorites: { title: '旅行者のお気に入り', subtitle: '今、旅行者に最も予約されているもの — リアルタイム更新。', bookings: '今月の予約', live: 'ライブ', book: '今すぐ予約', items: { esim: 'ウズベキスタン eSIM · 10GB', taxi: 'タシケント空港タクシー', guide: 'サマルカンド旧市街ウォーク', train: 'アフロシヨブ号 タシケント → サマルカンド', hotel: 'Silk Road Boutique（ブハラ）' } },
   why: {
     title: 'TravelMateが選ばれる理由', subtitle: '旅行者による、旅行者のためのアプリ — その違いがここに。',
     items: {

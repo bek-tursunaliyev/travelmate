@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { GoogleLogin } from '@react-oauth/google'
-import { FaCheckCircle, FaLock, FaExclamationTriangle, FaArrowLeft } from 'react-icons/fa'
+import { FaCheckCircle, FaLock, FaInfoCircle, FaArrowLeft } from 'react-icons/fa'
 import Logo from '../components/Logo'
 import { GOOGLE_CLIENT_ID, useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
@@ -18,6 +18,41 @@ function useButtonWidth() {
   return w
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+
+// Fallback sign-in used only when Google Sign-In is unavailable.
+function DemoLogin({ onDone }) {
+  const { t } = useTranslation()
+  const { loginDemo } = useAuth()
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [touched, setTouched] = useState(false)
+  const nameOk = name.trim().length >= 2
+  const emailOk = EMAIL_RE.test(email.trim())
+
+  const submit = (e) => {
+    e.preventDefault()
+    setTouched(true)
+    if (nameOk && emailOk) onDone(loginDemo({ name, email }))
+  }
+
+  return (
+    <form className="auth__demo" onSubmit={submit} noValidate>
+      <label>
+        <span>{t('auth.demoName')}</span>
+        <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" aria-invalid={touched && !nameOk} />
+      </label>
+      <label>
+        <span>{t('auth.demoEmail')}</span>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" aria-invalid={touched && !emailOk} />
+      </label>
+      {touched && (!nameOk || !emailOk) && <p className="auth__demo-error">{t('auth.demoInvalid')}</p>}
+      <button type="submit" className="btn btn--primary btn--block">{t('auth.demoSubmit')}</button>
+      <p className="auth__demo-note"><FaInfoCircle /> {t('auth.demoNote')}</p>
+    </form>
+  )
+}
+
 export default function AuthPage({ mode = 'login' }) {
   const { t, i18n } = useTranslation()
   const { user, loginWithGoogle } = useAuth()
@@ -27,15 +62,22 @@ export default function AuthPage({ mode = 'login' }) {
   const width = useButtonWidth()
   const from = location.state?.from || '/'
   const isLogin = mode === 'login'
+  const [googleFailed, setGoogleFailed] = useState(false)
+  const [demoOpen, setDemoOpen] = useState(false)
+  const showDemo = !GOOGLE_CLIENT_ID || googleFailed || demoOpen
 
   if (user) return <Navigate to={from} replace />
 
+  const finish = (u) => {
+    toast(t('auth.welcome', { name: u.givenName }))
+    navigate(from, { replace: true })
+  }
+
   const onSuccess = ({ credential }) => {
     try {
-      const u = loginWithGoogle(credential)
-      toast(t('auth.welcome', { name: u.givenName }))
-      navigate(from, { replace: true })
+      finish(loginWithGoogle(credential))
     } catch {
+      setGoogleFailed(true)
       toast(t('auth.failed'), 'error')
     }
   }
@@ -61,12 +103,12 @@ export default function AuthPage({ mode = 'login' }) {
           <h1>{isLogin ? t('auth.loginTitle') : t('auth.signupTitle')}</h1>
           <p className="muted">{isLogin ? t('auth.loginSubtitle') : t('auth.signupSubtitle')}</p>
 
-          {GOOGLE_CLIENT_ID ? (
+          {GOOGLE_CLIENT_ID && (
             <div className="auth__google">
               <GoogleLogin
                 key={`${i18n.resolvedLanguage}-${mode}`}
                 onSuccess={onSuccess}
-                onError={() => toast(t('auth.failed'), 'error')}
+                onError={() => { setGoogleFailed(true); toast(t('auth.failed'), 'error') }}
                 text={isLogin ? 'signin_with' : 'signup_with'}
                 shape="pill"
                 size="large"
@@ -77,17 +119,15 @@ export default function AuthPage({ mode = 'login' }) {
                 context={isLogin ? 'signin' : 'signup'}
               />
             </div>
+          )}
+
+          {showDemo ? (
+            <>
+              {GOOGLE_CLIENT_ID ? <div className="auth__or"><span>{t('auth.or')}</span></div> : <p className="auth__demo-intro">{t('auth.demoUnavailable')}</p>}
+              <DemoLogin onDone={finish} />
+            </>
           ) : (
-            <div className="auth__warning" role="alert">
-              <FaExclamationTriangle />
-              <div>
-                <strong>Google Client ID is not configured</strong>
-                <p>
-                  Create <code>.env</code> in the project root with <code>VITE_GOOGLE_CLIENT_ID=…</code> and restart
-                  <code>npm run dev</code>. See README.md for step-by-step setup.
-                </p>
-              </div>
-            </div>
+            <button className="auth__demo-toggle" onClick={() => setDemoOpen(true)}>{t('auth.demoToggle')}</button>
           )}
 
           <p className="auth__secure"><FaLock /> {t('auth.secure')}</p>
