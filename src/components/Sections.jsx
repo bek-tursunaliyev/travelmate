@@ -5,9 +5,13 @@ import { useLocalizedText } from '../i18n/auto'
 import {
   FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChair, FaArrowRight,
 } from 'react-icons/fa'
-import { services, serviceHref } from '../data/services'
-import { ticketCategories, tickets, venueById } from '../data/tickets'
-import { famousPlaces, placePhoto } from '../data/places'
+import { services, serviceHref, offers } from '../data/services'
+import { ticketCategories, tickets, allTickets, venueById } from '../data/tickets'
+import { famousPlaces, placePhoto, allPlaces } from '../data/places'
+import { tours } from '../data/tours'
+import { guides } from '../data/guides'
+import { transferDestinations } from '../data/transfers'
+import { esimPlans } from '../data/esim'
 import { partners } from '../data/partners'
 import PlaceImage from './PlaceImage'
 import Price from './Price'
@@ -30,9 +34,21 @@ export function SectionHeader({ eyebrow, title, subtitle, action }) {
 
 /* ------------------------------ Services ------------------------------ */
 
+// How many items each service page lists (read at render time, so admin edits show up).
+const serviceCounts = {
+  tours: () => tours.length,
+  guide: () => guides.length,
+  taxi: () => transferDestinations.length,
+  esim: () => esimPlans.length,
+  tickets: () => allTickets.length,
+  places: () => allPlaces.length,
+}
+export const serviceCount = (id) => (serviceCounts[id] ? serviceCounts[id]() : offers[id]?.length || 0)
+
 export function ServiceCard({ service }) {
   const { t } = useTranslation()
   const Icon = service.icon
+  const count = serviceCount(service.id)
   return (
     <Link
       to={serviceHref(service.id)}
@@ -40,6 +56,7 @@ export function ServiceCard({ service }) {
       style={{ '--c': service.color }}
       title={t(`services.items.${service.id}.desc`)}
     >
+      {count > 0 && <span className="svc__count">{count}</span>}
       <span className="svc__icon"><Icon /></span>
       <span className="svc__name">{t(`services.items.${service.id}.title`)}</span>
     </Link>
