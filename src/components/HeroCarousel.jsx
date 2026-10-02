@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { heroSlides } from '../data/site'
 import { useLocalizedText } from '../i18n/auto'
 import SearchBar from './SearchBar'
@@ -31,11 +30,6 @@ export default function HeroCarousel() {
     return () => clearTimeout(id)
   }, [index, paused, next])
 
-  // Preload all slide images so transitions never flash.
-  useEffect(() => {
-    heroSlides.forEach((s) => { const img = new Image(); img.src = s.image })
-  }, [count])
-
   const onTouchEnd = (e) => {
     if (touchX.current == null) return
     const dx = e.changedTouches[0].clientX - touchX.current
@@ -50,16 +44,15 @@ export default function HeroCarousel() {
       onTouchStart={(e) => { touchX.current = e.touches[0].clientX }}
       onTouchEnd={onTouchEnd}
     >
+      {/* One video stays in place; only the slide texts change. The two corner marks sit on the video like a burned-in watermark. */}
       <div className="hero__media">
-        {heroSlides.map((s, i) => (
-          <div
-            key={s.id || i}
-            className={`hero__slide ${i === index ? 'is-active' : ''}`}
-            style={{ backgroundImage: `url(${s.image})` }}
-            aria-hidden={i !== index}
-          />
-        ))}
+        <video className="hero__video" src="/hero.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
         <div className="hero__overlay" />
+        <img className="hero__mark hero__mark--partner" src="/uzairways-white.svg" alt="" aria-hidden="true" />
+        <span className="hero__mark hero__mark--brand" aria-hidden="true">
+          <span className="hero__mark-logo"><span className="logo__body" /><span className="logo__arrow" /></span>
+          TravelMate
+        </span>
       </div>
 
       <div className="container hero__content">
@@ -75,7 +68,6 @@ export default function HeroCarousel() {
       </div>
 
       <div className="hero__controls">
-        <button className="hero__arrow" onClick={prev} aria-label={t('hero.prev')}><FaChevronLeft className="flip-rtl" /></button>
         <div className="hero__dots">
           {heroSlides.map((_, i) => (
             <button
@@ -88,7 +80,6 @@ export default function HeroCarousel() {
             </button>
           ))}
         </div>
-        <button className="hero__arrow" onClick={next} aria-label={t('hero.next')}><FaChevronRight className="flip-rtl" /></button>
       </div>
     </section>
   )
